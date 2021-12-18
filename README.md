@@ -50,8 +50,13 @@ private static void _Driver_DriverReady(Controller Controller, ZWaveNode[] Nodes
     VID.property = "value";
     VID.endpoint = 0;
 
-    // Node, VauleID, Value - All methods returns a task, as to not block the UI
-    _Driver.SetValue(3, VID, 200).ContinueWith((res) => {
+    // Support for set Value Options
+    ZWaveJS.Net.SetValueOptions SVO = new SetValueOptions();
+    SVO.transitionDuration = "2s";
+    SVO.volume = 30;
+
+    // Node, VauleID, Value, SetValueOptions (Optional) : All methods returns a task, as to not block the UI
+    _Driver.SetValue(3, VID, 200, SVO).ContinueWith((res) => {
         if (res.Result) {
             Console.WriteLine("Value Updated");
         }
