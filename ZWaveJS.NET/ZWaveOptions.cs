@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-namespace ZWaveJS.Net
+namespace ZWaveJS.NET
 {
     
     public class ZWaveOptions

@@ -5,7 +5,7 @@ using System.IO;
 using Websocket.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-namespace ZWaveJS.Net
+namespace ZWaveJS.NET
 {
     public class Driver
     {

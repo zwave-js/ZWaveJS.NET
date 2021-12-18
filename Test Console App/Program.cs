@@ -1,7 +1,7 @@
 ﻿using System;
-using ZWaveJS.Net;
+using ZWaveJS.NET;
 
-namespace Scratch_Pad
+namespace Test_Console_App
 {
     internal class Program
     {

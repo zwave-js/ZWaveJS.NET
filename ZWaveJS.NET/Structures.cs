@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-namespace ZWaveJS.Net
+namespace ZWaveJS.NET
 {
     class CustomBooleanJsonConverter : JsonConverter<bool>
     {

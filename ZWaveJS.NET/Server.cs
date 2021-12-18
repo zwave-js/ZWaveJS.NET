@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-namespace ZWaveJS.Net
+namespace ZWaveJS.NET
 {
     public class Server
     {

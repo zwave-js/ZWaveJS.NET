@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZWaveJS.Net
+namespace ZWaveJS.NET
 {   
     public class Enums
     {
