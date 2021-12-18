@@ -16,11 +16,11 @@ The class library contains most of the methods you will need, from including a s
 
 ## Brief Example
 ```c#
-static ZWaveJS.Net.Driver _Driver;
+static ZWaveJS.NET.Driver _Driver;
 static void Main(string[] args)
 {
     // Set encryption keys, enable logging, adjust network timeouts so on and so forth.
-    ZWaveJS.Net.ZWaveOptions Options = new ZWaveJS.Net.ZWaveOptions();
+     ZWaveJS.NET.ZWaveOptions Options = new  ZWaveJS.NET.ZWaveOptions();
 
     _Driver = new Driver("COM7", Options);
 
@@ -43,15 +43,15 @@ static void Main(string[] args)
     _Driver.Start();
 }
 
-private static void _Driver_DriverReady(Controller Controller, ZWaveNode[] Nodes)
+private static void _Driver_DriverReady(ZWaveJS.NET.Controller Controller, ZWaveJS.NET.ZWaveNode[] Nodes)
 {
-    ZWaveJS.Net.ValueID VID = new ZWaveJS.Net.ValueID();
+    ZWaveJS.NET.ValueID VID = new ZWaveJS.NET.ValueID();
     VID.commandClass = 135;
     VID.property = "value";
     VID.endpoint = 0;
 
     // Support for set Value Options
-    ZWaveJS.Net.SetValueOptions SVO = new SetValueOptions();
+    ZWaveJS.NET.SetValueOptions SVO = new  ZWaveJS.NET.SetValueOptions();
     SVO.transitionDuration = "2s";
     SVO.volume = 30;
 
