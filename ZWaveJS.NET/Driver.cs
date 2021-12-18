@@ -81,7 +81,7 @@ namespace ZWaveJS.Net
             EventMap.Add("exclusion started", (JO) => ExclusionStarted?.Invoke());
             EventMap.Add("exclusion stopped", (JO) => ExclusionStopped?.Invoke());
             EventMap.Add("node removed", (JO) =>  NodeRemoved?.Invoke(JO.SelectToken("event.node.nodeId").Value<int>()));
-            EventMap.Add("node added", (JO) => NodeRemoved?.Invoke(JO.SelectToken("event.node.nodeId").Value<int>()));
+            EventMap.Add("node added", (JO) => NodeAdded?.Invoke(JO.SelectToken("event.node.nodeId").Value<int>()));
         }
         
         // CLient Mode
