@@ -16,6 +16,8 @@ The class library contains most of the methods you will need, from including a s
 ## Current implementation milestones 
  - [x] Inclusion (Currently only Unsecured/S0)
  - [x] Exclusion
+ - [x] Controller Info
+ - [x] Node Info
  - [ ] Replace Failed Node
  - [x] Updating Values
  - [x] Polling Values
