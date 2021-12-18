@@ -16,6 +16,7 @@ The class library contains most of the methods you will need, from including a s
 ## Current implementation milestones 
  - [x] Inclusion (Currently only Unsecured/S0)
  - [x] Exclusion
+ - [ ] Replace Failed Node
  - [x] Updating Values
  - [ ] CCAPI Invoke
  - [x] Value Updated Event Subscription
@@ -29,6 +30,7 @@ The class library contains most of the methods you will need, from including a s
  - [ ] Heal Node
  - [ ] Update Firmware
  - [ ] Update Firmware Progress Event Subscription
+ - [ ] Association Management
 
 
 ## Brief Example
