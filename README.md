@@ -14,7 +14,7 @@ Its an executable that is ran silently/hidden, and it contains everything necess
 The class library contains most of the methods you will need, from including a secure device, to removing it.
 
 ## Current implementation milestones 
- - [x] Inclusion (Unsecured/S0)
+ - [x] Inclusion (Currently only Unsecured/S0)
  - [x] Exclusion
  - [x] Updating Values
  - [ ] CCAPI Invoke
@@ -23,6 +23,7 @@ The class library contains most of the methods you will need, from including a s
  - [x] Node Added/Removed Event Subscription
  - [x] Inclusion Started, Stopped Event Subscription
  - [x] Exclusion Started, Stopped Event Subscription
+ - [x] Node Ready, Asleep, Awake Event Subscription
  - [ ] Heal Network
  - [ ] Heal Network Progress Event Subscription
  - [ ] Heal Node
