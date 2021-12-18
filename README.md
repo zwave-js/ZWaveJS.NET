@@ -13,6 +13,22 @@ Its an executable that is ran silently/hidden, and it contains everything necess
 
 The class library contains most of the methods you will need, from including a secure device, to removing it.
 
+## Current implementation milestones 
+ - [x] Inclusion (Unsecured/S0)
+ - [x] Exclusion
+ - [x] Updating Values
+ - [ ] CCAPI Invoke
+ - [x] Value Updated Event Subscription
+ - [x] Notification Event Subscription
+ - [x] Node Added/Removed Event Subscription
+ - [x] Inclusion Started, Stopped Event Subscription
+ - [x] Exclusion Started, Stopped Event Subscription
+ - [ ] Heal Network
+ - [ ] Heal Network Progress Event Subscription
+ - [ ] Heal Node
+ - [ ] Update Firmware
+ - [ ] Update Firmware Progress Event Subscription
+
 
 ## Brief Example
 ```c#
