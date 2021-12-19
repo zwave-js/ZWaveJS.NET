@@ -1,7 +1,7 @@
 name: Build PSIs
 on: release
 jobs:
-  build-WIN:
+  Build-WIN:
     runs-on: windows-latest
     steps:
       - name: Install PKG
@@ -23,3 +23,25 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           body: "Windows Server Binary"
+  Build-OSX:
+    runs-on: macos-latest
+    steps:
+      - name: Install PKG
+        run: npm install -g pkg
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Install Modules
+        run: npm install
+      - name: Build PSI Image
+        run: pkg . --output server.psi --compress GZip
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: server.psi
+          asset_name: server-osx.psi
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "OSX Server Binary"
