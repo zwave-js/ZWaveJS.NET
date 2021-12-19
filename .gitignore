@@ -4,3 +4,13 @@ bin
 .vs
 node_modules/
 dist/
+
+# Yarn config and stuff
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
