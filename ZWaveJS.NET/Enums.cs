@@ -26,7 +26,18 @@ namespace ZWaveJS.NET
             public const string BeginExclusion = "controller.begin_exclusion";
             public const string StopExclusion = "controller.stop_exclusion";
             public const string InvokeCCAPI = "endpoint.invoke_cc_api";
+            public const string GrantSecurityClasses = "controller.grant_security_classes";
+            public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
 
+
+        }
+
+        public enum SecurityClass
+        {
+            S2_Unauthenticated,
+            S2_Authenticated ,
+            S2_AccessControl,
+            S0_Legacy = 7
         }
 
         public enum LogLevel

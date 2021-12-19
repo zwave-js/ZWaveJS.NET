@@ -12,6 +12,13 @@ namespace Test_Console_App
             {
 
                 ZWaveOptions Options = new ZWaveOptions();
+                Options.securityKeys = new CFGSecurityKeys();
+
+                Options.securityKeys.S0_Legacy = "###########################";
+                Options.securityKeys.S2_Unauthenticated = "###########################";
+                Options.securityKeys.S2_Authenticated = "###########################";
+                Options.securityKeys.S2_AccessControl = "###########################";
+
                 _Driver = new Driver("/dev/tty.usbmodem21201", Options);
 
                 _Driver.DriverReady += _Driver_DriverReady;
@@ -29,8 +36,8 @@ namespace Test_Console_App
                 _Driver.InclusionStopped += _Driver_InclusionStopped;
                 _Driver.ExclusionStarted += _Driver_ExclusionStarted;
                 _Driver.ExclusionStopped += _Driver_ExclusionStopped;
-
-
+                _Driver.GrantSecurityClasses += _Driver_GrantSecurityClasses;
+                _Driver.ValidateDSK += _Driver_ValidateDSK;
 
                 _Driver.Start();
 
@@ -38,6 +45,20 @@ namespace Test_Console_App
             
 
             Console.Read();
+        }
+
+        private static string _Driver_ValidateDSK(string PartialDSK)
+        {
+            return "#####";
+        }
+
+        private static InclusionGrant _Driver_GrantSecurityClasses(Enums.SecurityClass[] SecurityClasses, bool ClientSideAuth)
+        {
+            InclusionGrant IG = new InclusionGrant();
+            IG.securityClasses = SecurityClasses;
+            IG.clientSideAuth = ClientSideAuth;
+
+            return IG;
         }
 
         private static void _Driver_ExclusionStopped()
@@ -113,6 +134,8 @@ namespace Test_Console_App
         private static void _Driver_DriverReady(Controller Controller, ZWaveNode[] Nodes)
         {
             Console.WriteLine("Driver Ready: {0} Nodes", Nodes.Length);
+
+            _Driver.BeginInclusion(Enums.InclusionStrategy.Security_S2, false);
 
 
         }

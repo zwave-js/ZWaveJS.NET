@@ -18,7 +18,8 @@ There is also a Helper method that pulls down the correct image if one is needed
 The class library contains most of the methods you will need, from including a secure device, to removing it.
 
 ## Current implementation milestones 
- - [x] Inclusion (Currently only Unsecured/S0)
+ - [x] Inclusion (Unsecured, S0 & S2 Security)
+ - [ ] Smart Start
  - [x] Exclusion
  - [x] Controller Info
  - [x] Node Info
@@ -66,6 +67,8 @@ static void Main(string[] args)
     _Driver.InclusionStopped += _Driver_InclusionStopped;
     _Driver.ExclusionStarted += _Driver_ExclusionStarted;
     _Driver.ExclusionStopped += _Driver_ExclusionStopped;
+    _Driver.GrantSecurityClasses += _Driver_GrantSecurityClasses;
+    _Driver.ValidateDSK += _Driver_ValidateDSK;
 
     _Driver.Start();
 }

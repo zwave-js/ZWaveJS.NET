@@ -15,13 +15,17 @@ namespace ZWaveJS.NET
             {
                 return Convert.ToBoolean(reader.Value);
             }
-            
         }
-
         public override void WriteJson(JsonWriter writer, bool value, JsonSerializer serializer)
         {
             serializer.Serialize(writer, value);
         }
+    }
+
+    public class InclusionGrant
+    {
+        public Enums.SecurityClass[] securityClasses { get; set; }
+        public bool clientSideAuth { get; set; }
     }
     
     public class ZWaveNode

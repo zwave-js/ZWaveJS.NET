@@ -64,6 +64,12 @@ namespace ZWaveJS.NET
         public delegate void DriverReadyEvent(Controller Controller, ZWaveNode[] Nodes);
         public event DriverReadyEvent DriverReady;
 
+        public delegate InclusionGrant GrantSecurityClassesEvent(Enums.SecurityClass[] SecurityClasses, bool ClientSideAuth);
+        public event GrantSecurityClassesEvent GrantSecurityClasses;
+
+        public delegate string ValidateDSKEvent(string PartialDSK);
+        public event ValidateDSKEvent ValidateDSK;
+
         private void MapEvents()
         {
             EventMap = new Dictionary<string, Action<JObject>>();
@@ -80,10 +86,40 @@ namespace ZWaveJS.NET
             EventMap.Add("inclusion stopped", (JO) => InclusionStopped?.Invoke());
             EventMap.Add("exclusion started", (JO) => ExclusionStarted?.Invoke());
             EventMap.Add("exclusion stopped", (JO) => ExclusionStopped?.Invoke());
-            EventMap.Add("node removed", (JO) =>  NodeRemoved?.Invoke(JO.SelectToken("event.node.nodeId").Value<int>()));
+            EventMap.Add("node removed", (JO) => NodeRemoved?.Invoke(JO.SelectToken("event.node.nodeId").Value<int>()));
             EventMap.Add("node added", (JO) => NodeAdded?.Invoke(JO.SelectToken("event.node.nodeId").Value<int>()));
+
+            EventMap.Add("grant security classes", (JO) =>
+            {
+                Enums.SecurityClass[] RequestedClasses = JsonConvert.DeserializeObject<Enums.SecurityClass[]>(JO.SelectToken("event.requested.securityClasses").ToString());
+                bool CSA = JO.SelectToken("event.requested.clientSideAuth").Value<bool>();
+
+                InclusionGrant GSCs = GrantSecurityClasses?.Invoke(RequestedClasses, CSA);
+
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", Guid.NewGuid().ToString());
+                Request.Add("command", Enums.Commands.GrantSecurityClasses);
+                Request.Add("inclusionGrant", GSCs);
+
+                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+                Client.Send(RequestPL);
+            });
+
+            EventMap.Add("validate dsk and enter pin", (JO) =>
+            {
+                string DSK = ValidateDSK?.Invoke(JO.SelectToken("event.dsk").Value<string>());
+
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", Guid.NewGuid().ToString());
+                Request.Add("command", Enums.Commands.ValidateDSK);
+                Request.Add("pin", DSK); ;
+
+                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+                Client.Send(RequestPL);
+            });
+
         }
-        
+
         // CLient Mode
         public Driver(Uri Server)
         {
@@ -140,9 +176,12 @@ namespace ZWaveJS.NET
 
                 if(MessageID != Guid.Empty)
                 {
-                    Callbacks[MessageID].Invoke(JO);
-                    Callbacks.Remove(MessageID);
-
+                    if (Callbacks.ContainsKey(MessageID))
+                    {
+                        Callbacks[MessageID].Invoke(JO);
+                        Callbacks.Remove(MessageID);
+                    }
+           
                     return;
                 }
 
