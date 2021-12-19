@@ -3,47 +3,52 @@ on:
   release:
     types: [published]
 jobs:
-  Build-WIN:
-    runs-on: windows-latest
+
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [16]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          # Define the binary names to use for uploads
+          - os: ubuntu-latest
+            file: server-linux
+            asset_name: server-linux.psi
+            asset_body: "Linux Server Binary"
+          - os: windows-latest
+            file: server-win.exe
+            asset_name: server-win.psi
+            asset_body: "Windows Server Binary"
+          - os: macos-latest
+            file: server-macos
+            asset_name: server-macos.psi
+            asset_body: "macOS Server Binary"
+
     steps:
-      - name: Install PKG
-        run: npm install -g pkg
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
         with:
           ref: main
-      - name: Install Modules
-        run: npm install
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build PSI Image
-        run: pkg . --output server.exe --compress GZip && ren server.exe server.psi
+        run: npm run build
+
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: server.psi
-          asset_name: server-win.psi
+          file: ${{ matrix.file }}
+          asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Windows Server Binary"
-  Build-OSX:
-    runs-on: macos-latest
-    steps:
-      - name: Install PKG
-        run: npm install -g pkg
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
-      - name: Install Modules
-        run: npm install
-      - name: Build PSI Image
-        run: pkg . --output server.psi --compress GZip
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: server.psi
-          asset_name: server-osx.psi
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: "OSX Server Binary"
+          body: ${{ matrix.asset_body }}
