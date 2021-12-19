@@ -9,13 +9,13 @@ jobs:
     strategy:
       matrix:
         node-version: [16]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest, macos-latest]
         include:
           # Define the binary names to use for uploads
-          - os: ubuntu-latest
-            file: server
-            asset_name: server-linux.psi
-            asset_body: "Linux Server Binary"
+          # - os: ubuntu-latest
+          #   file: server
+          #   asset_name: server-linux.psi
+          #   asset_body: "Linux Server Binary"
           - os: windows-latest
             file: server.exe
             asset_name: server-win.psi

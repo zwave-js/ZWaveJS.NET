@@ -8,9 +8,6 @@
   "devDependencies": {
     "pkg": "^5.5.1"
   },
-  "resolutions": {
-    "serialport": "~10"
-  },
   "scripts": {
     "build": "pkg . --compress GZip -t host"
   },
