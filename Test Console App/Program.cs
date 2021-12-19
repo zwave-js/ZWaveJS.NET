@@ -8,27 +8,33 @@ namespace Test_Console_App
         static Driver _Driver;
         static void Main(string[] args)
         {
-            ZWaveOptions Options = new ZWaveOptions();
-            _Driver = new Driver("COM7", Options);
+            ZWaveJS.NET.Helpers.DownloadPSI().ContinueWith(R =>
+            {
 
-            _Driver.DriverReady += _Driver_DriverReady;
-            _Driver.NodeReady += _Driver_NodeReady;
-            _Driver.NodeAdded += _Driver_NodeAdded;
-            _Driver.NodeRemoved += _Driver_NodeRemoved;
-            _Driver.NodeAsleep += _Driver_NodeAsleep;
-            _Driver.NodeAwake += _Driver_NodeAwake;
-            _Driver.NodeInterviewStarted += _Driver_NodeInterviewStarted;
-            _Driver.NodeInterviewFailed += _Driver_NodeInterviewFailed;
-            _Driver.NodeInterviewCompleted += _Driver_NodeInterviewCompleted;
-            _Driver.Notification += _Driver_Notification;
-            _Driver.ValueUpdated += _Driver_ValueUpdated;
-            _Driver.InclusionStarted += _Driver_InclusionStarted;
-            _Driver.InclusionStopped += _Driver_InclusionStopped;
-            _Driver.ExclusionStarted += _Driver_ExclusionStarted;
-            _Driver.ExclusionStopped += _Driver_ExclusionStopped;
+                ZWaveOptions Options = new ZWaveOptions();
+                _Driver = new Driver("COM7", Options);
+
+                _Driver.DriverReady += _Driver_DriverReady;
+                _Driver.NodeReady += _Driver_NodeReady;
+                _Driver.NodeAdded += _Driver_NodeAdded;
+                _Driver.NodeRemoved += _Driver_NodeRemoved;
+                _Driver.NodeAsleep += _Driver_NodeAsleep;
+                _Driver.NodeAwake += _Driver_NodeAwake;
+                _Driver.NodeInterviewStarted += _Driver_NodeInterviewStarted;
+                _Driver.NodeInterviewFailed += _Driver_NodeInterviewFailed;
+                _Driver.NodeInterviewCompleted += _Driver_NodeInterviewCompleted;
+                _Driver.Notification += _Driver_Notification;
+                _Driver.ValueUpdated += _Driver_ValueUpdated;
+                _Driver.InclusionStarted += _Driver_InclusionStarted;
+                _Driver.InclusionStopped += _Driver_InclusionStopped;
+                _Driver.ExclusionStarted += _Driver_ExclusionStarted;
+                _Driver.ExclusionStopped += _Driver_ExclusionStopped;
 
 
-            _Driver.Start();
+                _Driver.Start();
+
+            });
+            
 
             Console.Read();
         }

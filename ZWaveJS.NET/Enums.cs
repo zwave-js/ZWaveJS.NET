@@ -6,6 +6,13 @@ namespace ZWaveJS.NET
 {   
     public class Enums
     {
+        internal enum Platform
+        {
+            Windows,
+            Linux,
+            Mac
+        }
+
         internal class Commands
         {
             public const string SetAPIVersion = "set_api_schema";
