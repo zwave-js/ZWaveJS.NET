@@ -9,13 +9,13 @@ jobs:
     strategy:
       matrix:
         node-version: [16]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest, macos-latest]
         include:
           # Define the binary names to use for uploads
-          - os: ubuntu-latest
-            file: server
-            asset_name: server-linux.psi
-            asset_body: "Linux Server Binary"
+          # - os: ubuntu-latest
+          #   file: server
+          #   asset_name: server-linux.psi
+          #   asset_body: "Linux Server Binary"
           - os: windows-latest
             file: server.exe
             asset_name: server-win.psi
@@ -33,13 +33,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --immutable
 
       - name: Build PSI Image
-        run: npm run build
+        run: yarn run build
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
