@@ -4,9 +4,13 @@ jobs:
   build-WIN:
     runs-on: windows-latest
     steps:
+      - name: Install PKG
+        run: npm install -g pkg
       - name: Checkout
         uses: actions/checkout@v2
         with:
           ref: main
-      - name: Build
-        run: npm run build-psi-windows
+      - name: Install Modules
+        run: npm install
+      - name: Build PSI Image
+        run: pkg . --output server.exe --compress GZip && ren server.exe server.psi
