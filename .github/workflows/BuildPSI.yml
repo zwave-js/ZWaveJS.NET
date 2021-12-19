@@ -1,4 +1,4 @@
-name: BuildPSI
+name: Build PSIs
 on: release
 jobs:
   build-WIN:
