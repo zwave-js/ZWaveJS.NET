@@ -9,7 +9,7 @@
     "pkg": "^5.5.1"
   },
   "scripts": {
-    "build": "pkg . --compress GZip --targets host"
+    "build": "pkg . --compress GZip --targets host --debug"
   },
   "pkg": {
     "assets": "./node_modules/@serialport/bindings/build/Release/bindings.node",
