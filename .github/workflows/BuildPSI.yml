@@ -1,15 +1,12 @@
 name: BuildPSI
-on:
-  push:
-    branches:
-      - dev
+on: release
 jobs:
-  build:
+  build-WIN:
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: main
       - name: Build
         run: npm run build-psi-windows
