@@ -1,5 +1,7 @@
 name: Build PSIs
-on: release
+on:
+  release:
+    types: [published]
 jobs:
   Build-WIN:
     runs-on: windows-latest
