@@ -14,6 +14,8 @@ Its an executable that is ran silently/hidden, and it contains everything necess
 Every github release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**,  
 and ensure its in the same location as the dll.
 
+There is also a Helper method that pulls down the correct image if one is needed **ZWaveJS.NET.Helpers.DownloadPSI()**
+
 The class library contains most of the methods you will need, from including a secure device, to removing it.
 
 ## Current implementation milestones 
