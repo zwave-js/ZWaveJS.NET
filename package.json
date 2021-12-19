@@ -9,8 +9,7 @@
     "pkg": "^5.5.1"
   },
   "resolutions": {
-    "serialport": "~9.0.7",
-    "@serialport/bindings": "~9.0.8"
+    "serialport": "~10"
   },
   "scripts": {
     "build": "pkg . --compress GZip -t host"
