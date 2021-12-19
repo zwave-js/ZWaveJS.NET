@@ -12,7 +12,7 @@ namespace Test_Console_App
             {
 
                 ZWaveOptions Options = new ZWaveOptions();
-                _Driver = new Driver("COM7", Options);
+                _Driver = new Driver("/dev/tty.usbmodem21201", Options);
 
                 _Driver.DriverReady += _Driver_DriverReady;
                 _Driver.NodeReady += _Driver_NodeReady;
@@ -112,8 +112,7 @@ namespace Test_Console_App
 
         private static void _Driver_DriverReady(Controller Controller, ZWaveNode[] Nodes)
         {
-            Console.WriteLine("Driver Ready: {0} Nodes",Nodes.Length);
-
+            Console.WriteLine("Driver Ready: {0} Nodes", Nodes.Length);
 
 
         }
