@@ -5,10 +5,6 @@
     "zwave-js": "8.8.3",
     "@zwave-js/server": "1.13.0"
   },
-  "scripts": {
-    "build-psi-windows": "npm install && %appdata%\\npm\\pkg.cmd . --output server.exe --compress GZip && ren server.exe server.psi",
-    "build-psi-osx": "npm install && pkg . --output server.psi --compress GZip"
-  },
   "pkg": {
     "assets": "./node_modules/@serialport/bindings/build/Release/bindings.node"
   }
