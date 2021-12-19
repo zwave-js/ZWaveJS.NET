@@ -14,3 +14,12 @@ jobs:
         run: npm install
       - name: Build PSI Image
         run: pkg . --output server.exe --compress GZip && ren server.exe server.psi
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: server.psi
+          asset_name: server-win.psi
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Windows Server Binary"
