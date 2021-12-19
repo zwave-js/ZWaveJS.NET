@@ -25,6 +25,7 @@ namespace ZWaveJS.NET
             public const string StopInclusion = "controller.stop_inclusion";
             public const string BeginExclusion = "controller.begin_exclusion";
             public const string StopExclusion = "controller.stop_exclusion";
+            public const string InvokeCCAPI = "endpoint.invoke_cc_api";
 
         }
 

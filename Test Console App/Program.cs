@@ -31,6 +31,7 @@ namespace Test_Console_App
                 _Driver.ExclusionStopped += _Driver_ExclusionStopped;
 
 
+
                 _Driver.Start();
 
             });

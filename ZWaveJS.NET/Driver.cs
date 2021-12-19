@@ -375,6 +375,31 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        public Task<JObject> InvokeCCAPI(int NodeID, int Endpoint, int CommandClass, string Method, params object[] Params)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
+            Callbacks.Add(ID, (JO) => {
+                Result.SetResult(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.InvokeCCAPI);
+            Request.Add("nodeId", NodeID);
+            Request.Add("endpoint", Endpoint);
+            Request.Add("commandClass", CommandClass);
+            Request.Add("methodName", Method);
+            Request.Add("args", Params);
+
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
 
     }
 }
