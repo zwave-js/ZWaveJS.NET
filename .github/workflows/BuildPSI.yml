@@ -13,23 +13,21 @@ jobs:
         include:
           # Define the binary names to use for uploads
           - os: ubuntu-latest
-            file: server-linux
+            file: server
             asset_name: server-linux.psi
             asset_body: "Linux Server Binary"
           - os: windows-latest
-            file: server-win.exe
+            file: server.exe
             asset_name: server-win.psi
             asset_body: "Windows Server Binary"
           - os: macos-latest
-            file: server-macos
+            file: server
             asset_name: server-macos.psi
             asset_body: "macOS Server Binary"
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: main
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
