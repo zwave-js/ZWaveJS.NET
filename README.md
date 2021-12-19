@@ -26,7 +26,7 @@ The class library contains most of the methods you will need, from including a s
  - [x] Updating Values
  - [x] Polling Values
  - [ ] Fetching Values (after initial data dump)
- - [ ] CCAPI Invoke
+ - [x] CCAPI Invoke
  - [x] Value Updated Event Subscription
  - [x] Notification Event Subscription
  - [x] Node Added/Removed Event Subscription
