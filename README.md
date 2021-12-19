@@ -52,6 +52,7 @@ static void Main(string[] args)
 
     _Driver = new Driver("COM7", Options);
 
+     // Subscribe to various network events (Devices waking up, value updates, notifications S2 inclusion steps etc etc)
     _Driver.DriverReady += _Driver_DriverReady;
     _Driver.NodeReady += _Driver_NodeReady;
     _Driver.NodeAdded += _Driver_NodeAdded;
