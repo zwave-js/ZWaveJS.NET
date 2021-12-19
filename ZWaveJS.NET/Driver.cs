@@ -94,7 +94,7 @@ namespace ZWaveJS.NET
                 Enums.SecurityClass[] RequestedClasses = JsonConvert.DeserializeObject<Enums.SecurityClass[]>(JO.SelectToken("event.requested.securityClasses").ToString());
                 bool CSA = JO.SelectToken("event.requested.clientSideAuth").Value<bool>();
 
-                InclusionGrant GSCs = GrantSecurityClasses?.Invoke(RequestedClasses, CSA);
+                InclusionGrant GSCs = GrantSecurityClasses.Invoke(RequestedClasses, CSA);
 
                 Dictionary<string, object> Request = new Dictionary<string, object>();
                 Request.Add("messageId", Guid.NewGuid().ToString());
@@ -107,7 +107,7 @@ namespace ZWaveJS.NET
 
             EventMap.Add("validate dsk and enter pin", (JO) =>
             {
-                string DSK = ValidateDSK?.Invoke(JO.SelectToken("event.dsk").Value<string>());
+                string DSK = ValidateDSK.Invoke(JO.SelectToken("event.dsk").Value<string>());
 
                 Dictionary<string, object> Request = new Dictionary<string, object>();
                 Request.Add("messageId", Guid.NewGuid().ToString());
@@ -251,6 +251,15 @@ namespace ZWaveJS.NET
 
         public Task<bool> BeginInclusion(Enums.InclusionStrategy Strategy, bool EnforceSecurity = false)
         {
+
+            if(Strategy == Enums.InclusionStrategy.Default || Strategy == Enums.InclusionStrategy.Security_S2)
+            {
+                if(GrantSecurityClasses == null || ValidateDSK == null)
+                {
+                    throw new InvalidOperationException("Events: GrantSecurityClasses and ValidateDSK need to be subscribed to.");
+                }
+            }
+
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
