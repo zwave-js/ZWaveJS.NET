@@ -2,10 +2,17 @@
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
-    "zwave-js": "8.8.3",
-    "@zwave-js/server": "1.13.0"
+    "@zwave-js/server": "1.13.0",
+    "zwave-js": "8.8.3"
+  },
+  "devDependencies": {
+    "pkg": "^5.5.1"
+  },
+  "scripts": {
+    "build": "pkg . --compress GZip"
   },
   "pkg": {
-    "assets": "./node_modules/@serialport/bindings/build/Release/bindings.node"
+    "assets": "./node_modules/@serialport/bindings/build/Release/bindings.node",
+    "outputPath": "dist"
   }
 }
