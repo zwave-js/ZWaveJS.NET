@@ -11,7 +11,7 @@ The library uses [zwave-js-server](https://github.com/zwave-js/zwave-js-server) 
 Its an executable that is ran silently/hidden, and it contains everything necessary for .NET to work with zwave-js.  
 **server.psi** files are platform specific, but the assembly isn't - it will run on windows, OSX and Linux, and the platform specifics i.e **node** are contained in **server.psi**.
 
-Every github release will include a set of PSI images, so download the one for your platform, and rename it **server.psi**,  
+Every github release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**,  
 and ensure its in the same location as the dll.
 
 The class library contains most of the methods you will need, from including a secure device, to removing it.
