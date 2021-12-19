@@ -76,6 +76,10 @@ static void Main(string[] args)
 
 private static void _Driver_DriverReady(ZWaveJS.NET.Controller Controller, ZWaveJS.NET.ZWaveNode[] Nodes)
 {
+    // Controller - Conroller Information Class
+    // Nodes      - An array of ZWaveNode class'
+
+    // Update a value
     ZWaveJS.NET.ValueID VID = new ZWaveJS.NET.ValueID();
     VID.commandClass = 135;
     VID.property = "value";
