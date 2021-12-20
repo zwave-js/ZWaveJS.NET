@@ -39,7 +39,7 @@ The class library contains most of the methods you will need, from including a s
 
 ## Installing.
 
-Download the **nupkg** package file from the releases page, and place in your nuget package source directory. ZWaveJS.NET, will then be listed, and will install any dependencies its needs.
+Download the **nupkg** package file from the releases page, and place in your nuget package source directory. ZWaveJS.NET, will then be listed, and will install any dependencies it needs.
 
 ## Current implementation milestones 
 
