@@ -30,9 +30,10 @@ namespace Test_Console_App
 
         private static void _Driver_DriverReady()
         {
-            // Get a node, update it's value
-            _Driver.Controller.Nodes.Get(5).GetDefinedValueIDs();
+           
         }
+
+      
     }
 
 

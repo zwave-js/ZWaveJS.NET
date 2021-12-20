@@ -40,9 +40,7 @@ namespace ZWaveJS.NET
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             if (!File.Exists("server.psi"))
             {
-                string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/download/{V}/{F}";
-                URI = URI.Replace("{V}", Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
-
+                string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/latest/download/{F}";
                 switch (RunningPlatform())
                 {
                     case Enums.Platform.Windows:
