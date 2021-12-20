@@ -113,7 +113,7 @@ private static void _Driver_DriverReady()
 
     // Or All of them
     ZWaveJS.NET.ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
-    Foreach(ZWaveJS.NET.ZWaveNode Node in Nodes)
+    foreach(ZWaveJS.NET.ZWaveNode Node in Nodes)
     {
         Node.ValueUpdated += Program_ValueUpdated;
         Node.Notification += Program_Notification;
