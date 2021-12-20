@@ -42,9 +42,9 @@ The class library contains most of the methods you will need, from including a s
  - [ ] Controller
    - [x] Controller Info
    - [x] Inclusion (Unsecured, S0 & S2 Security)
+   - [x] S2 Security inclusion Event hooks (needed to guide users in a UI for pairing S2 devices)
    - [x] Exclusion
-   - [x] Inclusion Started, Stopped Event Subscription
-   - [x] Exclusion Started, Stopped Event Subscription
+   - [x] Inclusion, Exclusion Started, Stopped Event Subscription
    - [ ] Smart Start
    - [x] Node Added/Removed Event Subscription
    - [ ] Heal Network
