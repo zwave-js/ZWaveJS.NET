@@ -24,6 +24,8 @@ namespace ZWaveJS.NET
         public delegate void DriverReadyEvent();
         public event DriverReadyEvent DriverReady;
 
+        private bool Inited = false;
+
         private void MapEvents()
         {
             EventMap = new Dictionary<string, Action<JObject>>();
@@ -193,7 +195,7 @@ namespace ZWaveJS.NET
                 Callbacks = new Dictionary<Guid, Action<JObject>>();
                 MapEvents();
                 BoolConverter = new CustomBooleanJsonConverter();
-
+                Server.FatalError += Server_FatalError;
                 Server.Start(SerialPort, Options, ServerCommunicationPort);
 
                 Client = new WebsocketClient(new Uri("ws://127.0.0.1:" + ServerCommunicationPort));
@@ -207,6 +209,11 @@ namespace ZWaveJS.NET
                 throw err;
             }
 
+        }
+
+        private void Server_FatalError()
+        {
+            throw new Exception("Unrecoverable server error");
         }
 
         // Start Driver
@@ -294,16 +301,24 @@ namespace ZWaveJS.NET
 
         private void StartListetningCB(JObject JO)
         {
-            if (JO.Value<bool>("success"))
+            if (!Inited)
             {
-                Controller C = JsonConvert.DeserializeObject<Controller>(JO.SelectToken("result.state.controller").ToString());
-                ZWaveNode[] Nodes = JsonConvert.DeserializeObject<ZWaveNode[]>(JO.SelectToken("result.state.nodes").ToString(), BoolConverter);
+                if (JO.Value<bool>("success"))
+                {
+                    Controller C = JsonConvert.DeserializeObject<Controller>(JO.SelectToken("result.state.controller").ToString());
+                    ZWaveNode[] Nodes = JsonConvert.DeserializeObject<ZWaveNode[]>(JO.SelectToken("result.state.nodes").ToString(), BoolConverter);
 
-                this.Controller = C;
-                this.Controller.Nodes = new NodesCollection(Nodes);
+                    this.Controller = C;
+                    this.Controller.Nodes = new NodesCollection(Nodes);
 
-                DriverReady?.Invoke();
+                    DriverReady?.Invoke();
+
+                    Inited = true;
+                }
+
+
             }
+
         }
 
 

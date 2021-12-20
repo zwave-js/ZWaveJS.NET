@@ -10,6 +10,11 @@ namespace ZWaveJS.NET
     {
 
         private static Process ServerProcess;
+        private static int Restarts = 0;
+
+        public delegate void FatalErrorEvent();
+        public static event FatalErrorEvent FatalError;
+
         internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
             if (!File.Exists("server.psi"))
@@ -31,8 +36,37 @@ namespace ZWaveJS.NET
             PSI.UseShellExecute = false;
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
             PSI.CreateNoWindow = true;
-            ServerProcess = Process.Start(PSI);
 
+            ServerProcess = new Process();
+            ServerProcess.EnableRaisingEvents = true;
+            ServerProcess.Exited += ServerProcess_Exited;
+            ServerProcess.StartInfo = PSI;
+            ServerProcess.Start();
+
+
+        }
+
+        private static void ServerProcess_Exited(object sender, EventArgs e)
+        {
+            switch (ServerProcess.ExitCode)
+            {
+                case 1:
+                    FatalError?.Invoke();
+                    break;
+
+                case 2:
+                    if (Restarts < 5)
+                    {
+                        Restarts++;
+                        ServerProcess.Start(); // again
+                    }
+                    else
+                    {
+                        FatalError?.Invoke();
+                    }
+
+                    break;
+            }
         }
 
         private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
