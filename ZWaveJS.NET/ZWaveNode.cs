@@ -137,6 +137,28 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        public Task<ValueMetaData> GetValueMetadata(ValueID VID)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<ValueMetaData> Result = new TaskCompletionSource<ValueMetaData>();
+            Driver.Callbacks.Add(ID, (JO) => {
+                Result.SetResult(JsonConvert.DeserializeObject<ValueMetaData>(JO.SelectToken("result.ValueMetadata").ToString()));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetValueMetadata);
+            Request.Add("nodeId", this.nodeId);
+            Request.Add("valueId", VID);
+
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<JObject> InvokeCCAPI(int Endpoint, int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
