@@ -16,7 +16,7 @@ The library can operate in 2 ways: Client or Self Hosted.
 **Client**  
 The library will connect to an already running instance of [zwave-js-server](https://github.com/zwave-js/zwave-js-server).
 
-**Self Hosted**
+**Self Hosted**  
 The library will host its own zwave-js instance.  
 You might ask, if in this mode, **nodejs** and **npm** is needed on the host system - it is not!
 
