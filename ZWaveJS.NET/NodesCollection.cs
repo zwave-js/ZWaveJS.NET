@@ -15,5 +15,10 @@ namespace ZWaveJS.NET
         {
             return Nodes.FirstOrDefault((N) => N.nodeId.Equals(Node));
         }
+
+        public ZWaveNode[] AsArray()
+        {
+            return Nodes;
+        }
     }
 }
