@@ -51,6 +51,8 @@ The class library contains most of the methods you will need, from including a s
    - [x] Updating Values
    - [x] Polling Values
    - [x] CCAPI Invoke
+   - [x] Obtain Value IDs
+   - [ ] Obtain Value Meta Data
    - [x] Node Ready, Asleep, Awake Event Subscription
    - [x] Value Updated Event Subscription
    - [x] Notification Event Subscription
