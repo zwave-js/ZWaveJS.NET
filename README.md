@@ -33,31 +33,31 @@ The class library contains most of the methods you will need, from including a s
 ## Current implementation milestones 
 
  - [ ] Controller
-  - [x] Controller Info
-  - [x] Inclusion (Unsecured, S0 & S2 Security)
-  - [x] Exclusion
-  - [x] Inclusion Started, Stopped Event Subscription
-  - [x] Exclusion Started, Stopped Event Subscription
-  - [ ] Smart Start
-  - [x] Node Added/Removed Event Subscription
-  - [ ] Heal Network
-  - [ ] Heal Network Progress Event Subscription
-  - [ ] Replace Failed Node
-  - [ ] Remove Failed Node
+   - [x] Controller Info
+   - [x] Inclusion (Unsecured, S0 & S2 Security)
+   - [x] Exclusion
+   - [x] Inclusion Started, Stopped Event Subscription
+   - [x] Exclusion Started, Stopped Event Subscription
+   - [ ] Smart Start
+   - [x] Node Added/Removed Event Subscription
+   - [ ] Heal Network
+   - [ ] Heal Network Progress Event Subscription
+   - [ ] Replace Failed Node
+   - [ ] Remove Failed Node
 
  - [ ] Node
-  - [x] Node Info
-  - [x] Updating Values
-  - [x] Polling Values
-  - [x] CCAPI Invoke
-  - [x] Node Ready, Asleep, Awake Event Subscription
-  - [x] Value Updated Event Subscription
-  - [x] Notification Event Subscription
-  - [ ] Heal Node
-  - [ ] Update Firmware
-  - [ ] Update Firmware Progress Event Subscription
-  - [ ] Association Management
-  - [ ] Fetching Values (after initial data dump)
+   - [x] Node Info
+   - [x] Updating Values
+   - [x] Polling Values
+   - [x] CCAPI Invoke
+   - [x] Node Ready, Asleep, Awake Event Subscription
+   - [x] Value Updated Event Subscription
+   - [x] Notification Event Subscription
+   - [ ] Heal Node
+   - [ ] Update Firmware
+   - [ ] Update Firmware Progress Event Subscription
+   - [ ] Association Management
+   - [ ] Fetching Values (after initial data dump)
   
   ## Brief Example
 ```c#
