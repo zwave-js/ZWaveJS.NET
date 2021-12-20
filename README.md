@@ -99,8 +99,17 @@ private static void _Driver_DriverReady()
         }
     });
 
+    // Listen for Value Updates
+    _Driver.Controller.Nodes.Get(3).ValueUpdated += Program_ValueUpdated;
+
+
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
         // Do something with Value ID's (res.Result)
     });
+}
+
+private static void Program_ValueUpdated(ZWaveNode Node, JObject Args)
+{
+   // Do something with Args
 }
 ```
