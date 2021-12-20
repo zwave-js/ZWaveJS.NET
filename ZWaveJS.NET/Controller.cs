@@ -5,9 +5,10 @@ namespace ZWaveJS.NET
 {
     public class Controller
     {
-        internal Controller(ZWaveNode[] Nodes)
+
+        internal Controller()
         {
-            this.Nodes = new NodesCollection(Nodes);
+
         }
 
         public delegate string ValidateDSKEvent(string PartialDSK);
@@ -59,11 +60,11 @@ namespace ZWaveJS.NET
             NodeRemoved?.Invoke(NodeID);
         }
 
-        public delegate void NodeAddedEvent(int NodeID);
+        public delegate void NodeAddedEvent(ZWaveNode Node);
         public event NodeAddedEvent NodeAdded;
-        internal void Trigger_NodeAdded(int NodeID)
+        internal void Trigger_NodeAdded(ZWaveNode Node)
         {
-            NodeAdded?.Invoke(NodeID);
+            NodeAdded?.Invoke(Node);
         }
 
         public Task<bool> BeginInclusion(Enums.InclusionStrategy Strategy, bool EnforceSecurity = false)
@@ -78,7 +79,8 @@ namespace ZWaveJS.NET
 
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
@@ -103,7 +105,8 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
 
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
@@ -123,7 +126,8 @@ namespace ZWaveJS.NET
 
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
 
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
@@ -145,7 +149,8 @@ namespace ZWaveJS.NET
 
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
 
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
@@ -162,23 +167,42 @@ namespace ZWaveJS.NET
         }
 
         public NodesCollection Nodes { get; internal set; }
+
+        [Newtonsoft.Json.JsonProperty]
         public string libraryVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int type { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public long homeId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int ownNodeId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isSecondary { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isUsingHomeIdFromOtherNetwork { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isSISPresent { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool wasRealPrimary { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isStaticUpdateController { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isSlave { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string serialApiVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int manufacturerId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int productType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int[] supportedFunctionTypes { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int sucNodeId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool supportsTimers { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isHealNetworkActive { get; internal set; }
 
     }

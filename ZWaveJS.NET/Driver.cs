@@ -10,7 +10,7 @@ namespace ZWaveJS.NET
 {
     public class Driver
     {
-      
+
         // Things
         internal static WebsocketClient Client;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
@@ -70,8 +70,12 @@ namespace ZWaveJS.NET
             EventMap.Add("ready", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
+                ZWaveNode NNI = JsonConvert.DeserializeObject<ZWaveNode>(JO.SelectToken("event.nodeState").ToString());
+
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
+                this.Controller.Nodes.ReplaceInformation(NNI);
                 N.Trigger_NodeReady();
+
             });
 
             EventMap.Add("interview started", (JO) =>
@@ -81,12 +85,7 @@ namespace ZWaveJS.NET
                 N.Trigger_NodeInterviewStarted();
             });
 
-            EventMap.Add("interview started", (JO) =>
-            {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeInterviewStarted();
-            });
+
 
             EventMap.Add("interview completed", (JO) =>
             {
@@ -126,13 +125,19 @@ namespace ZWaveJS.NET
             EventMap.Add("node removed", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
+                this.Controller.Nodes.RemoveNodeFromCollection(NID);
                 this.Controller.Trigger_NodeRemoved(NID);
             });
 
             EventMap.Add("node added", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
-                this.Controller.Trigger_NodeAdded(NID);
+
+                ZWaveNode NN = new ZWaveNode();
+                NN.nodeId = NID;
+
+                this.Controller.Nodes.AddNodeToCollection(NN);
+                this.Controller.Trigger_NodeAdded(NN);
             });
 
             EventMap.Add("grant security classes", (JO) =>
@@ -172,6 +177,8 @@ namespace ZWaveJS.NET
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
+
+
             Client = new WebsocketClient(Server);
             Client.ReconnectTimeout = null;
             Client.ErrorReconnectTimeout = TimeSpan.Parse("00:00:05");
@@ -186,22 +193,22 @@ namespace ZWaveJS.NET
                 Callbacks = new Dictionary<Guid, Action<JObject>>();
                 MapEvents();
                 BoolConverter = new CustomBooleanJsonConverter();
+
                 Server.Start(SerialPort, Options, ServerCommunicationPort);
 
                 Client = new WebsocketClient(new Uri("ws://127.0.0.1:" + ServerCommunicationPort));
-
                 Client.ReconnectTimeout = null;
                 Client.ErrorReconnectTimeout = TimeSpan.Parse("00:00:05");
 
                 Client.MessageReceived.Subscribe(ProcessMessage);
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 throw err;
             }
-            
+
         }
-        
+
         // Start Driver
         public void Start()
         {
@@ -211,27 +218,27 @@ namespace ZWaveJS.NET
         // Proces Message
         private void ProcessMessage(ResponseMessage IncomingMessage)
         {
-            if(IncomingMessage.MessageType == System.Net.WebSockets.WebSocketMessageType.Text)
+            if (IncomingMessage.MessageType == System.Net.WebSockets.WebSocketMessageType.Text)
             {
                 JObject JO = JObject.Parse(IncomingMessage.Text);
 
                 string Type = JO.Value<string>("type");
                 Guid MessageID = JO.ContainsKey("messageId") ? Guid.Parse(JO.Value<string>("messageId")) : Guid.Empty;
-                
+
                 System.Diagnostics.Debug.WriteLine(IncomingMessage.Text);
 
-                if(MessageID != Guid.Empty)
+                if (MessageID != Guid.Empty)
                 {
                     if (Callbacks.ContainsKey(MessageID))
                     {
                         Callbacks[MessageID].Invoke(JO);
                         Callbacks.Remove(MessageID);
                     }
-           
+
                     return;
                 }
 
-                if(Type == "version")
+                if (Type == "version")
                 {
 
                     Guid CBID = Guid.NewGuid();
@@ -249,7 +256,7 @@ namespace ZWaveJS.NET
                     return;
                 }
 
-                if(Type == "event")
+                if (Type == "event")
                 {
                     string EE = JO.SelectToken("event.event").Value<string>();
                     if (EventMap.ContainsKey(EE))
@@ -262,14 +269,14 @@ namespace ZWaveJS.NET
                 }
             }
 
-            
+
         }
 
 
 
         private void SetAPIVersionCB(JObject JO)
         {
-            if(JO.Value<bool>("success"))
+            if (JO.Value<bool>("success"))
             {
                 Guid CBID = Guid.NewGuid();
                 Callbacks.Add(CBID, StartListetningCB);
@@ -299,7 +306,7 @@ namespace ZWaveJS.NET
             }
         }
 
-        
+
 
 
     }

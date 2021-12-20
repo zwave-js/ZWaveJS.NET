@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 namespace ZWaveJS.NET
 {
-    public class Server
+    internal class Server
     {
 
         private static Process ServerProcess;

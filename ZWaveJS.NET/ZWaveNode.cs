@@ -68,12 +68,27 @@ namespace ZWaveJS.NET
             NodeInterviewFailed?.Invoke(this);
         }
 
+        public void RefreshInfo()
+        {
+            Guid ID = Guid.NewGuid();
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.RefreshInfo);
+            Request.Add("nodeId", this.nodeId);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+        }
+
         public Task<bool> SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
@@ -100,7 +115,8 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JO.Value<JObject>("result"));
             });
 
@@ -121,7 +137,8 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<ValueID[]> Result = new TaskCompletionSource<ValueID[]>();
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JsonConvert.DeserializeObject<ValueID[]>(JO.SelectToken("result.valueIds").ToString()));
             });
 
@@ -142,8 +159,9 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<ValueMetaData> Result = new TaskCompletionSource<ValueMetaData>();
-            Driver.Callbacks.Add(ID, (JO) => {
-                Result.SetResult(JsonConvert.DeserializeObject<ValueMetaData>(JO.SelectToken("result.ValueMetadata").ToString()));
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JsonConvert.DeserializeObject<ValueMetaData>(JO.SelectToken("result").ToString()));
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -164,7 +182,8 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
-            Driver.Callbacks.Add(ID, (JO) => {
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
                 Result.SetResult(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
             });
 
@@ -184,40 +203,75 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        [Newtonsoft.Json.JsonProperty]
         public int nodeId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int index { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int installerIcon { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int userIcon { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public Enums.NodeStatus status { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool ready { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isListening { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isRouting { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isSecure { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int manufacturerId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int productType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string firmwareVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string zwavePlusVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string name { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string location { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public DeviceConfig deviceConfig { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string label { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int interviewAttempts { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public Endpoint[] endpoints { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public object isFrequentListening { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public long maxDataRate { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public long[] supportedDataRates { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int protocolVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool supportsBeaming { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool supportsSecurity { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int nodeType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int zwavePlusNodeType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int zwavePlusRoleType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public DeviceClass deviceClass { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public CommandClass[] commandClasses { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string interviewStage { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string deviceDatabaseUrl { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int highestSecurityClass { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public ValueDump[] values { get; internal set; }
     }
 }

@@ -60,6 +60,8 @@ The class library contains most of the methods you will need, from including a s
    - [x] Node Ready, Asleep, Awake Event Subscription
    - [x] Value Updated Event Subscription
    - [x] Notification Event Subscription
+   - [x] Interview Node
+   - [x] Interview Events (Started, Completed, Failed)
    - [ ] Heal Node
    - [ ] Update Firmware
    - [ ] Update Firmware Progress Event Subscription

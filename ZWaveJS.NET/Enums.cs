@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ZWaveJS.NET
-{   
+{
     public class Enums
     {
         internal enum Platform
@@ -21,6 +21,7 @@ namespace ZWaveJS.NET
             public const string GetValue = "node.get_value";
             public const string PollValue = "node.poll_value";
             public const string GetDefinedValueIDs = "node.get_defined_value_ids";
+            public const string GetValueMetadata = "node.get_value_metadata";
             public const string BeginInclusion = "controller.begin_inclusion";
             public const string StopInclusion = "controller.stop_inclusion";
             public const string BeginExclusion = "controller.begin_exclusion";
@@ -28,6 +29,7 @@ namespace ZWaveJS.NET
             public const string InvokeCCAPI = "endpoint.invoke_cc_api";
             public const string GrantSecurityClasses = "controller.grant_security_classes";
             public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
+            public const string RefreshInfo = "node.refresh_info";
 
 
         }
@@ -35,7 +37,7 @@ namespace ZWaveJS.NET
         public enum SecurityClass
         {
             S2_Unauthenticated,
-            S2_Authenticated ,
+            S2_Authenticated,
             S2_AccessControl,
             S0_Legacy = 7
         }
@@ -67,8 +69,8 @@ namespace ZWaveJS.NET
             Security_S2
         }
     }
-    
-  
 
-   
+
+
+
 }

@@ -3,13 +3,14 @@ using System.IO;
 using Newtonsoft.Json;
 namespace ZWaveJS.NET
 {
-    
+
     public class ZWaveOptions
     {
         public ZWaveOptions()
         {
             this.logConfig = new CFGLogConfig();
             this.logConfig.enabled = false;
+            this.logConfig.logToFile = false;
             this.logConfig.level = Enums.LogLevel.Debug;
             this.logConfig.filename = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js.log");
 
@@ -49,7 +50,7 @@ namespace ZWaveJS.NET
 
     public class CFGLogConfig
     {
-        [JsonProperty(PropertyName = "logToFile")]
+        public bool logToFile { get; set; }
         public bool enabled { get; set; }
         public Enums.LogLevel level { get; set; }
         public int[] nodeFilter { get; set; }

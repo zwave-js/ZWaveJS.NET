@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace ZWaveJS.NET
 {
-    public  class Helpers
+    public class Helpers
     {
 
         private const string MACOSBIN = "server-macos.psi";
@@ -53,7 +53,8 @@ namespace ZWaveJS.NET
                 }
 
                 WebClient WC = new WebClient();
-                WC.DownloadFileCompleted += (s, e) => {
+                WC.DownloadFileCompleted += (s, e) =>
+                {
                     Result.SetResult(true);
                 };
                 WC.DownloadFileAsync(new Uri(URI), "server.psi");
@@ -64,6 +65,6 @@ namespace ZWaveJS.NET
             }
 
             return Result.Task;
-        } 
+        }
     }
 }

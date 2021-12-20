@@ -7,7 +7,7 @@ namespace ZWaveJS.NET
     {
         public override bool ReadJson(JsonReader reader, Type objectType, bool existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            if(reader.ValueType == typeof(string) && reader.Value.ToString().Equals("unknown"))
+            if (reader.ValueType == typeof(string) && reader.Value.ToString().Equals("unknown"))
             {
                 return false;
             }
@@ -49,7 +49,7 @@ namespace ZWaveJS.NET
         public bool writeable { get; set; }
         public string label { get; set; }
         public string description { get; set; }
-        public int @default {get;set;}
+        public int @default { get; set; }
         public int min { get; set; }
         public int max { get; set; }
         public Dictionary<string, string> states { get; set; }
@@ -95,7 +95,7 @@ namespace ZWaveJS.NET
         public string label { get; set; }
         public string description { get; set; }
         public Device[] devices { get; set; }
-        public FirmwareVersion firmwareVersion {get;set;}
+        public FirmwareVersion firmwareVersion { get; set; }
     }
 
     public class FirmwareVersion
@@ -112,7 +112,7 @@ namespace ZWaveJS.NET
 
     public class ValueID
     {
-        
+
         public int commandClass { get; set; }
         public int endpoint { get; set; }
         public object property { get; set; }
