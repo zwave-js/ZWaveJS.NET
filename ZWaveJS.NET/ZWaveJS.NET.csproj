@@ -1,13 +1,27 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<Version>0.1.0</Version>
+		<Authors>Marcus Davies</Authors>
+		<Company>ZWave-JS</Company>
+		<Product>ZWaveJS.NET</Product>
+		<PackageId>ZWaveJS.NET</PackageId>
+		<Description>A Z-Wave JS wrapper for .NET (Core 3.1)</Description>
+		<Copyright>ZWave-JS</Copyright>
+		<PackageProjectUrl>https://github.com/zwave-js/ZWaveJS.NET</PackageProjectUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageIcon>Logo.png</PackageIcon>
+		<RepositoryUrl>https://github.com/zwave-js/ZWaveJS.NET</RepositoryUrl>
 	</PropertyGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>Newtonsoft.Json</_Parameter1>
 		</AssemblyAttribute>
+		<None Include="..\Logo.png">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Websocket.Client" Version="4.4.43" />
 	</ItemGroup>
