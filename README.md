@@ -114,7 +114,7 @@ private static void Program_ValueUpdated(ZWaveNode Node, JObject Args)
    // Do something with Args
 }
 
-private static void Program_ValueUpdated(ZWaveNode Node, int ccId JObject Args)
+private static void Program_Notification(ZWaveNode Node, int ccId JObject Args)
 {
    // Do something with args
 }
