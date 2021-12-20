@@ -27,46 +27,6 @@ namespace ZWaveJS.NET
         public Enums.SecurityClass[] securityClasses { get; set; }
         public bool clientSideAuth { get; set; }
     }
-    
-    public class ZWaveNode
-    {
-      
-        public int nodeId { get; set; }
-        public int index { get; set; }
-        public int installerIcon { get; set; }
-        public int userIcon { get; set; }
-        public Enums.NodeStatus status { get; set; }
-        public bool ready { get; set; }
-        public bool isListening { get; set; }
-        public bool isRouting { get; set; }
-        public bool isSecure { get; set; }
-        public int manufacturerId { get; set; }
-        public int productId { get; set; }
-        public int productType { get; set; }
-        public string firmwareVersion { get; set; }
-        public string zwavePlusVersion { get; set; }
-        public string name { get; set; }
-        public string location { get; set; }
-        public DeviceConfig deviceConfig { get; set; }
-        public string label { get; set; }
-        public int interviewAttempts { get; set; }
-        public Endpoint[] endpoints { get; set; }
-        public object isFrequentListening { get; set; }
-        public long maxDataRate { get; set; }
-        public long[] supportedDataRates { get; set; }
-        public int protocolVersion { get; set; }
-        public bool supportsBeaming { get; set; }
-        public bool supportsSecurity { get; set; }
-        public int nodeType { get; set; }
-        public int zwavePlusNodeType { get; set; }
-        public int zwavePlusRoleType { get; set; }
-        public DeviceClass deviceClass { get; set; }
-        public CommandClass[] commandClasses { get; set; }
-        public string interviewStage { get; set; }
-        public string deviceDatabaseUrl { get; set; }
-        public int highestSecurityClass { get; set; }
-        public ValueDump[] values { get; set; }
-    }
 
     public class ValueDump
     {
@@ -150,29 +110,6 @@ namespace ZWaveJS.NET
         public int productId { get; set; }
     }
 
-    public class Controller
-    {
-        public string libraryVersion { get; set; }
-        public int type { get; set; }
-        public long homeId { get; set; }
-        public int ownNodeId { get; set; }
-        public bool isSecondary { get; set; }
-        public bool isUsingHomeIdFromOtherNetwork { get; set; }
-        public bool isSISPresent { get; set; }
-        public bool wasRealPrimary { get; set; }
-        public bool isStaticUpdateController { get; set; }
-        public bool isSlave { get; set; }
-        public string serialApiVersion { get; set; }
-        public int manufacturerId { get; set; }
-        public int productType { get; set; }
-        public int productId { get; set; }
-        public int[] supportedFunctionTypes { get; set; }
-        public int sucNodeId { get; set; }
-        public bool supportsTimers { get; set; }
-        public bool isHealNetworkActive { get; set; }
-       
-    }
-    
     public class ValueID
     {
         
