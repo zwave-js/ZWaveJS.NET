@@ -101,6 +101,7 @@ private static void _Driver_DriverReady()
 
     // Listen for Value Updates
     _Driver.Controller.Nodes.Get(3).ValueUpdated += Program_ValueUpdated;
+    _Driver.Controller.Nodes.Get(3).Notification += Program_Notification;
 
 
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
@@ -111,5 +112,10 @@ private static void _Driver_DriverReady()
 private static void Program_ValueUpdated(ZWaveNode Node, JObject Args)
 {
    // Do something with Args
+}
+
+private static void Program_ValueUpdated(ZWaveNode Node, int ccId JObject Args)
+{
+   // Do something with args
 }
 ```
