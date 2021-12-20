@@ -22,7 +22,9 @@ You might ask, if in this mode, **nodejs** and **npm** is needed on the host sys
 
 This is all possible with an accompanying file - **server.psi**.
 
-Its an executable that is running silently/hidden, and it contains everything necessary for .NET to work with zwave-js.  
+Its an executable that is running silently/hidden,  
+and it contains everything necessary for .NET to work with zwave-js.  
+
 **server.psi** files are platform specific, but the assembly isn't - it will run on windows, OSX and Linux, and the platform specifics i.e **node** are contained in **server.psi**.
 
 Please Note: Self Hosted is *currently* only possible under OSX and Windows.
