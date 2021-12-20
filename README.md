@@ -25,7 +25,7 @@ This is all possible with an accompanying file - **server.psi**.
 Its an executable that is ran silently/hidden, and it contains everything necessary for .NET to work with zwave-js.  
 **server.psi** files are platform specific, but the assembly isn't - it will run on windows, OSX and Linux, and the platform specifics i.e **node** are contained in **server.psi**.
 
-Please Note: Self Hosted is _currently only possible under OSX and Windows.
+Please Note: Self Hosted is *currently* only possible under OSX and Windows.
 
 Every github release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
 
