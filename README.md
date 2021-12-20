@@ -62,7 +62,7 @@ The class library contains most of the methods you will need, from including a s
    - [ ] Update Firmware
    - [ ] Update Firmware Progress Event Subscription
    - [ ] Association Management
-   - [ ] Fetching Values (after initial data dump)
+   - [ ] Fetching Values (after initial data dump) - awaiting downstream implementation
   
   ## Brief Example
 ```c#
