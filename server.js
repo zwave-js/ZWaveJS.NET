@@ -19,7 +19,7 @@ if (DriverOptions.securityKeys) {
 
 console.log('ZWaveJS.NET: Instantiating Driver...');
 const _Driver = new Driver(SieralPort, DriverOptions);
-WSServer = new Server.ZwavejsServer(_Driver, {port: WSPort, host: 'localhost'})
+WSServer = new Server.ZwavejsServer(_Driver, port: {port: WSPort, host: 'localhost'})
 _Driver.on('error', (e) => {
     if (e instanceof ZWaveError && e.code === ZWaveErrorCodes.Driver_Failed) {
         process.exit(0);
