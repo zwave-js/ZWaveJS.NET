@@ -12,6 +12,13 @@ namespace ZWaveJS.NET
 
         }
 
+        public delegate void ValueNotificationEvent(ZWaveNode Node, JObject Args);
+        public event ValueNotificationEvent ValueNotification;
+        internal void Trigger_ValueNotification(JObject Args)
+        {
+            ValueNotification?.Invoke(this, Args);
+        }
+
         public delegate void ValueUpdatedEvent(ZWaveNode Node, JObject Args);
         public event ValueUpdatedEvent ValueUpdated;
         internal void Trigger_ValueUpdated(JObject Args)
@@ -61,11 +68,11 @@ namespace ZWaveJS.NET
             NodeInterviewCompleted?.Invoke(this);
         }
 
-        public delegate void NodeInterviewFailedEvent(ZWaveNode Node);
+        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, JObject Args);
         public event NodeInterviewFailedEvent NodeInterviewFailed;
-        internal void Trigger_NodeInterviewFailed()
+        internal void Trigger_NodeInterviewFailed(JObject Args)
         {
-            NodeInterviewFailed?.Invoke(this);
+            NodeInterviewFailed?.Invoke(this, Args);
         }
 
         public void RefreshInfo()

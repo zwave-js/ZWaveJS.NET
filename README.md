@@ -66,6 +66,7 @@ Download the **nupkg** package file from the releases page, and place in your nu
    - [x] Node Ready, Asleep, Awake Event Subscription
    - [x] Value Updated Event Subscription
    - [x] Notification Event Subscription
+   - [x] Value Notification Event Subscription
    - [x] Interview Node
    - [x] Interview Events (Started, Completed, Failed)
    - [ ] Heal Node

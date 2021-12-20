@@ -26,6 +26,15 @@ namespace ZWaveJS.NET
 
         private bool Inited = false;
 
+        private string _ZWaveJSDriverVersion;
+        public string ZWaveJSDriverVersion
+        {
+            get
+            {
+                return _ZWaveJSDriverVersion;
+            }
+        }
+
         private void MapEvents()
         {
             EventMap = new Dictionary<string, Action<JObject>>();
@@ -44,6 +53,14 @@ namespace ZWaveJS.NET
                 JObject IJO = JO.SelectToken("event.args").Value<JObject>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_ValueUpdated(IJO);
+            });
+
+            EventMap.Add("value notification", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_ValueNotification(IJO);
             });
 
             EventMap.Add("notification", (JO) =>
@@ -99,8 +116,9 @@ namespace ZWaveJS.NET
             EventMap.Add("interview failed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
+                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeInterviewFailed();
+                N.Trigger_NodeInterviewFailed(IJO);
             });
 
             EventMap.Add("inclusion started", (JO) =>
@@ -247,6 +265,7 @@ namespace ZWaveJS.NET
 
                 if (Type == "version")
                 {
+                    _ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
 
                     Guid CBID = Guid.NewGuid();
                     Callbacks.Add(CBID, SetAPIVersionCB);
