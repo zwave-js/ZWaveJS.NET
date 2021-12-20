@@ -37,6 +37,10 @@ There is also a Helper method that pulls down the correct image if one is needed
 
 The class library contains most of the methods you will need, from including a secure device, to removing it.
 
+## Installing.
+
+Download the **nupkg** package file from the releases page, and place in your nuget package source directory. ZWaveJS.NET, will then be listed, and will install any dependencies its needs.
+
 ## Current implementation milestones 
 
  - [ ] Controller
