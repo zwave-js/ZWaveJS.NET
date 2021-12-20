@@ -110,8 +110,7 @@ private static void _Driver_DriverReady()
         Node.ValueUpdated += Program_ValueUpdated;
         Node.Notification += Program_Notification;
     }
-
-
+    
     // Other Node methods
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
         // Do something with Value ID's (res.Result)
