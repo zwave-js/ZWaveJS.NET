@@ -39,7 +39,7 @@ The class library contains most of the methods you will need, from including a s
 
 ## Installing.
 
-All releases will be published to nuget, so search for **ZWaveJS.NET** and install it, the **nupkg** file will also be attached to the relase here, on Github, along with the platform PSI files.
+All releases will be published to nuget, so search for **ZWaveJS.NET** and install it, the **nupkg** file will also be attached to the release here, on Github, along with the platform PSI files.
 
 ## Current implementation milestones 
 
