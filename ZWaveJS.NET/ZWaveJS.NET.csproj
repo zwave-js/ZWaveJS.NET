@@ -22,6 +22,7 @@ The library closely follows the structure of the zwave-js API.</Description>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>zwave-js, z-wave, z wave, zwave, zwavejs.net</PackageTags>
 		<PackageReleaseNotes>See the github repo for release notes.</PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
