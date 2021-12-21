@@ -29,7 +29,7 @@ and it contains everything necessary for .NET to work with zwave-js.
 
 Please Note: Self Hosted is *currently* only possible under OSX and Windows, or at least we can't automate an image build that is guaranteed to work across distros.  
 
-To build an image for your platform, clone the repo, run `npm install` and finally `npm run build` - rename **build/server** to **server.psi**, and distrubute with your application.
+To build an image for your platform, clone the repo, run `npm install` and finally `npm run build` - rename **dist/server** to **server.psi**, and distrubute with your application.
 
 Every release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
 
