@@ -29,7 +29,7 @@ and it contains everything necessary for .NET to work with zwave-js.
 
 Please Note: Self Hosted is *currently* only possible under OSX and Windows.
 
-Every github release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
+Every release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
 
 There is also a Helper method that pulls down the correct image if one is needed **ZWaveJS.NET.Helpers.DownloadPSI()**  
 
@@ -39,7 +39,7 @@ The class library contains most of the methods you will need, from including a s
 
 ## Installing.
 
-Download the **nupkg** package file from the releases page, and place in your nuget package source directory. ZWaveJS.NET, will then be listed, and will install any dependencies it needs.
+All releases will be published to nuget, so search for **ZWaveJS.NET** and install it, the **nupkg** file will also be attached to the relase here, on Github.
 
 ## Current implementation milestones 
 
