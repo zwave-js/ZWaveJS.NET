@@ -7,12 +7,21 @@
 		<Company>ZWave-JS</Company>
 		<Product>ZWaveJS.NET</Product>
 		<PackageId>ZWaveJS.NET</PackageId>
-		<Description>A Z-Wave JS wrapper for .NET (Core 3.1)</Description>
+		<Description>A Z-Wave JS wrapper for .NET (Core 3.1)
+
+ZWaveJS.NET is a class library developed in .NET Core 3.1,
+it exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.
+
+The library closely follows the structure of the zwave-js API.</Description>
 		<Copyright>ZWave-JS</Copyright>
 		<PackageProjectUrl>https://github.com/zwave-js/ZWaveJS.NET</PackageProjectUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageIcon>Logo.png</PackageIcon>
 		<RepositoryUrl>https://github.com/zwave-js/ZWaveJS.NET</RepositoryUrl>
+		<SignAssembly>False</SignAssembly>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageTags>zwave-js, z-wave, z wave, zwave, zwavejs.net</PackageTags>
+		<PackageReleaseNotes>See the github repo for release notes.</PackageReleaseNotes>
 	</PropertyGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
