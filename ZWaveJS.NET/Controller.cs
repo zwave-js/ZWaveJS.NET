@@ -5,10 +5,23 @@ namespace ZWaveJS.NET
 {
     public class Controller
     {
-
         internal Controller()
         {
 
+        }
+
+        public delegate void HealNetworkProgressEvent(Dictionary<string,string> Progress);
+        public event HealNetworkProgressEvent HealNetworkProgress;
+        internal void Trigger_HealNetworkProgress(Dictionary<string, string> Progress)
+        {
+             HealNetworkProgress?.Invoke(Progress);
+        }
+
+        public delegate void HealNetworkDoneEvent(Dictionary<string, string> Result);
+        public event HealNetworkDoneEvent HealNetworkDone;
+        internal void Trigger_HealNetworkDone(Dictionary<string, string> Result)
+        {
+            HealNetworkDone?.Invoke(Result);
         }
 
         public delegate string ValidateDSKEvent(string PartialDSK);
@@ -67,6 +80,70 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node);
         }
 
+        public Task<bool> HealNode(int NodeID)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.HealNode);
+            Request.Add("nodeId", NodeID);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<bool> BeginHealingNetwork()
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.BeginHealingNetwork);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<bool> StopHealingNetwork()
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.StopHealingNetwork);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<bool> BeginInclusion(Enums.InclusionStrategy Strategy, bool EnforceSecurity = false)
         {
             if (Strategy == Enums.InclusionStrategy.Default || Strategy == Enums.InclusionStrategy.Security_S2)
@@ -97,7 +174,6 @@ namespace ZWaveJS.NET
             Driver.Client.Send(RequestPL);
 
             return Result.Task;
-
         }
 
         public Task<bool> StopInclusion()
@@ -140,7 +216,6 @@ namespace ZWaveJS.NET
             Driver.Client.Send(RequestPL);
 
             return Result.Task;
-
         }
 
         public Task<bool> StopExclusion()
@@ -163,7 +238,6 @@ namespace ZWaveJS.NET
             Driver.Client.Send(RequestPL);
 
             return Result.Task;
-
         }
 
         public NodesCollection Nodes { get; internal set; }

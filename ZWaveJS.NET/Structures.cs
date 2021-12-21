@@ -53,7 +53,6 @@ namespace ZWaveJS.NET
         public int min { get; set; }
         public int max { get; set; }
         public Dictionary<string, string> states { get; set; }
-
     }
 
     public class CommandClass
@@ -112,15 +111,12 @@ namespace ZWaveJS.NET
 
     public class ValueID
     {
-
-        public int commandClass { get; set; }
         public int endpoint { get; set; }
         public object property { get; set; }
         public object propertyKey { get; set; }
         public string commandClassName { get; set; }
         public string propertyName { get; set; }
         public string propertyKeyName { get; set; }
-
     }
 
     public class SetValueOptions
@@ -128,8 +124,4 @@ namespace ZWaveJS.NET
         public string transitionDuration { get; set; }
         public int volume { get; set; }
     }
-
-
-
-
 }

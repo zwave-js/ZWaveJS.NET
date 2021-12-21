@@ -10,7 +10,6 @@ namespace ZWaveJS.NET
 {
     public class Helpers
     {
-
         private const string MACOSBIN = "server-macos.psi";
         private const string WINBIN = "server-win.psi";
 

@@ -10,12 +10,12 @@ namespace ZWaveJS.NET
         {
         }
 
+        internal List<ZWaveNode> Nodes { get; set; }
+
         internal NodesCollection(ZWaveNode[] Nodes)
         {
             this.Nodes = Nodes.ToList();
         }
-
-        internal List<ZWaveNode> Nodes { get; set; }
 
         internal void AddNodeToCollection(ZWaveNode Node)
         {
@@ -31,7 +31,6 @@ namespace ZWaveJS.NET
             {
                 info.SetValue(CN, info.GetValue(Node, null), null);
             }
-
         }
 
         internal void RemoveNodeFromCollection(int Node)
@@ -40,9 +39,7 @@ namespace ZWaveJS.NET
             if (N != null)
             {
                 Nodes.Remove(N);
-
             }
-
         }
 
         public ZWaveNode Get(int Node)

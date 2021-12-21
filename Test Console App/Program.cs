@@ -6,11 +6,9 @@ namespace Test_Console_App
 {
     internal class Program
     {
+        static Driver D;
         static void Main(string[] args)
         {
-          
-          
         }
     }
-
 }

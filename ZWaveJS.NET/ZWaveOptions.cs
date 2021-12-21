@@ -39,7 +39,6 @@ namespace ZWaveJS.NET
 
     public class CFGTimeouts
     {
-
         public int ack { get; set; }
         public int response { get; set; }
         public int sendDataCallback { get; set; }
@@ -59,7 +58,6 @@ namespace ZWaveJS.NET
 
     public class CFGStorage
     {
-
         public string cacheDir { get; set; }
         public string deviceConfigPriorityDir { get; set; }
         public string throttle { get; set; }
@@ -67,7 +65,6 @@ namespace ZWaveJS.NET
 
     public class CFGSecurityKeys
     {
-
         public string S2_Unauthenticated { get; set; }
         public string S2_Authenticated { get; set; }
         public string S2_AccessControl { get; set; }

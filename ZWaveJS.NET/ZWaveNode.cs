@@ -75,9 +75,15 @@ namespace ZWaveJS.NET
             NodeInterviewFailed?.Invoke(this, Args);
         }
 
-        public void RefreshInfo()
+        public Task<bool> RefreshInfo()
         {
             Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(true);
+            });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
@@ -87,6 +93,7 @@ namespace ZWaveJS.NET
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.Send(RequestPL);
 
+            return Result.Task;
         }
 
         public Task<bool> SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)

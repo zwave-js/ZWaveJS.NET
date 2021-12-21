@@ -10,19 +10,11 @@ namespace ZWaveJS.NET
 {
     public class Driver
     {
-
-        // Things
         internal static WebsocketClient Client;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         private Dictionary<string, Action<JObject>> EventMap;
         private const int SchemaVersionID = 13;
         internal static CustomBooleanJsonConverter BoolConverter;
-        public static int ServerCommunicationPort = 50001;
-
-        public Controller Controller { get; internal set; }
-
-        public delegate void DriverReadyEvent();
-        public event DriverReadyEvent DriverReady;
 
         private bool Inited = false;
 
@@ -35,10 +27,13 @@ namespace ZWaveJS.NET
             }
         }
 
-        private void MapEvents()
-        {
-            EventMap = new Dictionary<string, Action<JObject>>();
+        public static int ServerCommunicationPort = 50001;
+        public Controller Controller { get; internal set; }
+        public delegate void DriverReadyEvent();
+        public event DriverReadyEvent DriverReady;
 
+        private void MapNodeEvents()
+        {
             EventMap.Add("value updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
@@ -94,7 +89,6 @@ namespace ZWaveJS.NET
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 this.Controller.Nodes.ReplaceInformation(NNI);
                 N.Trigger_NodeReady();
-
             });
 
             EventMap.Add("interview started", (JO) =>
@@ -103,8 +97,6 @@ namespace ZWaveJS.NET
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeInterviewStarted();
             });
-
-
 
             EventMap.Add("interview completed", (JO) =>
             {
@@ -120,7 +112,10 @@ namespace ZWaveJS.NET
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeInterviewFailed(IJO);
             });
+        }
 
+        private void MapControllerEvents()
+        {
             EventMap.Add("inclusion started", (JO) =>
             {
                 bool Secure = JO.SelectToken("event.secure").Value<bool>();
@@ -189,15 +184,32 @@ namespace ZWaveJS.NET
                 Client.Send(RequestPL);
             });
 
+            EventMap.Add("heal network progress", (JO) =>
+            {
+                Dictionary<string, string> Progress = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.progress").ToString());
+                this.Controller.Trigger_HealNetworkProgress(Progress);
+            });
+
+            EventMap.Add("heal network done", (JO) =>
+            {
+                Dictionary<string, string> Result = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.result").ToString());
+                this.Controller.Trigger_HealNetworkDone(Result);
+            });
         }
 
-        // CLient Mode
+        private void MapEvents()
+        {
+            EventMap = new Dictionary<string, Action<JObject>>();
+            MapNodeEvents();
+            MapControllerEvents();
+        }
+
+        // Client Mode
         public Driver(Uri Server)
         {
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
-
 
             Client = new WebsocketClient(Server);
             Client.ReconnectTimeout = null;
@@ -226,7 +238,6 @@ namespace ZWaveJS.NET
             {
                 throw err;
             }
-
         }
 
         private void Server_FatalError()
@@ -291,14 +302,9 @@ namespace ZWaveJS.NET
                     }
 
                     return;
-
                 }
             }
-
-
         }
-
-
 
         private void SetAPIVersionCB(JObject JO)
         {
@@ -334,14 +340,7 @@ namespace ZWaveJS.NET
 
                     Inited = true;
                 }
-
-
             }
-
         }
-
-
-
-
     }
 }

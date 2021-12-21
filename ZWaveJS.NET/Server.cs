@@ -42,8 +42,6 @@ namespace ZWaveJS.NET
             ServerProcess.Exited += ServerProcess_Exited;
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
-
-
         }
 
         private static void ServerProcess_Exited(object sender, EventArgs e)

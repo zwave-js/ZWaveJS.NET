@@ -49,12 +49,13 @@ Download the **nupkg** package file from the releases page, and place in your nu
    - [x] S2 Security inclusion Event hooks (needed to guide users in a UI for pairing S2 devices)
    - [x] Exclusion
    - [x] Inclusion, Exclusion Started, Stopped Event Subscription
-   - [ ] Smart Start
    - [x] Node Added/Removed Event Subscription
-   - [ ] Heal Network
-   - [ ] Heal Network Progress Event Subscription
-   - [ ] Replace Failed Node
+   - [x] Heal Network
+   - [x] Heal Network Progress Event Subscription
+   - [x] Heal Node
    - [ ] Remove Failed Node
+   - [ ] Replace Failed Node
+   - [ ] Smart Start
 
  - [ ] Node
    - [x] Node Info
@@ -69,7 +70,6 @@ Download the **nupkg** package file from the releases page, and place in your nu
    - [x] Value Notification Event Subscription
    - [x] Interview Node
    - [x] Interview Events (Started, Completed, Failed)
-   - [ ] Heal Node
    - [ ] Update Firmware
    - [ ] Update Firmware Progress Event Subscription
    - [ ] Association Management
