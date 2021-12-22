@@ -3,7 +3,7 @@
   "bin": "./server.js",
   "dependencies": {
     "@zwave-js/server": "1.13.0",
-    "zwave-js": "8.8.3"
+    "zwave-js": "8.9.0"
   },
   "devDependencies": {
     "pkg": "^5.5.1"
