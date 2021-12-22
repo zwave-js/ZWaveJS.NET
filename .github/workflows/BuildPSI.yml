@@ -36,14 +36,17 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
+        working-directory: ./PSI
         run: yarn install --immutable
 
       - name: Build PSI Image
+        working-directory: ./PSI
         run: yarn run build
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
+          working-directory: ./PSI
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: "dist/${{ matrix.file }}"
           asset_name: ${{ matrix.asset_name }}
