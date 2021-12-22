@@ -73,7 +73,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Node Info
    - [x] Updating Values
    - [x] Polling Values
-   - [x] CCAPI Invoke
+   - [x] CCAPI Invoke (and its endpoints)
    - [x] Obtain Value IDs
    - [x] Obtain Value Meta Data
    - [x] Node Ready, Asleep, Awake Event Subscription
