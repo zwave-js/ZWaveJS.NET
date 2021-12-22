@@ -1,13 +1,17 @@
 # ZWaveJS.NET
 
-ZWaveJS.NET is a class library developed in .NET Core 3.1, it exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
+ZWaveJS.NET is a class library developed in .NET Core 3.1, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
 
 The library closely follows the structure of the zwave-js API. 
 
 Examples:  
-`Driver.Controller.BeginHealingNetwork()`  
-`Driver.Controller.Nodes.Get(4).GetDefinedValueIDs()`  
-`Driver.Controller.Nodes.Get(4).SetValue(<ValueID>, <Value>, <SetValueOptions>)`  
+
+```c#
+Driver.Controller.BeginHealingNetwork()
+Driver.Controller.Nodes.Get(4).GetDefinedValueIDs()
+Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)
+Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
+```  
 
 ## Getting Started.
 
