@@ -47,9 +47,8 @@ jobs:
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
-          working-directory: ./PSI
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "dist/${{ matrix.file }}"
+          file: "PSI/dist/${{ matrix.file }}"
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
           overwrite: true
