@@ -32,8 +32,8 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          working-directory: ./PSI
           node-version: ${{ matrix.node-version }}
+          cache-dependency-path: ./PSI/yarn.lock
           cache: 'yarn'
 
       - name: Install dependencies
