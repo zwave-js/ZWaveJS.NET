@@ -30,6 +30,8 @@ namespace ZWaveJS.NET
 
     public class ValueDump
     {
+        internal ValueDump() { }
+
         public int commandClass { get; set; }
         public int endpoint { get; set; }
         public object property { get; set; }
@@ -44,6 +46,8 @@ namespace ZWaveJS.NET
 
     public class ValueMetaData
     {
+        internal ValueMetaData() { }
+
         public string type { get; set; }
         public bool readable { get; set; }
         public bool writeable { get; set; }
@@ -57,23 +61,18 @@ namespace ZWaveJS.NET
 
     public class CommandClass
     {
+        internal CommandClass() { }
+
         public int id { get; set; }
         public string name { get; set; }
         public int version { get; set; }
         public bool isSecure { get; set; }
     }
 
-    public class Endpoint
-    {
-        public int nodeId { get; set; }
-        public int index { get; set; }
-        public int installerIcon { get; set; }
-        public int userIcon { get; set; }
-        public DeviceClass deviceClass { get; set; }
-    }
-
     public class DeviceClass
     {
+        internal DeviceClass() { }
+
         public DeviceClassType basic { get; set; }
         public DeviceClassType generic { get; set; }
         public DeviceClassType specific { get; set; }
@@ -82,12 +81,16 @@ namespace ZWaveJS.NET
     }
     public class DeviceClassType
     {
+        internal DeviceClassType() { }
+
         public int key { get; set; }
         public string label { get; set; }
     }
 
     public class DeviceConfig
     {
+        internal DeviceConfig() { }
+
         public string filename { get; set; }
         public bool isEmbedded { get; set; }
         public string manufacturer { get; set; }
@@ -99,12 +102,16 @@ namespace ZWaveJS.NET
 
     public class FirmwareVersion
     {
+        internal FirmwareVersion() { }
+
         public string min { get; set; }
         public string max { get; set; }
     }
 
     public class Device
     {
+        internal Device() { }
+
         public int productType { get; set; }
         public int productId { get; set; }
     }

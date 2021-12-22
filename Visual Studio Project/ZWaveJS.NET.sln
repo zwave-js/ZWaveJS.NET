@@ -5,12 +5,6 @@ VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveJS.NET", "ZWaveJS.NET\ZWaveJS.NET.csproj", "{78DF967E-D460-4A9D-B3DC-598F5A159D4A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server Image Files", "Server Image Files", "{B8B34E0E-3EBA-418B-A340-5D9879437E32}"
-	ProjectSection(SolutionItems) = preProject
-		package.json = package.json
-		server.js = server.js
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Console App", "Test Console App\Test Console App.csproj", "{689FD8C0-96E2-43B6-99D8-42523E01014A}"
 EndProject
 Global

@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq;
 namespace ZWaveJS.NET
 {
     public class ZWaveNode
@@ -191,7 +192,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<JObject> InvokeCCAPI(int Endpoint, int CommandClass, string Method, params object[] Params)
+        public Task<JObject> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
 
@@ -205,7 +206,6 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.InvokeCCAPI);
             Request.Add("nodeId", this.nodeId);
-            Request.Add("endpoint", Endpoint);
             Request.Add("commandClass", CommandClass);
             Request.Add("methodName", Method);
             Request.Add("args", Params);
@@ -215,6 +215,12 @@ namespace ZWaveJS.NET
             Driver.Client.Send(RequestPL);
 
             return Result.Task;
+        }
+
+        public Endpoint GetEndpoint(int Index)
+        {
+            Endpoint EP = this.endpoints.FirstOrDefault((E) => E.index.Equals(Index));
+            return EP;
         }
 
         [Newtonsoft.Json.JsonProperty]
@@ -256,7 +262,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int interviewAttempts { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public Endpoint[] endpoints { get; internal set; }
+        internal Endpoint[] endpoints { get; set; }
         [Newtonsoft.Json.JsonProperty]
         public object isFrequentListening { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
