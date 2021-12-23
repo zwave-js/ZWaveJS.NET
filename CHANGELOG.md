@@ -13,7 +13,7 @@
      ```  
 
  - Changes
-  - Bump ZWave JS to 8.9.1
+   - Bump ZWave JS to 8.9.1
 
 
 ## v0.1.0
