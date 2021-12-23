@@ -5,6 +5,8 @@
    - **InvokeCCAPI** no longer accepts an **endpoint**, instead **InvokeCCAPI** is now called on the **ZWaveNode** class itself,  
      or an instance of **Endpoint** as obtained by **ZWaveNode.GetEndpoint(int Index)**
 
+     This is more inline with the zwave-js API.
+
      Examples:
 
      ```c#
