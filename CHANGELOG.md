@@ -23,7 +23,7 @@
 
  - Changes
    - Bump ZWave JS to 8.9.1
-   - Sychonise **isHealNetworkActive**
+   - Synchronise **isHealNetworkActive**
 
 
 ## v0.1.0
