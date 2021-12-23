@@ -71,6 +71,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
  - [ ] Node
    - [x] Node Info
+   - [ ] Set name & location
    - [x] Updating Values
    - [x] Polling Values
    - [x] CCAPI Invoke (and its endpoints)
