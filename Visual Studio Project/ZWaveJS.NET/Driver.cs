@@ -194,6 +194,7 @@ namespace ZWaveJS.NET
             {
                 Dictionary<string, string> Result = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.result").ToString());
                 this.Controller.Trigger_HealNetworkDone(Result);
+
             });
         }
 

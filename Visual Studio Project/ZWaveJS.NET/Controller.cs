@@ -21,6 +21,7 @@ namespace ZWaveJS.NET
         public event HealNetworkDoneEvent HealNetworkDone;
         internal void Trigger_HealNetworkDone(Dictionary<string, string> Result)
         {
+            this.isHealNetworkActive = false;
             HealNetworkDone?.Invoke(Result);
         }
 
@@ -109,7 +110,13 @@ namespace ZWaveJS.NET
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                bool _Result = JO.Value<bool>("success");
+                if (_Result)
+                {
+                    this.isHealNetworkActive = true;
+                }
+
+                Result.SetResult(_Result);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -125,11 +132,13 @@ namespace ZWaveJS.NET
 
         public Task<bool> StopHealingNetwork()
         {
+            
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
+                this.isHealNetworkActive = false;
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
