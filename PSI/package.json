@@ -1,9 +1,10 @@
 {
+  "version": "0.2.0",
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
     "@zwave-js/server": "1.13.0",
-    "zwave-js": "8.9.0"
+    "zwave-js": "8.9.1"
   },
   "devDependencies": {
     "pkg": "^5.5.1"
