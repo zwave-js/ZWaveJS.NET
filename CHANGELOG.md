@@ -2,7 +2,7 @@
 
  - Breaking Changes
    - **endpoints** object is no longer accessible on the **ZWaveNode** class, and instead, they are acessed via **ZWaveNode.GetEndpoint(int Index)**
-   - **InvokeCCAPI** no longer accepts an **endpoint**, instead **InvokeCCAPI** is now called the **ZWaveNode** class itsself,  
+   - **InvokeCCAPI** no longer accepts an **endpoint**, instead **InvokeCCAPI** is now called on the **ZWaveNode** class itself,  
      or an instance of **Endpoint** as obtained by **ZWaveNode.GetEndpoint(int Index)**
 
  - Changes
