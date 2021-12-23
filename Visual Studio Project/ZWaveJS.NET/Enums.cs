@@ -33,6 +33,8 @@ namespace ZWaveJS.NET
             public const string BeginHealingNetwork = "controller.begin_healing_network";
             public const string StopHealingNetwork = "controller.stop_healing_network";
             public const string HealNode = "controller.heal_node";
+            public const string SetName = "node.set_name";
+            public const string SetLocation = "node.set_location";
         }
 
         public enum SecurityClass

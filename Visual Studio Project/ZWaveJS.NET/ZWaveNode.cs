@@ -97,6 +97,27 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        public Task<JObject> GetValue(ValueID ValueID)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<JObject>("value"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetValue);
+            Request.Add("nodeId", this.nodeId);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<bool> SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
