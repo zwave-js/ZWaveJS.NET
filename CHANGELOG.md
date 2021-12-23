@@ -1,4 +1,4 @@
-## v0.2.0
+## v1.0.0
 
  - ZWave JS Driver Version: 8.9.1
 
