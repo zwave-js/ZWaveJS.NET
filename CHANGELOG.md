@@ -5,6 +5,13 @@
    - **InvokeCCAPI** no longer accepts an **endpoint**, instead **InvokeCCAPI** is now called on the **ZWaveNode** class itself,  
      or an instance of **Endpoint** as obtained by **ZWaveNode.GetEndpoint(int Index)**
 
+     Examples:
+
+     ```c#
+Driver.Controller.Nodes.Get(4).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
+Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
+```  
+
  - Changes
   - Bump ZWave JS to 8.9.1
 
