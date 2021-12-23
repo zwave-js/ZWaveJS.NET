@@ -252,10 +252,6 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public string zwavePlusVersion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public string name { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public string location { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
         public DeviceConfig deviceConfig { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public string label { get; internal set; }
@@ -293,5 +289,53 @@ namespace ZWaveJS.NET
         public int highestSecurityClass { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public ValueDump[] values { get; internal set; }
+
+        private string _Name;
+        [Newtonsoft.Json.JsonProperty]
+        public string name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                _Name = value;
+                Guid ID = Guid.NewGuid();
+
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", ID);
+                Request.Add("command", Enums.Commands.SetName);
+                Request.Add("nodeId", this.nodeId);
+                Request.Add("name", _Name);
+
+                string RequestPL = JsonConvert.SerializeObject(Request);
+                Driver.Client.Send(RequestPL);
+            }
+        }
+
+        private string _Location;
+        [Newtonsoft.Json.JsonProperty]
+        public string location
+        {
+            get
+            {
+                return _Location;
+            }
+            set
+            {
+                _Location = value;
+                Guid ID = Guid.NewGuid();
+
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", ID);
+                Request.Add("command", Enums.Commands.SetLocation);
+                Request.Add("nodeId", this.nodeId);
+                Request.Add("location", _Location);
+
+                string RequestPL = JsonConvert.SerializeObject(Request);
+                Driver.Client.Send(RequestPL);
+            }
+        }
     }
 }

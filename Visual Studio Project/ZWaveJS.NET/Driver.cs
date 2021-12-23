@@ -13,7 +13,7 @@ namespace ZWaveJS.NET
         internal static WebsocketClient Client;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         private Dictionary<string, Action<JObject>> EventMap;
-        private const int SchemaVersionID = 13;
+        private const int SchemaVersionID = 14;
         internal static CustomBooleanJsonConverter BoolConverter;
 
         private bool Inited = false;
