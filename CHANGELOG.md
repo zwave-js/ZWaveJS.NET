@@ -1,4 +1,4 @@
-## v1.0.0 (TBC)
+## v1.0.0 (Pending)
 
  - ZWave JS Driver Version: 8.9.1
 
@@ -15,9 +15,15 @@
      Driver.Controller.Nodes.Get(4).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
      Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
      ```  
+ - New Features
+   - Added ability to set a nodes name
+   - Added ability to set a nodes location
+   - Added ability to set a flag on a node to keep it awake.
+   - Added the zwave-js **getValue** method
 
  - Changes
    - Bump ZWave JS to 8.9.1
+   - Sychonise **isHealNetworkActive**
 
 
 ## v0.1.0
