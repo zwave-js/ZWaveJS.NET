@@ -22,6 +22,9 @@
    - Added ability to set a flag on a node to keep it awake.
    - Added the zwave-js **getValue** method
 
+ - Fixes
+   - Fix property setter loop 
+
  - Changes
    - Bump ZWave JS Driver
    - Bump ZWave JS Server
