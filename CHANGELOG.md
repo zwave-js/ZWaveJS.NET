@@ -2,7 +2,7 @@
 
  - Versions
    - ZWave JS Driver Version: 8.9.1
-   - ZWave JS Server Version: 1.14.0
+   - ZWave JS Server Version: 1.14.0 (Schema Version 14)
 
  - Breaking Changes
    - **endpoints** object is no longer accessible on the **ZWaveNode** class, instead, they are acessed via  
@@ -37,6 +37,6 @@
 
  - Versions
    - ZWave JS Driver Version: 8.8.3
-   - ZWave JS Server Version: 1.13.0
+   - ZWave JS Server Version: 1.13.0 (Scheme Version 13)
 
  - Initial Release
