@@ -71,9 +71,10 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
  - [ ] Node
    - [x] Node Info
-   - [ ] Set name & location
+   - [x] Set name & location
    - [x] Updating Values
    - [x] Polling Values
+   - [x] Fetching Value
    - [x] CCAPI Invoke (and its endpoints)
    - [x] Obtain Value IDs
    - [x] Obtain Value Meta Data
@@ -86,7 +87,6 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [ ] Update Firmware
    - [ ] Update Firmware Progress Event Subscription
    - [ ] Association Management
-   - [ ] Fetching Values (after initial data dump) - awaiting downstream implementation
   
   ## Brief Example
 ```c#
