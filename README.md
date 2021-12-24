@@ -18,7 +18,7 @@ Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, stri
 The library can operate in 2 ways: Client or Self Hosted.  
 
 **Client**  
-The library will connect to an already running instance of [zwave-js-server](https://github.com/zwave-js/zwave-js-server).
+The library will connect to an already running instance of [zwave-js-server](https://github.com/zwave-js/zwave-js-server). (Schema Version >= 14)
 
 **Self Hosted**  
 The library will host its own zwave-js instance.  
