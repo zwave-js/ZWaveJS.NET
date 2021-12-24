@@ -1,6 +1,7 @@
 ## v1.0.0 (Pending)
 
  - ZWave JS Driver Version: 8.9.1
+ - ZWave JS Server Version: 1.14.0
 
  - Breaking Changes
    - **endpoints** object is no longer accessible on the **ZWaveNode** class, and instead, they are acessed via **ZWaveNode.GetEndpoint(int Index)**
@@ -22,12 +23,14 @@
    - Added the zwave-js **getValue** method
 
  - Changes
-   - Bump ZWave JS to 8.9.1
+   - Bump ZWave JS Driver
+   - Bump ZWave JS Server
    - Synchronise **isHealNetworkActive**
 
 
 ## v0.1.0
 
  - ZWave JS Driver Version: 8.8.3
+ - ZWave JS Server Version: 1.13.0
 
  - Initial Release
