@@ -110,6 +110,7 @@ namespace ZWaveJS.NET
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.GetValue);
+            Request.Add("valueId", ValueID);
             Request.Add("nodeId", this.nodeId);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
@@ -245,6 +246,9 @@ namespace ZWaveJS.NET
         }
 
         [Newtonsoft.Json.JsonProperty]
+        internal Endpoint[] endpoints { get; set; }
+
+        [Newtonsoft.Json.JsonProperty]
         public int nodeId { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int index { get; internal set; }
@@ -279,8 +283,6 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int interviewAttempts { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        internal Endpoint[] endpoints { get; set; }
-        [Newtonsoft.Json.JsonProperty]
         public object isFrequentListening { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public long maxDataRate { get; internal set; }
@@ -310,6 +312,30 @@ namespace ZWaveJS.NET
         public int highestSecurityClass { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public ValueDump[] values { get; internal set; }
+
+        private bool _KeepAwake;
+        [Newtonsoft.Json.JsonProperty]
+        public bool keepAwake
+        {
+            get
+            {
+                return _KeepAwake;
+            }
+            set
+            {
+                _KeepAwake = value;
+                Guid ID = Guid.NewGuid();
+
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", ID);
+                Request.Add("command", Enums.Commands.KeepNodeAwake);
+                Request.Add("nodeId", this.nodeId);
+                Request.Add("keepAwake", _KeepAwake);
+
+                string RequestPL = JsonConvert.SerializeObject(Request);
+                Driver.Client.Send(RequestPL);
+            }
+        }
 
         private string _Name;
         [Newtonsoft.Json.JsonProperty]
