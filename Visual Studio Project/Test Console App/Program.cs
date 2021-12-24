@@ -9,6 +9,11 @@ namespace Test_Console_App
         static Driver D;
         static void Main(string[] args)
         {
+
+        }
+
+        private static void D_DriverReady()
+        {
            
         }
     }

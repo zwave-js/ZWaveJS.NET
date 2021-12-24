@@ -104,7 +104,7 @@ namespace ZWaveJS.NET
             TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<JObject>("value"));
+                Result.SetResult(JO.Value<JObject>("result"));
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -324,16 +324,19 @@ namespace ZWaveJS.NET
             set
             {
                 _KeepAwake = value;
-                Guid ID = Guid.NewGuid();
+                if (Driver.Inited)
+                {
+                    Guid ID = Guid.NewGuid();
 
-                Dictionary<string, object> Request = new Dictionary<string, object>();
-                Request.Add("messageId", ID);
-                Request.Add("command", Enums.Commands.KeepNodeAwake);
-                Request.Add("nodeId", this.nodeId);
-                Request.Add("keepAwake", _KeepAwake);
+                    Dictionary<string, object> Request = new Dictionary<string, object>();
+                    Request.Add("messageId", ID);
+                    Request.Add("command", Enums.Commands.KeepNodeAwake);
+                    Request.Add("nodeId", this.nodeId);
+                    Request.Add("keepAwake", _KeepAwake);
 
-                string RequestPL = JsonConvert.SerializeObject(Request);
-                Driver.Client.Send(RequestPL);
+                    string RequestPL = JsonConvert.SerializeObject(Request);
+                    Driver.Client.Send(RequestPL);
+                }
             }
         }
 
@@ -347,17 +350,21 @@ namespace ZWaveJS.NET
             }
             set
             {
-                _Name = value;
-                Guid ID = Guid.NewGuid();
+                if (Driver.Inited)
+                {
+                    _Name = value;
+                    Guid ID = Guid.NewGuid();
 
-                Dictionary<string, object> Request = new Dictionary<string, object>();
-                Request.Add("messageId", ID);
-                Request.Add("command", Enums.Commands.SetName);
-                Request.Add("nodeId", this.nodeId);
-                Request.Add("name", _Name);
+                    Dictionary<string, object> Request = new Dictionary<string, object>();
+                    Request.Add("messageId", ID);
+                    Request.Add("command", Enums.Commands.SetName);
+                    Request.Add("nodeId", this.nodeId);
+                    Request.Add("name", _Name);
 
-                string RequestPL = JsonConvert.SerializeObject(Request);
-                Driver.Client.Send(RequestPL);
+                    string RequestPL = JsonConvert.SerializeObject(Request);
+                    Driver.Client.Send(RequestPL);
+                }
+              
             }
         }
 
@@ -371,17 +378,20 @@ namespace ZWaveJS.NET
             }
             set
             {
-                _Location = value;
-                Guid ID = Guid.NewGuid();
+                if (Driver.Inited)
+                {
+                    _Location = value;
+                    Guid ID = Guid.NewGuid();
 
-                Dictionary<string, object> Request = new Dictionary<string, object>();
-                Request.Add("messageId", ID);
-                Request.Add("command", Enums.Commands.SetLocation);
-                Request.Add("nodeId", this.nodeId);
-                Request.Add("location", _Location);
+                    Dictionary<string, object> Request = new Dictionary<string, object>();
+                    Request.Add("messageId", ID);
+                    Request.Add("command", Enums.Commands.SetLocation);
+                    Request.Add("nodeId", this.nodeId);
+                    Request.Add("location", _Location);
 
-                string RequestPL = JsonConvert.SerializeObject(Request);
-                Driver.Client.Send(RequestPL);
+                    string RequestPL = JsonConvert.SerializeObject(Request);
+                    Driver.Client.Send(RequestPL);
+                }
             }
         }
     }

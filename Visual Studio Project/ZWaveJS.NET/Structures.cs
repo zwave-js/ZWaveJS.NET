@@ -118,6 +118,7 @@ namespace ZWaveJS.NET
 
     public class ValueID
     {
+        public int commandClass { get; set; }
         public int endpoint { get; set; }
         public object property { get; set; }
         public object propertyKey { get; set; }

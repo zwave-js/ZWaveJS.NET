@@ -16,7 +16,7 @@ namespace ZWaveJS.NET
         private const int SchemaVersionID = 14;
         internal static CustomBooleanJsonConverter BoolConverter;
 
-        private bool Inited = false;
+        internal static bool Inited = false;
 
         private string _ZWaveJSDriverVersion;
         public string ZWaveJSDriverVersion
@@ -24,6 +24,15 @@ namespace ZWaveJS.NET
             get
             {
                 return _ZWaveJSDriverVersion;
+            }
+        }
+
+        private string _ZWaveJSServerVersion;
+        public string ZWaveJSServerVersion
+        {
+            get
+            {
+                return _ZWaveJSServerVersion;
             }
         }
 
@@ -255,14 +264,18 @@ namespace ZWaveJS.NET
         // Proces Message
         private void ProcessMessage(ResponseMessage IncomingMessage)
         {
+
             if (IncomingMessage.MessageType == System.Net.WebSockets.WebSocketMessageType.Text)
             {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    System.Diagnostics.Debug.WriteLine(IncomingMessage.Text);
+                }
+
                 JObject JO = JObject.Parse(IncomingMessage.Text);
 
                 string Type = JO.Value<string>("type");
                 Guid MessageID = JO.ContainsKey("messageId") ? Guid.Parse(JO.Value<string>("messageId")) : Guid.Empty;
-
-                System.Diagnostics.Debug.WriteLine(IncomingMessage.Text);
 
                 if (MessageID != Guid.Empty)
                 {
@@ -278,6 +291,7 @@ namespace ZWaveJS.NET
                 if (Type == "version")
                 {
                     _ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
+                    _ZWaveJSServerVersion = JO.Value<string>("serverVersion");
 
                     Guid CBID = Guid.NewGuid();
                     Callbacks.Add(CBID, SetAPIVersionCB);
@@ -337,9 +351,9 @@ namespace ZWaveJS.NET
                     this.Controller = C;
                     this.Controller.Nodes = new NodesCollection(Nodes);
 
-                    DriverReady?.Invoke();
-
                     Inited = true;
+
+                    DriverReady?.Invoke();
                 }
             }
         }
