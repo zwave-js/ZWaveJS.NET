@@ -5,7 +5,7 @@
    - ZWave JS Server Version: 1.14.0
 
  - Breaking Changes
-   - **endpoints** object is no longer accessible on the **ZWaveNode** class, and instead, they are acessed via **ZWaveNode.GetEndpoint(int Index)**
+   - **endpoints** object is no longer accessible on the **ZWaveNode** class, instead, they are acessed via **ZWaveNode.GetEndpoint(int Index)**
    - **InvokeCCAPI** no longer accepts an **endpoint**, instead **InvokeCCAPI** is now called on the **ZWaveNode** class itself,  
      or an instance of **Endpoint** as obtained by **ZWaveNode.GetEndpoint(int Index)**
 
