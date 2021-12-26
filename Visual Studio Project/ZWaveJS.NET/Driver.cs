@@ -244,9 +244,9 @@ namespace ZWaveJS.NET
 
                 Client.MessageReceived.Subscribe(ProcessMessage);
             }
-            catch (Exception err)
+            catch
             {
-                throw err;
+                throw;
             }
         }
 

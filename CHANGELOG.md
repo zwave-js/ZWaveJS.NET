@@ -1,3 +1,12 @@
+## v1.0.1
+
+ - Versions
+   - ZWave JS Driver Version: 8.9.1
+   - ZWave JS Server Version: 1.14.0 (Schema Version 14)
+
+ - Fixes
+   - LGTM Alerts
+
 ## v1.0.0
 
  - Versions
