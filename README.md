@@ -2,7 +2,8 @@
 
 ![Nuget](https://img.shields.io/static/v1?label=license&message=MIT&color=green)
 ![Nuget](https://img.shields.io/nuget/v/zwavejs.net)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/alerts/)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18&label=C%23%20alerts)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/context:javascript)
 
 
 ZWaveJS.NET is a class library developed in .NET Core 3.1, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
