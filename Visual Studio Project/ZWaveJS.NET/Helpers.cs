@@ -18,10 +18,7 @@ namespace ZWaveJS.NET
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Unix:
-                    if (Directory.Exists("/Applications")
-                        & Directory.Exists("/System")
-                        & Directory.Exists("/Users")
-                        & Directory.Exists("/Volumes"))
+                    if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users"))
                         return Enums.Platform.Mac;
                     else
                         return Enums.Platform.Linux;
@@ -51,12 +48,15 @@ namespace ZWaveJS.NET
                         break;
                 }
 
-                WebClient WC = new WebClient();
-                WC.DownloadFileCompleted += (s, e) =>
+                using (WebClient WC = new WebClient())
                 {
-                    Result.SetResult(true);
-                };
-                WC.DownloadFileAsync(new Uri(URI), "server.psi");
+                    WC.DownloadFileCompleted += (s, e) =>
+                    {
+                        Result.SetResult(true);
+                    };
+                    WC.DownloadFileAsync(new Uri(URI), "server.psi");
+                }
+                   
             }
             else
             {
