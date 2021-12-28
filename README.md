@@ -24,7 +24,7 @@ Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, stri
 The library can operate in 2 ways: Client or Self Hosted.  
 
 **Client**  
-The library will connect to an already running instance of [zwave-js-server](https://github.com/zwave-js/zwave-js-server). (Schema Version >= 14)
+The library will connect to an already running instance of [zwave-js-server](https://github.com/zwave-js/zwave-js-server).  
 
 **Self Hosted**  
 The library will host its own zwave-js instance.  
@@ -71,8 +71,8 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Heal Network
    - [x] Heal Network Progress Event Subscription
    - [x] Heal Node
-   - [ ] Remove Failed Node
-   - [ ] Replace Failed Node
+   - [x] Remove Failed Node
+   - [x] Replace Failed Node
    - [ ] Smart Start
 
  - [ ] Node

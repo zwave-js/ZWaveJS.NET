@@ -13,7 +13,7 @@ namespace ZWaveJS.NET
         internal static WebsocketClient Client;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         private Dictionary<string, Action<JObject>> EventMap;
-        private const int SchemaVersionID = 14;
+        private static int SchemaVersionID = 14;
         internal static CustomBooleanJsonConverter BoolConverter;
 
         internal static bool Inited = false;
@@ -125,6 +125,11 @@ namespace ZWaveJS.NET
 
         private void MapControllerEvents()
         {
+            EventMap.Add("inclusion aborted", (JO) =>
+            {
+                this.Controller.Trigger_InclusionAborted();
+            });
+
             EventMap.Add("inclusion started", (JO) =>
             {
                 bool Secure = JO.SelectToken("event.secure").Value<bool>();
@@ -215,8 +220,13 @@ namespace ZWaveJS.NET
         }
 
         // Client Mode
-        public Driver(Uri Server)
+        public Driver(Uri Server, int SchemaVersion = 0)
         {
+            if(SchemaVersion > 0)
+            {
+                SchemaVersionID = SchemaVersion;
+            }
+
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();

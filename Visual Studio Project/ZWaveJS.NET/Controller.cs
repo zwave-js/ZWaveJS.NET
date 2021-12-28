@@ -10,6 +10,14 @@ namespace ZWaveJS.NET
 
         }
 
+
+        public delegate void InclusionAbortedEvent();
+        public event InclusionAbortedEvent InclusionAborted;
+        internal void Trigger_InclusionAborted()
+        {
+            InclusionAborted?.Invoke();
+        }
+
         public delegate void HealNetworkProgressEvent(Dictionary<string,string> Progress);
         public event HealNetworkProgressEvent HealNetworkProgress;
         internal void Trigger_HealNetworkProgress(Dictionary<string, string> Progress)
@@ -79,6 +87,60 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeAdded(ZWaveNode Node)
         {
             NodeAdded?.Invoke(Node);
+        }
+
+        public Task<bool> ReplaceFailedNode(int NodeID, Enums.InclusionStrategy Strategy)
+        {
+            if (Strategy == Enums.InclusionStrategy.Default || Strategy == Enums.InclusionStrategy.Security_S2)
+            {
+                if (GrantSecurityClasses == null || ValidateDSK == null)
+                {
+                    throw new InvalidOperationException("Events: Controller.GrantSecurityClasses and Controller.ValidateDSK need to be subscribed to.");
+                }
+            }
+
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Options = new Dictionary<string, object>();
+            Options.Add("strategy", (int)Strategy);
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.ReplaceFailedNode);
+            Request.Add("nodeId", NodeID);
+            Request.Add("options", Options);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<bool> RemoveFailedNode(int NodeID)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(true);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.RemoveFailedNode);
+            Request.Add("nodeId", NodeID);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
         }
 
         public Task<bool> HealNode(int NodeID)

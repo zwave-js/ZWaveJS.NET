@@ -36,6 +36,8 @@ namespace ZWaveJS.NET
             public const string SetName = "node.set_name";
             public const string SetLocation = "node.set_location";
             public const string KeepNodeAwake = "node.set_keep_awake";
+            public const string RemoveFailedNode = "controller.remove_failed_node";
+            public const string ReplaceFailedNode = "controller.replace_failed_node";
         }
 
         public enum SecurityClass
