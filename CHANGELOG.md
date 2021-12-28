@@ -8,7 +8,7 @@
    - Added remove failed node method
    - Added replace failed node method
    - Added **inclusion aborted** event handler
-   - Added ability to override the schema on which to connect to a zwave-js-server instance.
+   - Added ability to override the schema on which to connect to a zwave-js-server instance.  
      This allows backwards compatibility with older server versions.
 
  - Fixes
