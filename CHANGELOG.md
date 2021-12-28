@@ -5,14 +5,14 @@
    - ZWave JS Server Version: 1.14.0 (Schema Version 14)
 
  - New Features
-   - Added remove failed node method
-   - Added replace failed node method
+   - Added **RemoveFailedNode** method
+   - Added **ReplaceFailedNode** method
    - Added **inclusion aborted** event handler
    - Added ability to override the schema on which to connect to a zwave-js-server instance.  
      This allows backwards compatibility with older server versions.
 
  - Fixes
-   - Webclient is now correctly disposed after downloading the PSI.
+   - Webclient instance is now correctly disposed, after downloading the PSI.
    - Fixed platform detection logic
    - Fixed throwing exception on server process exit.
 
