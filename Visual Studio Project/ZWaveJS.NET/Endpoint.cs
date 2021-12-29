@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
+
 namespace ZWaveJS.NET
 {
     public class Endpoint
