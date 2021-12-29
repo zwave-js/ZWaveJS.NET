@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Reflection;
 
+
 namespace ZWaveJS.NET
 {
     public class Helpers
