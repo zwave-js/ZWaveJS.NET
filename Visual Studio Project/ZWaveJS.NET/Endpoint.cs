@@ -36,10 +36,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public int nodeId { get; set; }
-        public int index { get; set; }
-        public int installerIcon { get; set; }
-        public int userIcon { get; set; }
-        public DeviceClass deviceClass { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int nodeId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int index { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int installerIcon { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int userIcon { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceClass deviceClass { get; internal set; }
     }
 }

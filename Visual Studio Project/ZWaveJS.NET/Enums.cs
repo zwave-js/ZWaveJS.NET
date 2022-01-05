@@ -40,6 +40,9 @@ namespace ZWaveJS.NET
             public const string ReplaceFailedNode = "controller.replace_failed_node";
             public const string BeginFirmwareUpdate = "node.begin_firmware_update";
             public const string AbortFirmwareUpdate = "node.abort_firmware_update";
+            public const string HasSecurityClass = "node.has_security_class";
+            public const string GetHighestSecurityClass = "node.get_highest_security_class";
+            public const string GetEndpointCount = "node.get_endpoint_count";
         }
 
         public enum SecurityClass

@@ -1,14 +1,25 @@
-## v1.2.0
+## v2.0.0
 
  - Versions
    - ZWave JS Driver Version: 8.10.0
    - ZWave JS Server Version: 1.14.0 (Schema Version 14)
+
+ - Breaking Changes
+   - **values**, **commandClasses**, **index**, **userIcon** and **installerIcon** properties are now removed from the ZWaveNode class 
+   - **nodeId** is now **id** on the ZWaveNode class
+   - **highestSecurityClass** property has been replaced by the correct method of **GetHighestSecurityClass** on the ZWaveNode class
+
+   The updates above are to better align the API with the ZWave JS API and its documentation.
 
  - New Features
    - Added **BeginFirmwareUpdate** method
    - Added **AbortFirmwareUpdate** method
    - Added **FirmwareUpdateProgress** event handler
    - Added **FirmwareUpdateFinished** event handler
+   - Added **Dead** event handler
+   - Added **GetAllEndpoints** method
+   - Added **GetEndpointCount** method
+   - Added **HasSecurityClass** method
 
  - New Features
    - Bump ZWave JS Driver

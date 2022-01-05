@@ -102,6 +102,13 @@ namespace ZWaveJS.NET
                 N.Trigger_Notification(CCID, IJO);
             });
 
+            EventMap.Add("dead", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_NodeDead();
+            });
+
             EventMap.Add("wake up", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
@@ -189,7 +196,7 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
 
                 ZWaveNode NN = new ZWaveNode();
-                NN.nodeId = NID;
+                NN.id = NID;
 
                 this.Controller.Nodes.AddNodeToCollection(NN);
                 this.Controller.Trigger_NodeAdded(NN);
