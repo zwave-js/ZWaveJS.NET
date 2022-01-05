@@ -43,6 +43,32 @@ namespace ZWaveJS.NET
 
         private void MapNodeEvents()
         {
+            EventMap.Add("firmware update finished", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int Status = JO.SelectToken("event.status").Value<int>();
+                int Wait = 0;
+
+                if(JO.SelectToken("event.waitTime") != null)
+                {
+                    Wait = JO.SelectToken("event.waitTime").Value<int>();
+                }
+
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_FirmwareUpdateFinished(Status, Wait);
+                
+            });
+
+
+            EventMap.Add("firmware update progress", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int Sent = JO.SelectToken("event.sentFragments").Value<int>();
+                int Total = JO.SelectToken("event.totalFragments").Value<int>();
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_FirmwareUpdateProgress(Sent, Total);
+            });
+
             EventMap.Add("value updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();

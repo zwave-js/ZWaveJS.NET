@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using System.IO;
 namespace ZWaveJS.NET
 {
     public class ZWaveNode
@@ -11,6 +12,20 @@ namespace ZWaveJS.NET
         internal ZWaveNode()
         {
 
+        }
+
+        public delegate void FirmwareUpdateFinishedEvent(ZWaveNode Node, int Status, int WaitTime);
+        public event FirmwareUpdateFinishedEvent FirmwareUpdateFinished;
+        internal void Trigger_FirmwareUpdateFinished(int Status, int Time)
+        {
+            FirmwareUpdateFinished?.Invoke(this, Status, Time);
+        }
+
+        public delegate void FirmwareUpdateProgressEvent(ZWaveNode Node, int SentFragments, int TotalFragments);
+        public event FirmwareUpdateProgressEvent FirmwareUpdateProgress;
+        internal void Trigger_FirmwareUpdateProgress(int SentFragments, int TotalFragments)
+        {
+            FirmwareUpdateProgress?.Invoke(this, SentFragments, TotalFragments);
         }
 
         public delegate void ValueNotificationEvent(ZWaveNode Node, JObject Args);
@@ -74,6 +89,55 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeInterviewFailed(JObject Args)
         {
             NodeInterviewFailed?.Invoke(this, Args);
+        }
+
+
+        public Task<bool> AbortFirmwareUpdate()
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(true);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.AbortFirmwareUpdate);
+            Request.Add("nodeId", this.nodeId);
+          
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<bool> BeginFirmwareUpdate(string FileName)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(true);
+            });
+
+            FileInfo FI = new FileInfo(FileName);
+            byte[] FileData = File.ReadAllBytes(FileName);
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.BeginFirmwareUpdate);
+            Request.Add("nodeId", this.nodeId);
+            Request.Add("firmwareFile", FileData);
+            Request.Add("firmwareFilename", FI.Name);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
         }
 
         public Task<bool> RefreshInfo()

@@ -38,6 +38,8 @@ namespace ZWaveJS.NET
             public const string KeepNodeAwake = "node.set_keep_awake";
             public const string RemoveFailedNode = "controller.remove_failed_node";
             public const string ReplaceFailedNode = "controller.replace_failed_node";
+            public const string BeginFirmwareUpdate = "node.begin_firmware_update";
+            public const string AbortFirmwareUpdate = "node.abort_firmware_update";
         }
 
         public enum SecurityClass
