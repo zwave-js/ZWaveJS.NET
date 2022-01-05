@@ -20,6 +20,7 @@
    - Added **GetAllEndpoints** method
    - Added **GetEndpointCount** method
    - Added **HasSecurityClass** method
+   - Added **StatisticsUpdated** event handler for both the controller and nodes
 
  - New Features
    - Bump ZWave JS Driver
