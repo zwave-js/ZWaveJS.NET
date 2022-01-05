@@ -1,3 +1,18 @@
+## v1.2.0
+
+ - Versions
+   - ZWave JS Driver Version: 8.10.0
+   - ZWave JS Server Version: 1.14.0 (Schema Version 14)
+
+ - New Features
+   - Added **BeginFirmwareUpdate** method
+   - Added **AbortFirmwareUpdate** method
+   - Added **FirmwareUpdateProgress** event handler
+   - Added **FirmwareUpdateFinished** event handler
+
+ - New Features
+   - Bump ZWave JS Driver
+
 ## v1.1.0
 
  - Versions

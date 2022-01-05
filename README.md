@@ -91,8 +91,8 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Value Notification Event Subscription
    - [x] Interview Node
    - [x] Interview Events (Started, Completed, Failed)
-   - [ ] Update Firmware
-   - [ ] Update Firmware Progress Event Subscription
+   - [x] Update Firmware
+   - [x] Update Firmware Progress Event Subscription
    - [ ] Association Management
   
   ## Brief Example
