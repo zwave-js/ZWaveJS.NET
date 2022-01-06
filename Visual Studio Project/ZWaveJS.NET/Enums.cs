@@ -27,6 +27,7 @@ namespace ZWaveJS.NET
             public const string BeginExclusion = "controller.begin_exclusion";
             public const string StopExclusion = "controller.stop_exclusion";
             public const string InvokeCCAPI = "endpoint.invoke_cc_api";
+            public const string SupportsCCAPI = "endpoint.supports_cc_api";
             public const string GrantSecurityClasses = "controller.grant_security_classes";
             public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
             public const string RefreshInfo = "node.refresh_info";

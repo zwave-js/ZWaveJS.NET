@@ -12,7 +12,8 @@ namespace ZWaveJS.NET
     {
         internal static WebsocketClient Client;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
-        private Dictionary<string, Action<JObject>> EventMap;
+        private Dictionary<string, Action<JObject>> NodeEventMap;
+        private Dictionary<string, Action<JObject>> ControllerEventMap;
         private static int SchemaVersionID = 14;
         internal static CustomBooleanJsonConverter BoolConverter;
 
@@ -43,7 +44,7 @@ namespace ZWaveJS.NET
 
         private void MapNodeEvents()
         {
-            EventMap.Add("firmware update finished", (JO) =>
+            NodeEventMap.Add("firmware update finished", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 int Status = JO.SelectToken("event.status").Value<int>();
@@ -60,7 +61,7 @@ namespace ZWaveJS.NET
             });
 
 
-            EventMap.Add("firmware update progress", (JO) =>
+            NodeEventMap.Add("firmware update progress", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 int Sent = JO.SelectToken("event.sentFragments").Value<int>();
@@ -69,7 +70,7 @@ namespace ZWaveJS.NET
                 N.Trigger_FirmwareUpdateProgress(Sent, Total);
             });
 
-            EventMap.Add("value updated", (JO) =>
+            NodeEventMap.Add("value updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 JObject IJO = JO.SelectToken("event.args").Value<JObject>();
@@ -77,7 +78,7 @@ namespace ZWaveJS.NET
                 N.Trigger_ValueUpdated(IJO);
             });
 
-            EventMap.Add("value added", (JO) =>
+            NodeEventMap.Add("value added", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 JObject IJO = JO.SelectToken("event.args").Value<JObject>();
@@ -85,7 +86,7 @@ namespace ZWaveJS.NET
                 N.Trigger_ValueUpdated(IJO);
             });
 
-            EventMap.Add("value notification", (JO) =>
+            NodeEventMap.Add("value notification", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 JObject IJO = JO.SelectToken("event.args").Value<JObject>();
@@ -93,7 +94,7 @@ namespace ZWaveJS.NET
                 N.Trigger_ValueNotification(IJO);
             });
 
-            EventMap.Add("notification", (JO) =>
+            NodeEventMap.Add("notification", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 int CCID = JO.SelectToken("event.ccId").Value<int>();
@@ -102,28 +103,28 @@ namespace ZWaveJS.NET
                 N.Trigger_Notification(CCID, IJO);
             });
 
-            EventMap.Add("dead", (JO) =>
+            NodeEventMap.Add("dead", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeDead();
             });
 
-            EventMap.Add("wake up", (JO) =>
+            NodeEventMap.Add("wake up", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeAwake();
             });
 
-            EventMap.Add("sleep", (JO) =>
+            NodeEventMap.Add("sleep", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeAsleep();
             });
 
-            EventMap.Add("ready", (JO) =>
+            NodeEventMap.Add("ready", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 ZWaveNode NNI = JsonConvert.DeserializeObject<ZWaveNode>(JO.SelectToken("event.nodeState").ToString());
@@ -133,21 +134,21 @@ namespace ZWaveJS.NET
                 N.Trigger_NodeReady();
             });
 
-            EventMap.Add("interview started", (JO) =>
+            NodeEventMap.Add("interview started", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeInterviewStarted();
             });
 
-            EventMap.Add("interview completed", (JO) =>
+            NodeEventMap.Add("interview completed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeInterviewCompleted();
             });
 
-            EventMap.Add("interview failed", (JO) =>
+            NodeEventMap.Add("interview failed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
                 JObject IJO = JO.SelectToken("event.args").Value<JObject>();
@@ -158,40 +159,40 @@ namespace ZWaveJS.NET
 
         private void MapControllerEvents()
         {
-            EventMap.Add("inclusion aborted", (JO) =>
+            ControllerEventMap.Add("inclusion aborted", (JO) =>
             {
                 this.Controller.Trigger_InclusionAborted();
             });
 
-            EventMap.Add("inclusion started", (JO) =>
+            ControllerEventMap.Add("inclusion started", (JO) =>
             {
                 bool Secure = JO.SelectToken("event.secure").Value<bool>();
                 this.Controller.Trigger_InclusionStarted(Secure);
             });
 
-            EventMap.Add("inclusion stopped", (JO) =>
+            ControllerEventMap.Add("inclusion stopped", (JO) =>
             {
                 this.Controller.Trigger_InclusionStopped();
             });
 
-            EventMap.Add("exclusion started", (JO) =>
+            ControllerEventMap.Add("exclusion started", (JO) =>
             {
                 this.Controller.Trigger_ExclusionStarted();
             });
 
-            EventMap.Add("exclusion stopped", (JO) =>
+            ControllerEventMap.Add("exclusion stopped", (JO) =>
             {
                 this.Controller.Trigger_ExclusionStopped();
             });
 
-            EventMap.Add("node removed", (JO) =>
+            ControllerEventMap.Add("node removed", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
                 this.Controller.Nodes.RemoveNodeFromCollection(NID);
                 this.Controller.Trigger_NodeRemoved(NID);
             });
 
-            EventMap.Add("node added", (JO) =>
+            ControllerEventMap.Add("node added", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
 
@@ -202,7 +203,7 @@ namespace ZWaveJS.NET
                 this.Controller.Trigger_NodeAdded(NN);
             });
 
-            EventMap.Add("grant security classes", (JO) =>
+            ControllerEventMap.Add("grant security classes", (JO) =>
             {
                 Enums.SecurityClass[] RequestedClasses = JsonConvert.DeserializeObject<Enums.SecurityClass[]>(JO.SelectToken("event.requested.securityClasses").ToString());
                 bool CSA = JO.SelectToken("event.requested.clientSideAuth").Value<bool>();
@@ -218,7 +219,7 @@ namespace ZWaveJS.NET
                 Client.Send(RequestPL);
             });
 
-            EventMap.Add("validate dsk and enter pin", (JO) =>
+            ControllerEventMap.Add("validate dsk and enter pin", (JO) =>
             {
                 string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").Value<string>());
 
@@ -231,13 +232,13 @@ namespace ZWaveJS.NET
                 Client.Send(RequestPL);
             });
 
-            EventMap.Add("heal network progress", (JO) =>
+            ControllerEventMap.Add("heal network progress", (JO) =>
             {
                 Dictionary<string, string> Progress = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.progress").ToString());
                 this.Controller.Trigger_HealNetworkProgress(Progress);
             });
 
-            EventMap.Add("heal network done", (JO) =>
+            ControllerEventMap.Add("heal network done", (JO) =>
             {
                 Dictionary<string, string> Result = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.result").ToString());
                 this.Controller.Trigger_HealNetworkDone(Result);
@@ -247,8 +248,10 @@ namespace ZWaveJS.NET
 
         private void MapEvents()
         {
-            EventMap = new Dictionary<string, Action<JObject>>();
+            NodeEventMap = new Dictionary<string, Action<JObject>>();
             MapNodeEvents();
+
+            ControllerEventMap = new Dictionary<string, Action<JObject>>();
             MapControllerEvents();
         }
 
@@ -261,8 +264,8 @@ namespace ZWaveJS.NET
             }
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
-            MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
+            MapEvents();
 
             Client = new WebsocketClient(Server);
             Client.ReconnectTimeout = null;
@@ -318,6 +321,7 @@ namespace ZWaveJS.NET
                 JObject JO = JObject.Parse(IncomingMessage.Text);
 
                 string Type = JO.Value<string>("type");
+                string Source = JO.Value<string>("source");
                 Guid MessageID = JO.ContainsKey("messageId") ? Guid.Parse(JO.Value<string>("messageId")) : Guid.Empty;
 
                 if (MessageID != Guid.Empty)
@@ -353,12 +357,25 @@ namespace ZWaveJS.NET
 
                 if (Type == "event")
                 {
-                    string EE = JO.SelectToken("event.event").Value<string>();
-                    if (EventMap.ContainsKey(EE))
-                    {
-                        EventMap[EE].Invoke(JO);
-                    }
+                    string _Event = JO.SelectToken("event.event").Value<string>();
 
+                    switch (Source)
+                    {
+                        case "node":
+                            if (NodeEventMap.ContainsKey(_Event))
+                            {
+                                NodeEventMap[_Event].Invoke(JO);
+                            }
+                            break;
+
+                        case "controller":
+                            if (ControllerEventMap.ContainsKey(_Event))
+                            {
+                                ControllerEventMap[_Event].Invoke(JO);
+                            }
+                            break;
+
+                    }
                     return;
                 }
             }

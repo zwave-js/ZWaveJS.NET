@@ -285,6 +285,28 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        public Task<bool> SupportsCCAPI(int CommandClass)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.SelectToken("supported").Value<bool>());
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SupportsCCAPI);
+            Request.Add("nodeId", this.id);
+            Request.Add("commandClass", CommandClass);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<JObject> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
@@ -442,6 +464,8 @@ namespace ZWaveJS.NET
         public string label { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int nodeType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public CommandClass[] commandClasses { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
         public int id { get; internal set; }

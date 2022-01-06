@@ -97,6 +97,16 @@ namespace ZWaveJS.NET
         public FirmwareVersion firmwareVersion { get; internal set; }
     }
 
+    public class CommandClass
+    {
+        internal CommandClass() { }
+
+        public int id { get; internal set; }
+        public string name { get; internal set; }
+        public int version { get; internal set; }
+        public bool isSecure { get; internal set; }
+    }
+
     public class FirmwareVersion
     {
         internal FirmwareVersion() { }
