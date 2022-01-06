@@ -335,7 +335,6 @@ namespace ZWaveJS.NET
                 JObject JO = JObject.Parse(IncomingMessage.Text);
 
                 string Type = JO.Value<string>("type");
-                string Source = JO.Value<string>("source");
                 Guid MessageID = JO.ContainsKey("messageId") ? Guid.Parse(JO.Value<string>("messageId")) : Guid.Empty;
 
                 if (MessageID != Guid.Empty)
@@ -371,9 +370,10 @@ namespace ZWaveJS.NET
 
                 if (Type == "event")
                 {
+                    string _Source = JO.SelectToken("event.source").Value<string>();
                     string _Event = JO.SelectToken("event.event").Value<string>();
 
-                    switch (Source)
+                    switch (_Source)
                     {
                         case "node":
                             if (NodeEventMap.ContainsKey(_Event))

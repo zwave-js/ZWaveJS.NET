@@ -101,9 +101,13 @@ namespace ZWaveJS.NET
     {
         internal CommandClass() { }
 
+        [Newtonsoft.Json.JsonProperty]
         public int id { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public string name { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public int version { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public bool isSecure { get; internal set; }
     }
 

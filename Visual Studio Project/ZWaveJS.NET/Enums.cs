@@ -48,10 +48,12 @@ namespace ZWaveJS.NET
 
         public enum SecurityClass
         {
+            
             S2_Unauthenticated,
             S2_Authenticated,
             S2_AccessControl,
-            S0_Legacy = 7
+            S0_Legacy = 7,
+            Unsecured = -1
         }
 
         public enum LogLevel

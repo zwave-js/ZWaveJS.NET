@@ -18,7 +18,7 @@ namespace ZWaveJS.NET
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.SelectToken("supported").Value<bool>());
+                Result.SetResult(JO.SelectToken("result.supported").Value<bool>());
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

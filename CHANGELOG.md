@@ -11,6 +11,9 @@
 
    The updates above are to better align the API with the ZWave JS API and its documentation.
 
+ - Fixes
+   - Node Name and location not being set up on driver init.
+
  - New Features
    - Added methods for firmware updating and associated event handlers
    - Added **Dead** event handler

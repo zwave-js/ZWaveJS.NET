@@ -299,7 +299,7 @@ namespace ZWaveJS.NET
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.SelectToken("supported").Value<bool>());
+                Result.SetResult(JO.SelectToken("result.supported").Value<bool>());
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -331,7 +331,6 @@ namespace ZWaveJS.NET
             Request.Add("commandClass", CommandClass);
             Request.Add("methodName", Method);
             Request.Add("args", Params);
-
 
             string RequestPL = JsonConvert.SerializeObject(Request);
             Driver.Client.Send(RequestPL);
@@ -514,9 +513,9 @@ namespace ZWaveJS.NET
             }
             set
             {
+                _Name = value;
                 if (Driver.Inited)
                 {
-                    _Name = value;
                     Guid ID = Guid.NewGuid();
 
                     Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -542,9 +541,10 @@ namespace ZWaveJS.NET
             }
             set
             {
+                _Location = value;
                 if (Driver.Inited)
                 {
-                    _Location = value;
+                    
                     Guid ID = Guid.NewGuid();
 
                     Dictionary<string, object> Request = new Dictionary<string, object>();
