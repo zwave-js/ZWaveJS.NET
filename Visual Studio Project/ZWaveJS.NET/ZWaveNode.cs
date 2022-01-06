@@ -14,6 +14,13 @@ namespace ZWaveJS.NET
 
         }
 
+        public delegate void StatisticsUpdatedEvent(ZWaveNode Node, NodeStatistics Statistics);
+        public event StatisticsUpdatedEvent StatisticsUpdated;
+        internal void Trigger_StatisticsUpdated(NodeStatistics Statistics)
+        {
+            StatisticsUpdated?.Invoke(this, Statistics);
+        }
+
         public delegate void FirmwareUpdateFinishedEvent(ZWaveNode Node, int Status, int WaitTime);
         public event FirmwareUpdateFinishedEvent FirmwareUpdateFinished;
         internal void Trigger_FirmwareUpdateFinished(int Status, int Time)

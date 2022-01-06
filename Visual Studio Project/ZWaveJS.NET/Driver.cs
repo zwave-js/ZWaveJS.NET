@@ -44,6 +44,14 @@ namespace ZWaveJS.NET
 
         private void MapNodeEvents()
         {
+            NodeEventMap.Add("statistics updated", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                NodeStatistics NS = JsonConvert.DeserializeObject<NodeStatistics>(JO.SelectToken("event.statistics").ToString());
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_StatisticsUpdated(NS);
+            });
+
             NodeEventMap.Add("firmware update finished", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
@@ -159,6 +167,12 @@ namespace ZWaveJS.NET
 
         private void MapControllerEvents()
         {
+            ControllerEventMap.Add("statistics updated", (JO) =>
+            {
+                ControllerStatistics CS = JsonConvert.DeserializeObject<ControllerStatistics>(JO.SelectToken("event.statistics").ToString());
+                this.Controller.Trigger_StatisticsUpdated(CS);
+            });
+
             ControllerEventMap.Add("inclusion aborted", (JO) =>
             {
                 this.Controller.Trigger_InclusionAborted();

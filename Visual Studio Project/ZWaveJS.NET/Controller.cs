@@ -10,6 +10,12 @@ namespace ZWaveJS.NET
 
         }
 
+        public delegate void StatisticsUpdatedEvent(ControllerStatistics Statistics);
+        public event StatisticsUpdatedEvent StatisticsUpdated;
+        internal void Trigger_StatisticsUpdated(ControllerStatistics Statistics)
+        {
+            StatisticsUpdated?.Invoke(Statistics);
+        }
 
         public delegate void InclusionAbortedEvent();
         public event InclusionAbortedEvent InclusionAborted;
