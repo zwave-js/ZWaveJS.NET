@@ -28,92 +28,107 @@ namespace ZWaveJS.NET
         public bool clientSideAuth { get; set; }
     }
 
-    public class ValueDump
-    {
-        internal ValueDump() { }
-
-        public int commandClass { get; set; }
-        public int endpoint { get; set; }
-        public object property { get; set; }
-        public object propertyKey { get; set; }
-        public string commandClassName { get; set; }
-        public string propertyName { get; set; }
-        public string propertyKeyName { get; set; }
-        public int ccVersion { get; set; }
-        public ValueMetaData metadata { get; set; }
-        public object value { get; set; }
-    }
-
     public class ValueMetaData
     {
         internal ValueMetaData() { }
 
-        public string type { get; set; }
-        public bool readable { get; set; }
-        public bool writeable { get; set; }
-        public string label { get; set; }
-        public string description { get; set; }
-        public int @default { get; set; }
-        public int min { get; set; }
-        public int max { get; set; }
-        public Dictionary<string, string> states { get; set; }
-    }
-
-    public class CommandClass
-    {
-        internal CommandClass() { }
-
-        public int id { get; set; }
-        public string name { get; set; }
-        public int version { get; set; }
-        public bool isSecure { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string type { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool readable { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool writeable { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string label { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string description { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int @default { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int min { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int max { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Dictionary<string, string> states { get; internal set; }
     }
 
     public class DeviceClass
     {
         internal DeviceClass() { }
 
-        public DeviceClassType basic { get; set; }
-        public DeviceClassType generic { get; set; }
-        public DeviceClassType specific { get; set; }
-        public int[] mandatorySupportedCCs { get; set; }
-        public int[] mandatoryControlledCCs { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceClassType basic { get; internal  set; }
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceClassType generic { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceClassType specific { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int[] mandatorySupportedCCs { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int[] mandatoryControlledCCs { get; internal set; }
     }
     public class DeviceClassType
     {
         internal DeviceClassType() { }
 
-        public int key { get; set; }
-        public string label { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int key { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string label { get; internal set; }
     }
 
     public class DeviceConfig
     {
         internal DeviceConfig() { }
 
-        public string filename { get; set; }
-        public bool isEmbedded { get; set; }
-        public string manufacturer { get; set; }
-        public string label { get; set; }
-        public string description { get; set; }
-        public Device[] devices { get; set; }
-        public FirmwareVersion firmwareVersion { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string filename { get;internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool isEmbedded { get;internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string manufacturer { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string label { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string description { get; internal  set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Device[] devices { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public FirmwareVersion firmwareVersion { get; internal set; }
+    }
+
+    public class CommandClass
+    {
+        internal CommandClass() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int id { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string name { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int version { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool isSecure { get; internal set; }
     }
 
     public class FirmwareVersion
     {
         internal FirmwareVersion() { }
 
-        public string min { get; set; }
-        public string max { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string min { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string max { get; internal set; }
     }
 
     public class Device
     {
         internal Device() { }
 
-        public int productType { get; set; }
-        public int productId { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productId { get; internal set; }
     }
 
     public class ValueID

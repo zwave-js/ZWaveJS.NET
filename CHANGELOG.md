@@ -1,3 +1,36 @@
+## v2.0.0
+
+ - Versions
+   - ZWave JS Driver Version: 8.10.0
+   - ZWave JS Server Version: 1.14.0 (Schema Version 14)
+
+ - Breaking Changes
+   - **values** and **index** properties are now removed from the ZWaveNode class 
+   - **nodeId** is now **id** on the ZWaveNode class
+   - **highestSecurityClass** property has been replaced with the correct method of **GetHighestSecurityClass** on the ZWaveNode class
+
+   The updates above are to better align the API with the ZWave JS API and its documentation.
+
+ - Fixes
+   - Node Name and location not being set up on driver init.
+   - Node status is now kept in sync.
+
+ - New Features
+   - Added methods for firmware updating and associated event handlers
+   - Added **Dead** event handler
+   - Added **GetAllEndpoints** method
+   - Added **GetEndpointCount** method
+   - Added **HasSecurityClass** method
+   - Added **StatisticsUpdated** event handler for both the controller and nodes
+   - Added **statistics** property to both the controller and its nodes
+   - Added **SupportsCCAPI** method
+
+ - Internal changes
+   - Split Node and Controller event dictionaries to isolate statistic events
+
+ - New Features
+   - Bump ZWave JS Driver
+
 ## v1.1.0
 
  - Versions

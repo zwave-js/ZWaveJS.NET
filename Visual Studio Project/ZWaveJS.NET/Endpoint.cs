@@ -10,6 +10,30 @@ namespace ZWaveJS.NET
     {
         internal Endpoint() { }
 
+
+        public Task<bool> SupportsCCAPI(int CommandClass)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.SelectToken("result.supported").Value<bool>());
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SupportsCCAPI);
+            Request.Add("nodeId", this.nodeId);
+            Request.Add("endpoint", this.index);
+            Request.Add("commandClass", CommandClass);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<JObject> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
@@ -36,10 +60,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public int nodeId { get; set; }
-        public int index { get; set; }
-        public int installerIcon { get; set; }
-        public int userIcon { get; set; }
-        public DeviceClass deviceClass { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int nodeId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int index { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int installerIcon { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int userIcon { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceClass deviceClass { get; internal set; }
     }
 }

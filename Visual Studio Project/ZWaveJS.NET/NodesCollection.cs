@@ -24,7 +24,7 @@ namespace ZWaveJS.NET
 
         internal void ReplaceInformation(ZWaveNode Node)
         {
-            ZWaveNode CN = Get(Node.nodeId);
+            ZWaveNode CN = Get(Node.id);
 
             PropertyInfo[] infos = typeof(ZWaveNode).GetProperties();
             foreach (PropertyInfo info in infos)
@@ -44,7 +44,7 @@ namespace ZWaveJS.NET
 
         public ZWaveNode Get(int Node)
         {
-            return Nodes.FirstOrDefault((N) => N.nodeId.Equals(Node));
+            return Nodes.FirstOrDefault((N) => N.id.Equals(Node));
         }
 
         public ZWaveNode[] AsArray()

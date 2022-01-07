@@ -64,6 +64,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
  - [ ] Controller
    - [x] Controller Info
+   - [x] Network Statistics
    - [x] Inclusion (Unsecured, S0 & S2 Security)
    - [x] S2 Security inclusion Event hooks (needed to guide users in a UI for pairing S2 devices)
    - [x] Exclusion
@@ -78,6 +79,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
  - [ ] Node
    - [x] Node Info
+   - [x] Network Statistics
    - [x] Set name & location
    - [x] Updating Values
    - [x] Polling Values
@@ -85,14 +87,14 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] CCAPI Invoke (and its endpoints)
    - [x] Obtain Value IDs
    - [x] Obtain Value Meta Data
-   - [x] Node Ready, Asleep, Awake Event Subscription
+   - [x] Node Ready, Asleep, Awake, Dead Event Subscription
    - [x] Value Updated Event Subscription
    - [x] Notification Event Subscription
    - [x] Value Notification Event Subscription
    - [x] Interview Node
    - [x] Interview Events (Started, Completed, Failed)
-   - [ ] Update Firmware
-   - [ ] Update Firmware Progress Event Subscription
+   - [x] Update Firmware
+   - [x] Update Firmware Progress Event Subscription
    - [ ] Association Management
   
   ## Brief Example

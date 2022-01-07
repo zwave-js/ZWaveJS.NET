@@ -27,6 +27,7 @@ namespace ZWaveJS.NET
             public const string BeginExclusion = "controller.begin_exclusion";
             public const string StopExclusion = "controller.stop_exclusion";
             public const string InvokeCCAPI = "endpoint.invoke_cc_api";
+            public const string SupportsCCAPI = "endpoint.supports_cc_api";
             public const string GrantSecurityClasses = "controller.grant_security_classes";
             public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
             public const string RefreshInfo = "node.refresh_info";
@@ -38,14 +39,21 @@ namespace ZWaveJS.NET
             public const string KeepNodeAwake = "node.set_keep_awake";
             public const string RemoveFailedNode = "controller.remove_failed_node";
             public const string ReplaceFailedNode = "controller.replace_failed_node";
+            public const string BeginFirmwareUpdate = "node.begin_firmware_update";
+            public const string AbortFirmwareUpdate = "node.abort_firmware_update";
+            public const string HasSecurityClass = "node.has_security_class";
+            public const string GetHighestSecurityClass = "node.get_highest_security_class";
+            public const string GetEndpointCount = "node.get_endpoint_count";
         }
 
         public enum SecurityClass
         {
+            
             S2_Unauthenticated,
             S2_Authenticated,
             S2_AccessControl,
-            S0_Legacy = 7
+            S0_Legacy = 7,
+            Unsecured = -1
         }
 
         public enum LogLevel
