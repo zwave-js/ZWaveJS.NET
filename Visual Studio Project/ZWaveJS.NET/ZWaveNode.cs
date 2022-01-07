@@ -18,6 +18,7 @@ namespace ZWaveJS.NET
         public event StatisticsUpdatedEvent StatisticsUpdated;
         internal void Trigger_StatisticsUpdated(NodeStatistics Statistics)
         {
+            this.statistics = Statistics;
             StatisticsUpdated?.Invoke(this, Statistics);
         }
 
@@ -60,6 +61,7 @@ namespace ZWaveJS.NET
         public event NodeDeadEvent NodeDead;
         internal void Trigger_NodeDead()
         {
+            this.status = Enums.NodeStatus.Dead;
             NodeDead?.Invoke(this);
         }
 
@@ -67,6 +69,7 @@ namespace ZWaveJS.NET
         public event AwakeEvent NodeAwake;
         internal void Trigger_NodeAwake()
         {
+            this.status = Enums.NodeStatus.Awake;
             NodeAwake?.Invoke(this);
         }
 
@@ -74,6 +77,7 @@ namespace ZWaveJS.NET
         public event SleepEvent NodeAsleep;
         internal void Trigger_NodeAsleep()
         {
+            this.status = Enums.NodeStatus.Asleep;
             NodeAsleep?.Invoke(this);
         }
 
@@ -81,6 +85,7 @@ namespace ZWaveJS.NET
         public event NodeReadyEvent NodeReady;
         internal void Trigger_NodeReady()
         {
+            this.ready = true;
             NodeReady?.Invoke(this);
         }
 
@@ -472,6 +477,8 @@ namespace ZWaveJS.NET
         public int nodeType { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public CommandClass[] commandClasses { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public NodeStatistics statistics { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
         public int id { get; internal set; }

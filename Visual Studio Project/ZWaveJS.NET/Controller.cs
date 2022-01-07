@@ -14,6 +14,7 @@ namespace ZWaveJS.NET
         public event StatisticsUpdatedEvent StatisticsUpdated;
         internal void Trigger_StatisticsUpdated(ControllerStatistics Statistics)
         {
+            this.statistics = Statistics;
             StatisticsUpdated?.Invoke(Statistics);
         }
 
@@ -355,6 +356,8 @@ namespace ZWaveJS.NET
         public bool supportsTimers { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public bool isHealNetworkActive { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public ControllerStatistics statistics { get; internal set; }
 
     }
 }

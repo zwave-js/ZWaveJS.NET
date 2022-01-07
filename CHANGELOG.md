@@ -13,6 +13,7 @@
 
  - Fixes
    - Node Name and location not being set up on driver init.
+   - Node status is now kept in sync.
 
  - New Features
    - Added methods for firmware updating and associated event handlers
@@ -21,6 +22,7 @@
    - Added **GetEndpointCount** method
    - Added **HasSecurityClass** method
    - Added **StatisticsUpdated** event handler for both the controller and nodes
+   - Added **statistics** property to both the controller and its nodes
    - Added **SupportsCCAPI** method
 
  - Internal changes
