@@ -1,13 +1,13 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
-    "@zwave-js/server": "1.14.0",
-    "zwave-js": "8.10.0"
+    "@zwave-js/server": "1.14.1",
+    "zwave-js": "8.11.0"
   },
   "devDependencies": {
-    "pkg": "^5.5.1"
+    "pkg": "^5.5.2"
   },
   "scripts": {
     "build": "pkg . --compress GZip -t host"
