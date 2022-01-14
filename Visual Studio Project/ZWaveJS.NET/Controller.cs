@@ -96,6 +96,46 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node);
         }
 
+        public Task<bool> restoreNVM(byte[] NVMData)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(true);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.RestoreNVM);
+            Request.Add("nvmData", Convert.ToBase64String(NVMData));
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<byte[]> backupNVMRaw()
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<byte[]> Result = new TaskCompletionSource<byte[]>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                string B64 = JO.SelectToken("result.nvmData").ToString();
+                Result.SetResult(Convert.FromBase64String(B64));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.BackUpNVM);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<bool> ReplaceFailedNode(int NodeID, Enums.InclusionStrategy Strategy)
         {
             if (Strategy == Enums.InclusionStrategy.Default || Strategy == Enums.InclusionStrategy.Security_S2)

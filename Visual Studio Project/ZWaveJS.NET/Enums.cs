@@ -44,6 +44,8 @@ namespace ZWaveJS.NET
             public const string HasSecurityClass = "node.has_security_class";
             public const string GetHighestSecurityClass = "node.get_highest_security_class";
             public const string GetEndpointCount = "node.get_endpoint_count";
+            public const string BackUpNVM = "controller.backup_nvm_raw";
+            public const string RestoreNVM = "controller.restore_nvm";
         }
 
         public enum SecurityClass
