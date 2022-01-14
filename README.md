@@ -64,6 +64,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
  - [ ] Controller
    - [x] Controller Info
+   - [ ] NVM Restore/Backup
    - [x] Network Statistics
    - [x] Inclusion (Unsecured, S0 & S2 Security)
    - [x] S2 Security inclusion Event hooks (needed to guide users in a UI for pairing S2 devices)
@@ -79,6 +80,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
  - [ ] Node
    - [x] Node Info
+   - [ ] Health Checks
    - [x] Network Statistics
    - [x] Set name & location
    - [x] Updating Values
