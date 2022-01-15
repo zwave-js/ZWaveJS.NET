@@ -147,4 +147,59 @@ namespace ZWaveJS.NET
         public string transitionDuration { get; set; }
         public int volume { get; set; }
     }
+
+    public class FailedInterviewInfo
+    {
+        internal FailedInterviewInfo() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string errorMessage { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool isFinal { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int attempt { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int maxAttempts { get; internal set; }
+
+    }
+
+    public class LifelineHealthCheckSummary
+    {
+        internal LifelineHealthCheckSummary() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public  LifelineHealthCheckResult[] results { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int rating { get; internal set; }
+       
+    }
+
+    public class LifelineHealthCheckResult
+    {
+        internal LifelineHealthCheckResult() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int routeChanges { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int latency { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int numNeighbors { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int failedPingsNode { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int minPowerlevel { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int failedPingsController { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int snrMargin { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int rating { get; internal set; }
+
+
+
+    }
+
+
+
+
 }

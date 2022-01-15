@@ -46,6 +46,7 @@ namespace ZWaveJS.NET
             public const string GetEndpointCount = "node.get_endpoint_count";
             public const string BackUpNVM = "controller.backup_nvm_raw";
             public const string RestoreNVM = "controller.restore_nvm";
+            public const string CheckLifelineHealth = "node.check_lifeline_health";
         }
 
         public enum SecurityClass

@@ -1,3 +1,17 @@
+## v3.0.0
+
+ - Versions
+   - ZWave JS Driver Version: 8.11.0
+   - ZWave JS Server Version: 1.14.1 (Schema Version 14)
+
+ - Breaking Changes
+   - The **NodeInterviewFailed** event now returns a **FailedInterviewInfo** class and no longer a generic **JObject** instance
+
+ - New Features
+   - Added **BackupNVMRaw** method and associated event handlers
+   - Added **RestoreNVM** method and associated event handlers
+   - Added **CheckLifelineHealth** method and associated event handlers for ZWaveNode instances.
+
 ## v2.0.0
 
  - Versions

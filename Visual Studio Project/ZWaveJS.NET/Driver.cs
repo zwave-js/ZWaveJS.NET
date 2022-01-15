@@ -44,6 +44,17 @@ namespace ZWaveJS.NET
 
         private void MapNodeEvents()
         {
+            NodeEventMap.Add("check lifeline health progress", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int Round = JO.SelectToken("event.round").Value<int>();
+                int Total = JO.SelectToken("event.totalRounds").Value<int>();
+                int LastRating = JO.SelectToken("event.lastRating").Value<int>();
+
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_LifelineHealthCheckProgress(Round, Total, LastRating);
+            });
+
             NodeEventMap.Add("statistics updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
@@ -159,14 +170,36 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("interview failed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
+                FailedInterviewInfo FII = JsonConvert.DeserializeObject<FailedInterviewInfo>(JO.SelectToken("event.args").ToString());
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeInterviewFailed(IJO);
+                N.Trigger_NodeInterviewFailed(FII);
             });
         }
 
         private void MapControllerEvents()
         {
+            ControllerEventMap.Add("nvm backup progress", (JO) =>
+            {
+                int Read = JO.SelectToken("event.bytesRead").Value<int>();
+                int Total = JO.SelectToken("event.total").Value<int>();
+                this.Controller.Trigger_BackupNVMProgress(Read, Total);
+            });
+
+            ControllerEventMap.Add("nvm convert progress", (JO) =>
+            {
+                int Read = JO.SelectToken("event.bytesRead").Value<int>();
+                int Total = JO.SelectToken("event.total").Value<int>();
+                this.Controller.Trigger_ConvertRestoreNVMProgress(Read, Total);
+            });
+
+            ControllerEventMap.Add("nvm restore progress", (JO) =>
+            {
+                int Written = JO.SelectToken("event.bytesWritten").Value<int>();
+                int Total = JO.SelectToken("event.total").Value<int>();
+                this.Controller.Trigger_RestoreNVMProgressSub(Written, Total);
+            });
+
+
             ControllerEventMap.Add("statistics updated", (JO) =>
             {
                 ControllerStatistics CS = JsonConvert.DeserializeObject<ControllerStatistics>(JO.SelectToken("event.statistics").ToString());
@@ -240,7 +273,7 @@ namespace ZWaveJS.NET
                 Dictionary<string, object> Request = new Dictionary<string, object>();
                 Request.Add("messageId", Guid.NewGuid().ToString());
                 Request.Add("command", Enums.Commands.ValidateDSK);
-                Request.Add("pin", DSK); ;
+                Request.Add("pin", DSK);
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
                 Client.Send(RequestPL);

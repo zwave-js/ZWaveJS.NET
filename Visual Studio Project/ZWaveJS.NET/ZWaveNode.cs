@@ -14,6 +14,13 @@ namespace ZWaveJS.NET
 
         }
 
+        public delegate void LifelineHealthCheckProgress(int Round, int Total, int LastRating);
+        private LifelineHealthCheckProgress LifelineHealthCheckProgressSub;
+        internal void Trigger_LifelineHealthCheckProgress(int Round, int Total, int LastRating)
+        {
+            LifelineHealthCheckProgressSub?.Invoke(Round, Total, LastRating);
+        }
+
         public delegate void StatisticsUpdatedEvent(ZWaveNode Node, NodeStatistics Statistics);
         public event StatisticsUpdatedEvent StatisticsUpdated;
         internal void Trigger_StatisticsUpdated(NodeStatistics Statistics)
@@ -103,11 +110,37 @@ namespace ZWaveJS.NET
             NodeInterviewCompleted?.Invoke(this);
         }
 
-        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, JObject Args);
+        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, FailedInterviewInfo Info);
         public event NodeInterviewFailedEvent NodeInterviewFailed;
-        internal void Trigger_NodeInterviewFailed(JObject Args)
+        internal void Trigger_NodeInterviewFailed(FailedInterviewInfo Info)
         {
-            NodeInterviewFailed?.Invoke(this, Args);
+            NodeInterviewFailed?.Invoke(this, Info);
+        }
+
+        public Task<LifelineHealthCheckSummary> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress= null)
+        {
+            LifelineHealthCheckProgressSub = OnProgress;
+
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<LifelineHealthCheckSummary> Result = new TaskCompletionSource<LifelineHealthCheckSummary>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                LifelineHealthCheckSummary LLHCS =  JsonConvert.DeserializeObject<LifelineHealthCheckSummary>(JO.SelectToken("result.summary").ToString());
+                Result.SetResult(LLHCS);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.CheckLifelineHealth);
+            Request.Add("nodeId", this.id);
+            Request.Add("rounds", Rounds);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
         }
 
 

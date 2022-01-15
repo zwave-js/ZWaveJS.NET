@@ -10,6 +10,27 @@ namespace ZWaveJS.NET
 
         }
 
+        public delegate void BackupNVMProgress(int BytesRead, int TotalBytes);
+        private  BackupNVMProgress BackupNVMProgressSub;
+        internal void Trigger_BackupNVMProgress(int BytesRead, int TotalBytes)
+        {
+            BackupNVMProgressSub?.Invoke(BytesRead, TotalBytes);
+        }
+
+        public delegate void ConvertRestoreNVMProgress(int BytesRead, int TotalBytes);
+        private ConvertRestoreNVMProgress ConvertRestoreNVMProgressSub;
+        internal void Trigger_ConvertRestoreNVMProgress(int BytesRead, int TotalBytes)
+        {
+            ConvertRestoreNVMProgressSub?.Invoke(BytesRead, TotalBytes);
+        }
+
+        public delegate void RestoreNVMProgress(int BytesWritten, int TotalBytes);
+        private RestoreNVMProgress RestoreNVMProgressSub;
+        internal void Trigger_RestoreNVMProgressSub(int BytesWritten, int TotalBytes)
+        {
+            RestoreNVMProgressSub?.Invoke(BytesWritten, TotalBytes);
+        }
+
         public delegate void StatisticsUpdatedEvent(ControllerStatistics Statistics);
         public event StatisticsUpdatedEvent StatisticsUpdated;
         internal void Trigger_StatisticsUpdated(ControllerStatistics Statistics)
@@ -96,8 +117,11 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node);
         }
 
-        public Task<bool> restoreNVM(byte[] NVMData)
+        public Task<bool> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress OnConvertProgress = null, RestoreNVMProgress OnRestoreProgress = null)
         {
+            ConvertRestoreNVMProgressSub = OnConvertProgress;
+            RestoreNVMProgressSub = OnRestoreProgress;
+
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             Driver.Callbacks.Add(ID, (JO) =>
@@ -116,8 +140,10 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<byte[]> backupNVMRaw()
+        public Task<byte[]> BackupNVMRaw(BackupNVMProgress OnProgress = null)
         {
+            BackupNVMProgressSub = OnProgress;
+
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<byte[]> Result = new TaskCompletionSource<byte[]>();
             Driver.Callbacks.Add(ID, (JO) =>
