@@ -110,14 +110,14 @@ namespace ZWaveJS.NET
             NodeInterviewCompleted?.Invoke(this);
         }
 
-        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, NodeInterviewFailedEventArgs Info);
+        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, NodeInterviewFailedEventArgs Args);
         public event NodeInterviewFailedEvent NodeInterviewFailed;
-        internal void Trigger_NodeInterviewFailed(NodeInterviewFailedEventArgs Info)
+        internal void Trigger_NodeInterviewFailed(NodeInterviewFailedEventArgs Args)
         {
-            NodeInterviewFailed?.Invoke(this, Info);
+            NodeInterviewFailed?.Invoke(this, Args);
         }
 
-        public Task<LifelineHealthCheckSummary> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress= null)
+        public Task<LifelineHealthCheckSummary> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
         {
             LifelineHealthCheckProgressSub = OnProgress;
 

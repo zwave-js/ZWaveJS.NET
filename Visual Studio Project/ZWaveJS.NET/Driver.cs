@@ -254,9 +254,6 @@ namespace ZWaveJS.NET
 
             ControllerEventMap.Add("grant security classes", (JO) =>
             {
-                Enums.SecurityClass[] RequestedClasses = JsonConvert.DeserializeObject<Enums.SecurityClass[]>(JO.SelectToken("event.requested.securityClasses").ToString());
-                bool CSA = JO.SelectToken("event.requested.clientSideAuth").Value<bool>();
-
                 InclusionGrant RIG = JsonConvert.DeserializeObject<InclusionGrant>(JO.SelectToken("event.requested").ToString());
                 InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
 
