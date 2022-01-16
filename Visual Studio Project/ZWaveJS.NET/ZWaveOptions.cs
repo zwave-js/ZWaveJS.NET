@@ -14,9 +14,13 @@ namespace ZWaveJS.NET
             this.logConfig.level = Enums.LogLevel.Debug;
             this.logConfig.filename = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js.log");
 
+            this.interview = new CFGInterview();
+            this.interview.queryAllUserCodes = false;
+
             this.storage = new CFGStorage();
             this.storage.throttle = "normal";
             this.storage.cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js-cache");
+
             this.enableSoftReset = false;
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;

@@ -170,7 +170,7 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("interview failed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                FailedInterviewInfo FII = JsonConvert.DeserializeObject<FailedInterviewInfo>(JO.SelectToken("event.args").ToString());
+                NodeInterviewFailedEventArgs FII = JsonConvert.DeserializeObject<NodeInterviewFailedEventArgs>(JO.SelectToken("event.args").ToString());
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_NodeInterviewFailed(FII);
             });
@@ -198,7 +198,6 @@ namespace ZWaveJS.NET
                 int Total = JO.SelectToken("event.total").Value<int>();
                 this.Controller.Trigger_RestoreNVMProgressSub(Written, Total);
             });
-
 
             ControllerEventMap.Add("statistics updated", (JO) =>
             {
@@ -235,19 +234,22 @@ namespace ZWaveJS.NET
             ControllerEventMap.Add("node removed", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                this.Controller.Trigger_NodeRemoved(N);
+
                 this.Controller.Nodes.RemoveNodeFromCollection(NID);
-                this.Controller.Trigger_NodeRemoved(NID);
             });
 
             ControllerEventMap.Add("node added", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
+                InclusionResult IR = JsonConvert.DeserializeObject<InclusionResult>(JO.SelectToken("event.result").ToString());
 
                 ZWaveNode NN = new ZWaveNode();
                 NN.id = NID;
 
                 this.Controller.Nodes.AddNodeToCollection(NN);
-                this.Controller.Trigger_NodeAdded(NN);
+                this.Controller.Trigger_NodeAdded(NN,IR);
             });
 
             ControllerEventMap.Add("grant security classes", (JO) =>
@@ -255,12 +257,13 @@ namespace ZWaveJS.NET
                 Enums.SecurityClass[] RequestedClasses = JsonConvert.DeserializeObject<Enums.SecurityClass[]>(JO.SelectToken("event.requested.securityClasses").ToString());
                 bool CSA = JO.SelectToken("event.requested.clientSideAuth").Value<bool>();
 
-                InclusionGrant GSCs = this.Controller.Trigger_GrantSecurityClasses(RequestedClasses, CSA);
+                InclusionGrant RIG = JsonConvert.DeserializeObject<InclusionGrant>(JO.SelectToken("event.requested").ToString());
+                InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
 
                 Dictionary<string, object> Request = new Dictionary<string, object>();
                 Request.Add("messageId", Guid.NewGuid().ToString());
                 Request.Add("command", Enums.Commands.GrantSecurityClasses);
-                Request.Add("inclusionGrant", GSCs);
+                Request.Add("inclusionGrant", SIG);
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
                 Client.Send(RequestPL);

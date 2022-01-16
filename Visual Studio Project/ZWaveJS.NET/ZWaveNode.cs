@@ -14,11 +14,11 @@ namespace ZWaveJS.NET
 
         }
 
-        public delegate void LifelineHealthCheckProgress(int Round, int Total, int LastRating);
+        public delegate void LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating);
         private LifelineHealthCheckProgress LifelineHealthCheckProgressSub;
-        internal void Trigger_LifelineHealthCheckProgress(int Round, int Total, int LastRating)
+        internal void Trigger_LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating)
         {
-            LifelineHealthCheckProgressSub?.Invoke(Round, Total, LastRating);
+            LifelineHealthCheckProgressSub?.Invoke(Round, TotalRounds, LastRating);
         }
 
         public delegate void StatisticsUpdatedEvent(ZWaveNode Node, NodeStatistics Statistics);
@@ -110,9 +110,9 @@ namespace ZWaveJS.NET
             NodeInterviewCompleted?.Invoke(this);
         }
 
-        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, FailedInterviewInfo Info);
+        public delegate void NodeInterviewFailedEvent(ZWaveNode Node, NodeInterviewFailedEventArgs Info);
         public event NodeInterviewFailedEvent NodeInterviewFailed;
-        internal void Trigger_NodeInterviewFailed(FailedInterviewInfo Info)
+        internal void Trigger_NodeInterviewFailed(NodeInterviewFailedEventArgs Info)
         {
             NodeInterviewFailed?.Invoke(this, Info);
         }
@@ -142,7 +142,6 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-
 
         public Task<bool> AbortFirmwareUpdate()
         {
@@ -235,7 +234,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)
+        public Task<bool> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
 
@@ -307,14 +306,14 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<ValueMetaData> GetValueMetadata(ValueID VID)
+        public Task<ValueMetadata> GetValueMetadata(ValueID VID)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<ValueMetaData> Result = new TaskCompletionSource<ValueMetaData>();
+            TaskCompletionSource<ValueMetadata> Result = new TaskCompletionSource<ValueMetadata>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JsonConvert.DeserializeObject<ValueMetaData>(JO.SelectToken("result").ToString()));
+                Result.SetResult(JsonConvert.DeserializeObject<ValueMetadata>(JO.SelectToken("result").ToString()));
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

@@ -10,25 +10,25 @@ namespace ZWaveJS.NET
 
         }
 
-        public delegate void BackupNVMProgress(int BytesRead, int TotalBytes);
+        public delegate void BackupNVMProgress(int BytesRead, int Total);
         private  BackupNVMProgress BackupNVMProgressSub;
-        internal void Trigger_BackupNVMProgress(int BytesRead, int TotalBytes)
+        internal void Trigger_BackupNVMProgress(int BytesRead, int Total)
         {
-            BackupNVMProgressSub?.Invoke(BytesRead, TotalBytes);
+            BackupNVMProgressSub?.Invoke(BytesRead, Total);
         }
 
-        public delegate void ConvertRestoreNVMProgress(int BytesRead, int TotalBytes);
+        public delegate void ConvertRestoreNVMProgress(int BytesRead, int Total);
         private ConvertRestoreNVMProgress ConvertRestoreNVMProgressSub;
-        internal void Trigger_ConvertRestoreNVMProgress(int BytesRead, int TotalBytes)
+        internal void Trigger_ConvertRestoreNVMProgress(int BytesRead, int Total)
         {
-            ConvertRestoreNVMProgressSub?.Invoke(BytesRead, TotalBytes);
+            ConvertRestoreNVMProgressSub?.Invoke(BytesRead, Total);
         }
 
-        public delegate void RestoreNVMProgress(int BytesWritten, int TotalBytes);
+        public delegate void RestoreNVMProgress(int BytesWritten, int Total);
         private RestoreNVMProgress RestoreNVMProgressSub;
-        internal void Trigger_RestoreNVMProgressSub(int BytesWritten, int TotalBytes)
+        internal void Trigger_RestoreNVMProgressSub(int BytesWritten, int Total)
         {
-            RestoreNVMProgressSub?.Invoke(BytesWritten, TotalBytes);
+            RestoreNVMProgressSub?.Invoke(BytesWritten, Total);
         }
 
         public delegate void StatisticsUpdatedEvent(ControllerStatistics Statistics);
@@ -37,13 +37,6 @@ namespace ZWaveJS.NET
         {
             this.statistics = Statistics;
             StatisticsUpdated?.Invoke(Statistics);
-        }
-
-        public delegate void InclusionAbortedEvent();
-        public event InclusionAbortedEvent InclusionAborted;
-        internal void Trigger_InclusionAborted()
-        {
-            InclusionAborted?.Invoke();
         }
 
         public delegate void HealNetworkProgressEvent(Dictionary<string,string> Progress);
@@ -61,18 +54,22 @@ namespace ZWaveJS.NET
             HealNetworkDone?.Invoke(Result);
         }
 
-        public delegate string ValidateDSKEvent(string PartialDSK);
-        public event ValidateDSKEvent ValidateDSK;
-        internal string Trigger_ValidateDSK(string PartialDSK)
+        private Abort AbortSub;
+        internal void Trigger_InclusionAborted()
         {
-            return ValidateDSK?.Invoke(PartialDSK);
+            AbortSub?.Invoke();
         }
 
-        public delegate InclusionGrant GrantSecurityClassesEvent(Enums.SecurityClass[] SecurityClasses, bool ClientSideAuth);
-        public event GrantSecurityClassesEvent GrantSecurityClasses;
-        internal InclusionGrant Trigger_GrantSecurityClasses(Enums.SecurityClass[] SecurityClasses, bool ClientSideAuth)
+        private ValidateDSKAndEnterPIN ValidateDSKAndEnterPINSub;
+        internal string Trigger_ValidateDSK(string DSK)
         {
-            return GrantSecurityClasses?.Invoke(SecurityClasses, ClientSideAuth);
+            return ValidateDSKAndEnterPINSub?.Invoke(DSK);
+        }
+
+        private GrantSecurityClasses GrantSecurityClassesSub;
+        internal InclusionGrant Trigger_GrantSecurityClasses(InclusionGrant Requested)
+        {
+            return GrantSecurityClassesSub?.Invoke(Requested);
         }
 
         public delegate void InclusionStartedEvent(bool Secure);
@@ -103,24 +100,24 @@ namespace ZWaveJS.NET
             ExclusionStopped?.Invoke();
         }
 
-        public delegate void NodeRemovedEvent(int NodeID);
+        public delegate void NodeRemovedEvent(ZWaveNode Node);
         public event NodeRemovedEvent NodeRemoved;
-        internal void Trigger_NodeRemoved(int NodeID)
+        internal void Trigger_NodeRemoved(ZWaveNode Node)
         {
-            NodeRemoved?.Invoke(NodeID);
+            NodeRemoved?.Invoke(Node);
         }
 
-        public delegate void NodeAddedEvent(ZWaveNode Node);
+        public delegate void NodeAddedEvent(ZWaveNode Node, InclusionResult Result);
         public event NodeAddedEvent NodeAdded;
-        internal void Trigger_NodeAdded(ZWaveNode Node)
+        internal void Trigger_NodeAdded(ZWaveNode Node, InclusionResult Result)
         {
-            NodeAdded?.Invoke(Node);
+            NodeAdded?.Invoke(Node, Result);
         }
 
-        public Task<bool> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress OnConvertProgress = null, RestoreNVMProgress OnRestoreProgress = null)
+        public Task<bool> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress ConvertProgress = null, RestoreNVMProgress RestoreProgress = null)
         {
-            ConvertRestoreNVMProgressSub = OnConvertProgress;
-            RestoreNVMProgressSub = OnRestoreProgress;
+            ConvertRestoreNVMProgressSub = ConvertProgress;
+            RestoreNVMProgressSub = RestoreProgress;
 
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
@@ -162,13 +159,27 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> ReplaceFailedNode(int NodeID, Enums.InclusionStrategy Strategy)
+        public Task<bool> ReplaceFailedNode(int NodeID, InclusionOptions Options)
         {
-            if (Strategy == Enums.InclusionStrategy.Default || Strategy == Enums.InclusionStrategy.Security_S2)
+            ValidateDSKAndEnterPINSub = null;
+            GrantSecurityClassesSub = null;
+            AbortSub = null;
+
+            switch (Options.strategy)
             {
-                if (GrantSecurityClasses == null || ValidateDSK == null)
+                case Enums.InclusionStrategy.Default:
+                case Enums.InclusionStrategy.Security_S2:
+                    ValidateDSKAndEnterPINSub = Options.userCallbacks?.validateDSKAndEnterPIN ?? null;
+                    GrantSecurityClassesSub = Options.userCallbacks?.grantSecurityClasses ?? null;
+                    AbortSub = Options.userCallbacks?.abort ?? null;
+                    break;
+            }
+
+            if(Options.strategy == Enums.InclusionStrategy.Default || Options.strategy == Enums.InclusionStrategy.Security_S2)
+            {
+                if(ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {
-                    throw new InvalidOperationException("Events: Controller.GrantSecurityClasses and Controller.ValidateDSK need to be subscribed to.");
+                    throw new InvalidOperationException("S2 Security require userCallbacks to be provided");
                 }
             }
 
@@ -179,14 +190,14 @@ namespace ZWaveJS.NET
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
-            Dictionary<string, object> Options = new Dictionary<string, object>();
-            Options.Add("strategy", (int)Strategy);
+            Dictionary<string, object> _Options = new Dictionary<string, object>();
+            _Options.Add("strategy", (int)Options.strategy);
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.ReplaceFailedNode);
             Request.Add("nodeId", NodeID);
-            Request.Add("options", Options);
+            Request.Add("options", _Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.Send(RequestPL);
@@ -288,14 +299,29 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> BeginInclusion(Enums.InclusionStrategy Strategy, bool EnforceSecurity = false)
+        public Task<bool> BeginInclusion(InclusionOptions Options)
         {
-            if (Strategy == Enums.InclusionStrategy.Default || Strategy == Enums.InclusionStrategy.Security_S2)
+            ValidateDSKAndEnterPINSub = null;
+            GrantSecurityClassesSub = null;
+            AbortSub = null;
+
+            switch (Options.strategy)
             {
-                if (GrantSecurityClasses == null || ValidateDSK == null)
+                case Enums.InclusionStrategy.Default:
+                case Enums.InclusionStrategy.Security_S2:
+                    ValidateDSKAndEnterPINSub = Options.userCallbacks?.validateDSKAndEnterPIN ?? null;
+                    GrantSecurityClassesSub = Options.userCallbacks?.grantSecurityClasses ?? null;
+                    AbortSub = Options.userCallbacks?.abort ?? null;
+                    break;
+            }
+
+            if (Options.strategy == Enums.InclusionStrategy.Default || Options.strategy == Enums.InclusionStrategy.Security_S2)
+            {
+                if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {
-                    throw new InvalidOperationException("Events: Controller.GrantSecurityClasses and Controller.ValidateDSK need to be subscribed to.");
+                    throw new InvalidOperationException("S2 Security require userCallbacks to be provided");
                 }
+
             }
 
             Guid ID = Guid.NewGuid();
@@ -305,14 +331,14 @@ namespace ZWaveJS.NET
                 Result.SetResult(JO.Value<bool>("success"));
             });
 
-            Dictionary<string, object> Options = new Dictionary<string, object>();
-            Options.Add("strategy", (int)Strategy);
-            Options.Add("forceSecurity", EnforceSecurity);
+            Dictionary<string, object> _Options = new Dictionary<string, object>();
+            _Options.Add("strategy", (int)Options.strategy);
+            _Options.Add("forceSecurity", Options.forceSecurity);
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.BeginInclusion);
-            Request.Add("options", Options);
+            Request.Add("options", _Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.Send(RequestPL);

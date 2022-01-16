@@ -28,9 +28,9 @@ namespace ZWaveJS.NET
         public bool clientSideAuth { get; set; }
     }
 
-    public class ValueMetaData
+    public class ValueMetadata
     {
-        internal ValueMetaData() { }
+        internal ValueMetadata() { }
 
         [Newtonsoft.Json.JsonProperty]
         public string type { get; internal set; }
@@ -67,6 +67,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int[] mandatoryControlledCCs { get; internal set; }
     }
+
     public class DeviceClassType
     {
         internal DeviceClassType() { }
@@ -142,15 +143,15 @@ namespace ZWaveJS.NET
         public string propertyKeyName { get; set; }
     }
 
-    public class SetValueOptions
+    public class SetValueAPIOptions
     {
         public string transitionDuration { get; set; }
         public int volume { get; set; }
     }
 
-    public class FailedInterviewInfo
+    public class NodeInterviewFailedEventArgs
     {
-        internal FailedInterviewInfo() { }
+        internal NodeInterviewFailedEventArgs() { }
 
         [Newtonsoft.Json.JsonProperty]
         public string errorMessage { get; internal set; }
@@ -160,7 +161,6 @@ namespace ZWaveJS.NET
         public int attempt { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int maxAttempts { get; internal set; }
-
     }
 
     public class LifelineHealthCheckSummary
@@ -171,7 +171,6 @@ namespace ZWaveJS.NET
         public  LifelineHealthCheckResult[] results { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int rating { get; internal set; }
-       
     }
 
     public class LifelineHealthCheckResult
@@ -194,12 +193,30 @@ namespace ZWaveJS.NET
         public int snrMargin { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int rating { get; internal set; }
-
-
-
     }
 
+    public class InclusionResult
+    {
+        internal InclusionResult() { }
+        [Newtonsoft.Json.JsonProperty]
+        public bool lowSecurity { get; internal set; }
+    }
 
+    public delegate string ValidateDSKAndEnterPIN(string dsk);
+    public delegate InclusionGrant GrantSecurityClasses(InclusionGrant requested);
+    public delegate void Abort();
 
+    public class InclusionOptions
+    {
+        public Enums.InclusionStrategy strategy { get; set; }
+        public bool forceSecurity { get; set; }
+        public InclusionUserCallbacks userCallbacks { get;  set; }
+    }
 
+    public class InclusionUserCallbacks
+    {
+        public ValidateDSKAndEnterPIN validateDSKAndEnterPIN { get; set; }
+        public GrantSecurityClasses grantSecurityClasses { get; set; }
+        public Abort abort { get; set; }
+    }
 }

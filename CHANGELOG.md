@@ -5,12 +5,18 @@
    - ZWave JS Server Version: 1.14.1 (Schema Version 14)
 
  - Breaking Changes
-   - The **NodeInterviewFailed** event now returns a **FailedInterviewInfo** class and no longer a generic **JObject** instance
+   - The **NodeInterviewFailed** event now returns a **NodeInterviewFailedEventArgs** instance and no longer a generic **JObject** instance
+   - The controller events **ValidateDSK** and **GrantSecurityClasses** have been removed.
+   - **BeginInclusion** and **ReplaceFailedNode** now require an **InclusionOptions** instance (which contains User callbacks)
+   - The **NodeRemoved** event now returns the **ZWaveNode** instance and no longer just it's ID.
+   - The **NodeAdded** event now also returns an instance of **InclusionResult**.
+   - **SetValueOptions** has been renamed to **SetValueAPIOptions**
+   - **ValueMetaData** has been renamed to **ValueMetadata**
 
  - New Features
-   - Added **BackupNVMRaw** method and associated event handlers
-   - Added **RestoreNVM** method and associated event handlers
-   - Added **CheckLifelineHealth** method and associated event handlers for ZWaveNode instances.
+   - Added **BackupNVMRaw** method and associated user callbacks
+   - Added **RestoreNVM** method and associated user callbacks
+   - Added **CheckLifelineHealth** method and associated user callbacks
 
 ## v2.0.0
 
