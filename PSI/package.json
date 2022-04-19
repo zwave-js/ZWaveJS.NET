@@ -13,7 +13,7 @@
     "build": "pkg . --compress GZip -t host"
   },
   "pkg": {
-    "assets": "./node_modules/@serialport/bindings/build/Release/bindings.node",
+    "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
     "outputPath": "dist"
   },
   "packageManager": "yarn@3.1.1"
