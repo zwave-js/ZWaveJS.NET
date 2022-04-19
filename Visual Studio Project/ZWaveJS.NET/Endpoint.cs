@@ -70,5 +70,7 @@ namespace ZWaveJS.NET
         public int userIcon { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public DeviceClass deviceClass { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public CommandClass[] commandClasses { get; internal set; }
     }
 }

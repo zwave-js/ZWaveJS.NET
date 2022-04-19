@@ -14,7 +14,7 @@ namespace ZWaveJS.NET
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
-        private static int SchemaVersionID = 14;
+        private static int SchemaVersionID = 16;
         internal static CustomBooleanJsonConverter BoolConverter;
 
         internal static bool Inited = false;

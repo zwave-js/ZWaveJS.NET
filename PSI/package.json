@@ -3,11 +3,11 @@
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
-    "@zwave-js/server": "1.14.1",
-    "zwave-js": "8.11.2"
+    "@zwave-js/server": "1.16.0",
+    "zwave-js": "9.0.2"
   },
   "devDependencies": {
-    "pkg": "^5.5.2"
+    "pkg": "^5.6.0"
   },
   "scripts": {
     "build": "pkg . --compress GZip -t host"
