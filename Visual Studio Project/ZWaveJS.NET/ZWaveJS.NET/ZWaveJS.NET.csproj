@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Version>3.0.0</Version>
+    <Authors>Marcus Davies</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>ZWave JS</Company>
+    <Description>ZWaveJS.NET is a class library developed in .NET Standard 2.0, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.</Description>
+    <PackageProjectUrl>https://github.com/zwave-js/ZWaveJS.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/zwave-js/ZWaveJS.NET</RepositoryUrl>
+    <Copyright>Copyright © Marcus Davies 2022</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
