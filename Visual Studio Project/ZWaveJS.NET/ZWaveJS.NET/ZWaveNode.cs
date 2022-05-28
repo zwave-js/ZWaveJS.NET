@@ -454,8 +454,13 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+       
+
         [Newtonsoft.Json.JsonProperty]
         internal Endpoint[] endpoints { get; set; }
+
+        [Newtonsoft.Json.JsonProperty]
+        public bool isControllerNode { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty]
         public Enums.NodeStatus status { get; internal set; }
