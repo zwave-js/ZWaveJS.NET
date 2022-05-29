@@ -4,6 +4,7 @@ using System.Text;
 using System.Net.WebSockets;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ZWaveJS.NET
 {
@@ -11,6 +12,7 @@ namespace ZWaveJS.NET
     {
         public delegate void MessageReceived(WebSocketMessageType Type, byte[] Object);
         public event MessageReceived MessageReceivedEvent;
+        private Task RecieveTask;
 
         ClientWebSocket _Socket;
         Uri _Host;
@@ -21,55 +23,50 @@ namespace ZWaveJS.NET
             
         }
 
-        public void Start()
+        public async void Start()
         {
+            Start:
 
-            new System.Threading.Tasks.Task(async () =>
+            try
             {
                 _Socket = new ClientWebSocket();
-
-                while (_Socket.State != WebSocketState.Open)
-                {
-                    try
-                    {
-                      
-                        await _Socket.ConnectAsync(_Host, System.Threading.CancellationToken.None);
-                        Run();
-                    }
-                    catch (Exception Error)
-                    {
-                        System.Threading.Thread.Sleep(1000);
-                        _Socket = new ClientWebSocket();
-                    }
-
-                }
-            }).Start();
-
-        }
-
-        private void Run()
-        {
-            new System.Threading.Tasks.Task(async () =>
+                await _Socket.ConnectAsync(_Host, System.Threading.CancellationToken.None);
+            }
+            catch(Exception Error)
             {
+                _Socket?.Dispose();
+                _Socket = null;
 
-                byte[] Buf = new byte[4096];
-                ArraySegment<byte> buffer = new ArraySegment<byte>(Buf);
-                MemoryStream MS = new MemoryStream();
-                int Read = 0;
+                System.Threading.Thread.Sleep(1000);
+                goto Start;
+            }
+            
+            RecieveTask = Task.Run(async () => {
 
-                while (true)
+                byte[] Buf = new byte[1024 * 8];
+                ArraySegment<byte> AS = new ArraySegment<byte>(Buf);
+
+                while (_Socket.State != WebSocketState.Closed)
                 {
-                    var Result = await _Socket.ReceiveAsync(buffer, System.Threading.CancellationToken.None);
-                    MS.Write(buffer.Array, buffer.Offset, Result.Count);
-                    Read += Result.Count;
-                    if (Result.EndOfMessage)
+                    WebSocketReceiveResult result = null;
+                    using (MemoryStream MS = new MemoryStream())
                     {
-                        MessageReceivedEvent?.Invoke(Result.MessageType, MS.ToArray().Take(Read).ToArray());
-                        MS.SetLength(0);
-                        Read = 0;
+                        do
+                        {
+                            result = await _Socket.ReceiveAsync(AS, System.Threading.CancellationToken.None).ConfigureAwait(false);
+                            if (result.Count > 0)
+                            {
+                                MS.Write(AS.Array, AS.Offset, result.Count);
+                            }
+                        }
+                        while (!result.EndOfMessage);
+
+                        MessageReceivedEvent?.Invoke(result.MessageType, MS.ToArray());
                     }
+
                 }
-            }).Start();
+
+            });
         }
 
         public void Send(string Payload)
