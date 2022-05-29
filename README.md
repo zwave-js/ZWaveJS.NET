@@ -38,8 +38,7 @@ and it contains everything necessary for .NET to work with zwave-js.
 
 **server.psi** files are platform specific, but the assembly isn't - it will run on windows, OSX and Linux, and the platform specifics i.e **node** are contained in **server.psi**.
 
-## Running On Linux.
-We can't automate an image build that is guaranteed to work across distros, but you can build one with ease.  
+## Building yor own platform specific binary.
 
 To build an image for your platform:
  - Clone the repo
