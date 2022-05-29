@@ -16,9 +16,9 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int timeoutResponse { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int rtt { get; internal set; }
+        public decimal rtt { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int rssi { get; internal set; }
+        public decimal rssi { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public RouteStatisctics lwr { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -60,9 +60,9 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int[] repeaters { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int rssi { get; internal set; }
+        public decimal rssi { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int[] repeaterRSSI { get; internal set; }
+        public decimal[] repeaterRSSI { get; internal set; }
     }
 
 
