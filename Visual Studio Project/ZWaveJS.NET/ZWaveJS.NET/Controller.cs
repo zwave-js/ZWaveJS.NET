@@ -366,7 +366,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> unprovisionSmartStartNode(Int64 DSKOrNodeID)
+        public Task<bool> UnprovisionSmartStartNode(int NodeID)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
@@ -380,7 +380,29 @@ namespace ZWaveJS.NET
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", DSKOrNodeID);
+            Request.Add("dskOrNodeId", NodeID);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<bool> UnprovisionSmartStartNode(string DSK)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
+            Request.Add("dskOrNodeId", DSK);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.Send(RequestPL);
@@ -389,7 +411,7 @@ namespace ZWaveJS.NET
         }
 
 
-        public Task<bool> provisionSmartStartNode(string QRCode)
+        public Task<bool> ProvisionSmartStartNode(string QRCode)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();

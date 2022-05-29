@@ -60,7 +60,6 @@ namespace ZWaveJS.NET
                             }
                         }
                         while (!result.EndOfMessage);
-
                         MessageReceivedEvent?.Invoke(result.MessageType, MS.ToArray());
                     }
 
