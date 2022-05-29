@@ -15,6 +15,14 @@ namespace ZWaveJS.NET
         public int commandsDroppedTX { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int timeoutResponse { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int rtt { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int rssi { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public RouteStatisctics lwr { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public RouteStatisctics nlwr { get; internal set; }
 
     }
 
@@ -41,6 +49,20 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int timeoutACK { get; internal set; }
 
+    }
+
+    public class RouteStatisctics
+    {
+        internal RouteStatisctics() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int protocolDataRate { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int[] repeaters { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int rssi { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int[] repeaterRSSI { get; internal set; }
     }
 
 
