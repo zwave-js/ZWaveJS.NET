@@ -21,6 +21,9 @@ namespace ZWaveJS.NET
             this.storage.throttle = "normal";
             this.storage.cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js-cache");
 
+            this.securityKeys = new CFGSecurityKeys();
+            this.timeouts = new CFGTimeouts();
+
             this.enableSoftReset = false;
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;
@@ -43,12 +46,12 @@ namespace ZWaveJS.NET
 
     public class CFGTimeouts
     {
-        public int ack { get; set; }
-        public int response { get; set; }
-        public int sendDataCallback { get; set; }
-        public int report { get; set; }
-        public int nonce { get; set; }
-        public int serialAPIStarted { get; set; }
+        public int? ack { get; set; }
+        public int? response { get; set; }
+        public int? sendDataCallback { get; set; }
+        public int? report { get; set; }
+        public int? nonce { get; set; }
+        public int? serialAPIStarted { get; set; }
     }
 
     public class CFGLogConfig
