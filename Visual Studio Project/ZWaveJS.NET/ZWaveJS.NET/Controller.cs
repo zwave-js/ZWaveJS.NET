@@ -366,7 +366,52 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> BeginExclusion()
+        public Task<bool> unprovisionSmartStartNode(Int64 DSKOrNodeID)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
+            Request.Add("dskOrNodeId", DSKOrNodeID);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+
+        public Task<bool> provisionSmartStartNode(string QRCode)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                Result.SetResult(JO.Value<bool>("success"));
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.ProvisionSmartStartNode);
+            Request.Add("entry", QRCode);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.Send(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<bool> BeginExclusion(bool unprovision = false)
         {
             Guid ID = Guid.NewGuid();
 
@@ -381,6 +426,7 @@ namespace ZWaveJS.NET
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.BeginExclusion);
+            Request.Add("unprovision", unprovision);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.Send(RequestPL);

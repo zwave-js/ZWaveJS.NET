@@ -66,7 +66,6 @@ namespace ZWaveJS.NET
                     {
                         MessageReceivedEvent?.Invoke(Result.MessageType, MS.ToArray().Take(Read).ToArray());
                         MS.SetLength(0);
-                        //MS.Seek(0, SeekOrigin.Begin);
                         Read = 0;
                     }
                 }

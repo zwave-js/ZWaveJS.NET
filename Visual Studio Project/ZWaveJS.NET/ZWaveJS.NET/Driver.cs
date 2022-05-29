@@ -321,9 +321,6 @@ namespace ZWaveJS.NET
             MapEvents();
 
             Client = new WSClient(Server);
-            //Client.ReconnectTimeout = null;
-            //Client.ErrorReconnectTimeout = TimeSpan.Parse("00:00:05");
-            //Client.MessageReceived.Subscribe(ProcessMessage);
             Client.MessageReceivedEvent += ProcessMessage;
         }
 
@@ -339,9 +336,6 @@ namespace ZWaveJS.NET
                 Server.Start(SerialPort, Options, ServerCommunicationPort);
 
                 Client = new WSClient(new Uri("ws://127.0.0.1:" + ServerCommunicationPort));
-                //Client.ReconnectTimeout = null;
-                // Client.ErrorReconnectTimeout = TimeSpan.Parse("00:00:05");
-                //Client.MessageReceived.Subscribe(ProcessMessage);
                 Client.MessageReceivedEvent += ProcessMessage;
             }
             catch

@@ -7,7 +7,7 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/alerts/)
 
 
-ZWaveJS.NET is a class library developed in .NET Core 3.1, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
+ZWaveJS.NET is a class library developed for .NET 4.5 and .NET Standard 2.0, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
 
 The library closely follows the structure of the zwave-js API. 
 
@@ -62,7 +62,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
 ## Current implementation milestones 
 
- - [ ] Controller
+ - [x] Controller
    - [x] Controller Info
    - [x] NVM Restore/Backup
    - [x] Network Statistics
@@ -76,7 +76,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Heal Node
    - [x] Remove Failed Node
    - [x] Replace Failed Node
-   - [ ] Smart Start
+   - [x] Smart Start
 
  - [ ] Node
    - [x] Node Info

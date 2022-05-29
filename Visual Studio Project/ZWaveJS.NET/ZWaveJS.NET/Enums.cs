@@ -15,6 +15,8 @@ namespace ZWaveJS.NET
 
         internal class Commands
         {
+            public const string UnprovisionSmartStartNode = "controller.unprovision_smart_start_node";
+            public const string ProvisionSmartStartNode = "controller.provision_smart_start_node";
             public const string SetAPIVersion = "set_api_schema";
             public const string StartListetning = "start_listening";
             public const string SetValue = "node.set_value";
