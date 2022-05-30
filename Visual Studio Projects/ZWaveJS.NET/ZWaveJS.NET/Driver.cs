@@ -20,6 +20,11 @@ namespace ZWaveJS.NET
         private static int SchemaVersionID = 17;
         internal static CustomBooleanJsonConverter BoolConverter;
 
+        private string SerialPort;
+        private ZWaveOptions Options;
+        private Uri WSAddress;
+        private bool Host = true;
+
         internal static bool Inited = false;
 
         private string _ZWaveJSDriverVersion;
@@ -317,37 +322,57 @@ namespace ZWaveJS.NET
             }
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
-            BoolConverter = new CustomBooleanJsonConverter();
             MapEvents();
+            BoolConverter = new CustomBooleanJsonConverter();
+           
 
-            Client = new WSClient(Server);
-            Client.MessageReceivedEvent += ProcessMessage;
+            this.WSAddress = Server;
+            this.Host = false;
+            
+            InternalPrep();
         }
 
         // Host Mode
         public Driver(string SerialPort, ZWaveOptions Options)
         {
-            try
-            {
-                Callbacks = new Dictionary<Guid, Action<JObject>>();
-                MapEvents();
-                BoolConverter = new CustomBooleanJsonConverter();
-                Server.FatalError += Server_FatalError;
-                Server.NoneFatalError += Server_NoneFatalError;
-                Server.Start(SerialPort, Options, ServerCommunicationPort);
 
-                Client = new WSClient(new Uri("ws://127.0.0.1:" + ServerCommunicationPort));
-                Client.MessageReceivedEvent += ProcessMessage;
-            }
-            catch
+            Callbacks = new Dictionary<Guid, Action<JObject>>();
+            MapEvents();
+            BoolConverter = new CustomBooleanJsonConverter();
+          
+            
+            Server.FatalError += Server_FatalError;
+            Server.NoneFatalError += Server_NoneFatalError;
+
+            this.SerialPort = SerialPort;
+            this.Options = Options;
+            this.WSAddress = new Uri("ws://127.0.0.1:" + ServerCommunicationPort);
+            this.Host = true;
+
+            InternalPrep();
+
+        }
+
+        private void InternalPrep()
+        {
+            if (this.Host)
             {
-                throw;
+                Server.Start(SerialPort, Options, ServerCommunicationPort);
             }
+            
+            Client = new WSClient(this.WSAddress);
+            Client.MessageReceivedEvent += ProcessMessage;
         }
 
         private void Server_NoneFatalError()
         {
             Client.Stop();
+            Task.Run(async () =>
+            {
+                InternalPrep();
+            });
+            
+            
         }
 
         private void Server_FatalError()

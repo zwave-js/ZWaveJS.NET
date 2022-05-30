@@ -33,6 +33,7 @@ namespace ZWaveJS.NET
 
             ProcessStartInfo PSI = new ProcessStartInfo();
             PSI.RedirectStandardError = true;
+          
 
 #if NET45
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
@@ -65,10 +66,7 @@ namespace ZWaveJS.NET
 
         }
 
-        private static void ServerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -78,12 +76,18 @@ namespace ZWaveJS.NET
             {
                 case 1:
                     FatalError?.Invoke();
-                    ServerProcess.Kill();
+                    if (!ServerProcess.HasExited)
+                    {
+                        ServerProcess.Kill();
+                    }
                     break;
 
                 case 2:
                     NoneFatalError?.Invoke();
-                    ServerProcess.Kill();
+                    if (!ServerProcess.HasExited)
+                    {
+                        ServerProcess.Kill();
+                    }
                     break;
 
             }
