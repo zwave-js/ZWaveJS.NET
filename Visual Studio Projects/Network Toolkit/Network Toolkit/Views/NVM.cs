@@ -71,7 +71,7 @@ namespace Network_Toolkit.Views
                    
                     this.Invoke((Action)delegate {
 
-                        MessageBox.Show("NVM restore has completed", "Restore NVM", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("NVM restore has completed. Please allow 60 seconds for the Driver to restart.", "Restore NVM", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     });
                 });
