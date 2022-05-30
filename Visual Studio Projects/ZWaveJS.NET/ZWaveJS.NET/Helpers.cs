@@ -12,6 +12,7 @@ namespace ZWaveJS.NET
     {
         private const string MACOSBIN = "server-macos.psi";
         private const string WINBIN = "server-win.psi";
+        private const string UNIXBIN = "server-ubuntu.psi";
 
         internal static Enums.Platform RunningPlatform()
         {
@@ -45,6 +46,10 @@ namespace ZWaveJS.NET
 
                     case Enums.Platform.Mac:
                         URI = URI.Replace("{F}", MACOSBIN);
+                        break;
+
+                    case Enums.Platform.Linux:
+                        URI = URI.Replace("{F}", UNIXBIN);
                         break;
                 }
 

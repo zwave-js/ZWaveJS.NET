@@ -62,7 +62,6 @@ namespace ZWaveJS.NET
                 byte[] Buf = new byte[1024 * 8];
                 ArraySegment<byte> AS = new ArraySegment<byte>(Buf);
                 
-
                 while (_Socket.State != WebSocketState.Closed)
                 {
                     WebSocketReceiveResult result = null;
