@@ -102,6 +102,12 @@
     <Compile Include="Views\Connector.Designer.cs">
       <DependentUpon>Connector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Default.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Default.Designer.cs">
+      <DependentUpon>Default.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\IncludeOptions.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -150,6 +156,9 @@
     </Compile>
     <EmbeddedResource Include="Views\Connector.resx">
       <DependentUpon>Connector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Default.resx">
+      <DependentUpon>Default.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\IncludeOptions.resx">
       <DependentUpon>IncludeOptions.cs</DependentUpon>

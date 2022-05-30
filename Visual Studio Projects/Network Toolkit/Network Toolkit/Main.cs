@@ -24,9 +24,20 @@ namespace Network_Toolkit
         {
             Views.Connector Connector = new Views.Connector();
             Connector.StartConnectionEvent += Connector_StartConnectionEvent;
+            Connector.StartConnectionWSEvent += Connector_StartConnectionWSEvent;
             Connector.Parent = PAN_ViewContainer;
 
             PAN_ViewContainer.Controls.Add(Connector);
+        }
+
+        private void Connector_StartConnectionWSEvent(string WS, int Schema)
+        {
+            LBL_Status.Text = string.Format("Connecting...");
+
+            _Driver = new Driver(new Uri(WS), Schema);
+            _Driver.DriverReady += _Driver_DriverReady;
+            _Driver.StartupErrorEvent += _Driver_StartupErrorEvent;
+            _Driver.Start();
         }
 
         private void Connector_StartConnectionEvent(string SerialPort, ZWaveJS.NET.ZWaveOptions Options)
@@ -44,27 +55,42 @@ namespace Network_Toolkit
             MessageBox.Show(Message, "Startup Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private void ShowDefault()
+        {
+            Views.Default Default = new Views.Default();
+            Default.Parent = PAN_ViewContainer;
+
+            PAN_ViewContainer.Controls.Clear();
+            PAN_ViewContainer.Controls.Add(Default);
+
+            LBL_Status.Text = string.Format("Connected. Server Version: {0}, ZWave JS Driver Version: {1}", _Driver.ZWaveJSServerVersion, _Driver.ZWaveJSDriverVersion);
+
+        }
+
         private void _Driver_DriverReady()
         {
-            LBL_Status.Text = string.Format("Connected. Server Version: {0}, ZWave JS Driver Version: {1}", _Driver.ZWaveJSServerVersion, _Driver.ZWaveJSDriverVersion);
+            this.Invoke((MethodInvoker)delegate() {
+                ShowDefault();
+            });
+            
+
             
             _Driver.Controller.NodeAdded += Controller_NodeAdded;
             _Driver.Controller.NodeRemoved += Controller_NodeRemoved;
 
             foreach (ZWaveNode ZWN in _Driver.Controller.Nodes.AsArray())
             {
-                if(!ZWN.isControllerNode)
-                this.Invoke((Action)delegate {
-
-                    CustomControls.Node N = new CustomControls.Node(ZWN);
-                    N.NodeSelectedEvent += N_NodeSelectedEvent;
-                    N.Parent = PAN_Nodes;
-                    PAN_Nodes.Controls.Add(N);
-                });
+                if (!ZWN.isControllerNode)
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        CustomControls.Node N = new CustomControls.Node(ZWN);
+                        N.NodeSelectedEvent += N_NodeSelectedEvent;
+                        N.Parent = PAN_Nodes;
+                        PAN_Nodes.Controls.Add(N);
+                    });
+                   
+                }
             }
-
-            
-
         }
 
         private void N_NodeSelectedEvent(ZWaveNode ZwaveNode)
@@ -78,22 +104,37 @@ namespace Network_Toolkit
 
         private void Controller_NodeRemoved(ZWaveNode Node)
         {
-            this.Invoke((Action)delegate {
-                CustomControls.Node N =  PAN_Nodes.Controls.OfType<CustomControls.Node>().FirstOrDefault((_N) => _N.ZwaveNode.id.Equals(Node.id));
-                PAN_Nodes.Controls.Remove(N);
-
+            this.Invoke((MethodInvoker)delegate () {
+                ShowDefault();
             });
+
+            this.Invoke((MethodInvoker)delegate () {
+                CustomControls.Node N = PAN_Nodes.Controls.OfType<CustomControls.Node>().FirstOrDefault((_N) => _N.ZwaveNode.id.Equals(Node.id));
+                PAN_Nodes.Controls.Remove(N);
+            });
+
+
+           
+
+
         }
 
         private void Controller_NodeAdded(ZWaveNode Node, InclusionResult Result)
         {
-            this.Invoke((Action)delegate {
+            this.Invoke((MethodInvoker)delegate () {
+                ShowDefault();
+            });
 
+
+            this.Invoke((MethodInvoker)delegate () {
                 CustomControls.Node N = new CustomControls.Node(Node);
                 N.NodeSelectedEvent += N_NodeSelectedEvent;
                 N.Parent = PAN_Nodes;
                 PAN_Nodes.Controls.Add(N);
             });
+
+            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -126,14 +167,14 @@ namespace Network_Toolkit
                 {
                     if (R.Result)
                     {
-                        this.Invoke((Action)delegate {
-
+                        this.Invoke((MethodInvoker)delegate () {
                             Views.NIFWait NIF = new Views.NIFWait();
                             NIF.Parent = PAN_ViewContainer;
 
                             PAN_ViewContainer.Controls.Clear();
                             PAN_ViewContainer.Controls.Add(NIF);
                         });
+
                     }
                    
 
@@ -158,14 +199,16 @@ namespace Network_Toolkit
                 {
                     if (R.Result)
                     {
-                        this.Invoke((Action)delegate {
 
+                        this.Invoke((MethodInvoker)delegate () {
                             Views.NIFWait NIF = new Views.NIFWait();
                             NIF.Parent = PAN_ViewContainer;
 
                             PAN_ViewContainer.Controls.Clear();
                             PAN_ViewContainer.Controls.Add(NIF);
                         });
+                       
+
                     }
                    
 
@@ -180,10 +223,16 @@ namespace Network_Toolkit
 
         private InclusionGrant HandleIG(InclusionGrant IG)
         {
-            InclusionGrantPrompt IGP = new InclusionGrantPrompt(IG);
-            IGP.ShowDialog();
+            InclusionGrant _IG = (InclusionGrant)this.Invoke((Func<InclusionGrant>)delegate {
+                InclusionGrantPrompt IGP = new InclusionGrantPrompt(IG);
+                IGP.ShowDialog();
 
-            return IG;
+                return IGP.IG;
+            });
+
+            return _IG;
+
+           
            
            
         }

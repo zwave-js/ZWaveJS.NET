@@ -17,6 +17,9 @@ namespace Network_Toolkit.Views
         public delegate void StartConnection(string SerialPort, ZWaveOptions Options);
         public event StartConnection StartConnectionEvent;
 
+        public delegate void StartConnectionWS(string WS, int Schema);
+        public event StartConnectionWS StartConnectionWSEvent;
+
         public Connector()
         {
             InitializeComponent();
@@ -89,6 +92,12 @@ namespace Network_Toolkit.Views
             byte[] Key = new byte[16];
             R.NextBytes(Key);
             TXT_S2U.Text = BitConverter.ToString(Key).ToLower().Replace("-", "");
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            
+            StartConnectionWSEvent.Invoke(TXT_WS.Text, Convert.ToInt32(NUM_Schema.Value));
         }
     }
 }

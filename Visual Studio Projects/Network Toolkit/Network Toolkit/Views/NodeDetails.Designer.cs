@@ -42,6 +42,8 @@ namespace Network_Toolkit.Views
             this.Property = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Value = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label2
@@ -59,9 +61,9 @@ namespace Network_Toolkit.Views
             this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.ForeColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(23, 137);
+            this.button5.Location = new System.Drawing.Point(23, 125);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(95, 34);
+            this.button5.Size = new System.Drawing.Size(61, 46);
             this.button5.TabIndex = 31;
             this.button5.Text = "Remove Failed";
             this.button5.UseVisualStyleBackColor = false;
@@ -71,9 +73,9 @@ namespace Network_Toolkit.Views
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(124, 137);
+            this.button1.Location = new System.Drawing.Point(105, 125);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(95, 34);
+            this.button1.Size = new System.Drawing.Size(60, 46);
             this.button1.TabIndex = 32;
             this.button1.Text = "Replace Failed";
             this.button1.UseVisualStyleBackColor = false;
@@ -83,9 +85,9 @@ namespace Network_Toolkit.Views
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(225, 137);
+            this.button2.Location = new System.Drawing.Point(185, 125);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(95, 34);
+            this.button2.Size = new System.Drawing.Size(59, 46);
             this.button2.TabIndex = 33;
             this.button2.Text = "Update FW";
             this.button2.UseVisualStyleBackColor = false;
@@ -95,11 +97,11 @@ namespace Network_Toolkit.Views
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(326, 137);
+            this.button3.Location = new System.Drawing.Point(263, 125);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(95, 34);
+            this.button3.Size = new System.Drawing.Size(63, 46);
             this.button3.TabIndex = 34;
-            this.button3.Text = "Associations";
+            this.button3.Text = "Asso MGMT";
             this.button3.UseVisualStyleBackColor = false;
             // 
             // button4
@@ -107,9 +109,9 @@ namespace Network_Toolkit.Views
             this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(427, 137);
+            this.button4.Location = new System.Drawing.Point(346, 125);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(95, 34);
+            this.button4.Size = new System.Drawing.Size(63, 46);
             this.button4.TabIndex = 35;
             this.button4.Text = "Health Check";
             this.button4.UseVisualStyleBackColor = false;
@@ -177,10 +179,36 @@ namespace Network_Toolkit.Views
             this.label1.TabIndex = 40;
             this.label1.Text = "Command Class Values";
             // 
+            // button6
+            // 
+            this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button6.ForeColor = System.Drawing.Color.White;
+            this.button6.Location = new System.Drawing.Point(428, 125);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(63, 46);
+            this.button6.TabIndex = 41;
+            this.button6.Text = "Interview Node";
+            this.button6.UseVisualStyleBackColor = false;
+            // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.ForeColor = System.Drawing.Color.White;
+            this.button7.Location = new System.Drawing.Point(508, 125);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(63, 46);
+            this.button7.TabIndex = 42;
+            this.button7.Text = "Event Monitor";
+            this.button7.UseVisualStyleBackColor = false;
+            // 
             // NodeDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LST_Values);
             this.Controls.Add(this.LBL_Description);
@@ -214,5 +242,7 @@ namespace Network_Toolkit.Views
         private System.Windows.Forms.ColumnHeader Property;
         private System.Windows.Forms.ColumnHeader Value;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }

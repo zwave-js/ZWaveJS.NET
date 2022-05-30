@@ -34,9 +34,11 @@ namespace Network_Toolkit.Views
                     string GroupName = Group.Key;
                     ListViewGroup LVG = new ListViewGroup(GroupName);
 
-                    this.Invoke((Action)delegate {
+                    this.Invoke((MethodInvoker)delegate () {
                         LST_Values.Groups.Add(LVG);
                     });
+
+                   
                     
 
                     foreach (ValueID VID in Group)
@@ -56,14 +58,12 @@ namespace Network_Toolkit.Views
                                 LVI.SubItems.Add("");
 
                             }
-                         
-                        
-                      
 
-                        this.Invoke((Action)delegate
-                        {
+
+                        this.Invoke((MethodInvoker)delegate () {
                             LST_Values.Items.Add(LVI);
                         });
+
                     }
                 }
 

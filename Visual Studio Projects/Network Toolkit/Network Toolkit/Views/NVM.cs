@@ -33,23 +33,24 @@ namespace Network_Toolkit.Views
                 _Driver.Controller.BackupNVMRaw(Progress).ContinueWith((R) =>
                 {
                     File.WriteAllBytes(SFD.FileName, R.Result);
-                    this.Invoke((Action)delegate {
 
+                    this.Invoke((MethodInvoker)delegate () {
                         MessageBox.Show("NVM backup has completed", "Backup NVM", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                     });
+
                 });
             }
         }
 
         private void Progress(int Read, int Total)
         {
-            this.Invoke((Action) delegate {
 
+
+            this.Invoke((MethodInvoker)delegate () {
                 PB_Progress.Value = Convert.ToInt32(((decimal)Read / (decimal)Total) * 100);
-            
-            
             });
+
+           
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -68,34 +69,30 @@ namespace Network_Toolkit.Views
 
                 _Driver.Controller.RestoreNVM(Data,_Convert,Write).ContinueWith((R) =>
                 {
-                   
-                    this.Invoke((Action)delegate {
 
+                    this.Invoke((MethodInvoker)delegate () {
                         MessageBox.Show("NVM restore has completed. Please allow 60 seconds for the Driver to restart.", "Restore NVM", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                     });
+                  
                 });
             }
         }
 
         private void _Convert(int Read, int Total)
         {
-            this.Invoke((Action)delegate {
-
+            this.Invoke((MethodInvoker)delegate () {
                 PB_Progress.Value = Convert.ToInt32(((decimal)Read / (decimal)Total) * 100);
-
-
             });
+
+           
         }
 
         private void Write(int Read, int Total)
         {
-            this.Invoke((Action)delegate {
-
+            this.Invoke((MethodInvoker)delegate () {
                 PB_Progress.Value = Convert.ToInt32(((decimal)Read / (decimal)Total) * 100);
-
-
             });
+          
         }
     }
 }
