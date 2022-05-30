@@ -10,10 +10,13 @@ namespace ZWaveJS.NET
     {
 
         private static Process ServerProcess;
-        private static int Restarts = 0;
 
         public delegate void FatalErrorEvent();
         public static event FatalErrorEvent FatalError;
+
+        public delegate void NoneFatalErrorEvent();
+        public static event NoneFatalErrorEvent NoneFatalError;
+
 
         internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
@@ -29,6 +32,7 @@ namespace ZWaveJS.NET
             string _Config = JsonConvert.SerializeObject(Config, JSS);
 
             ProcessStartInfo PSI = new ProcessStartInfo();
+            PSI.RedirectStandardError = true;
 
 #if NET45
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
@@ -54,31 +58,34 @@ namespace ZWaveJS.NET
             
             ServerProcess = new Process();
             ServerProcess.EnableRaisingEvents = true;
-            ServerProcess.Exited += ServerProcess_Exited;
+            ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
+            ServerProcess.BeginErrorReadLine();
+
         }
 
-        private static void ServerProcess_Exited(object sender, EventArgs e)
+        private static void ServerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            switch (ServerProcess.ExitCode)
+            throw new NotImplementedException();
+        }
+
+        private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            int Code = Convert.ToInt32(e.Data);
+
+            switch (Code)
             {
                 case 1:
                     FatalError?.Invoke();
+                    ServerProcess.Kill();
                     break;
 
                 case 2:
-                    if (Restarts < 5)
-                    {
-                        Restarts++;
-                        ServerProcess.Start(); // again
-                    }
-                    else
-                    {
-                        FatalError?.Invoke();
-                    }
-
+                    NoneFatalError?.Invoke();
+                    ServerProcess.Kill();
                     break;
+
             }
         }
 

@@ -333,6 +333,7 @@ namespace ZWaveJS.NET
                 MapEvents();
                 BoolConverter = new CustomBooleanJsonConverter();
                 Server.FatalError += Server_FatalError;
+                Server.NoneFatalError += Server_NoneFatalError;
                 Server.Start(SerialPort, Options, ServerCommunicationPort);
 
                 Client = new WSClient(new Uri("ws://127.0.0.1:" + ServerCommunicationPort));
@@ -344,9 +345,15 @@ namespace ZWaveJS.NET
             }
         }
 
+        private void Server_NoneFatalError()
+        {
+            Client.Stop();
+        }
+
         private void Server_FatalError()
         {
-            throw new Exception("Unrecoverable server error");
+            Client.Stop();
+            StartupErrorEvent?.Invoke("Driver could not start.");
         }
 
         // Start Driver

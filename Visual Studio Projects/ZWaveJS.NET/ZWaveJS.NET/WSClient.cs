@@ -5,6 +5,7 @@ using System.Net.WebSockets;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ZWaveJS.NET
 {
@@ -14,13 +15,26 @@ namespace ZWaveJS.NET
         public event MessageReceived MessageReceivedEvent;
         private Task RecieveTask;
 
+        private CancellationTokenSource CTS;
+        private CancellationToken Token;
+
         ClientWebSocket _Socket;
         Uri _Host;
 
         public WSClient(Uri Host)
         {
+            CTS = new CancellationTokenSource();
+            Token = CTS.Token;
             _Host = Host;
             
+        }
+
+        public async void Stop()
+        {
+            if(CTS != null)
+            {
+                CTS.Cancel();
+            }
         }
 
         public async void Start()
@@ -30,7 +44,7 @@ namespace ZWaveJS.NET
             try
             {
                 _Socket = new ClientWebSocket();
-                await _Socket.ConnectAsync(_Host, System.Threading.CancellationToken.None);
+                await _Socket.ConnectAsync(_Host, Token);
             }
             catch(Exception Error)
             {
@@ -40,11 +54,14 @@ namespace ZWaveJS.NET
                 System.Threading.Thread.Sleep(1000);
                 goto Start;
             }
-            
+
+
+
             RecieveTask = Task.Run(async () => {
 
                 byte[] Buf = new byte[1024 * 8];
                 ArraySegment<byte> AS = new ArraySegment<byte>(Buf);
+                
 
                 while (_Socket.State != WebSocketState.Closed)
                 {
@@ -53,17 +70,32 @@ namespace ZWaveJS.NET
                     {
                         do
                         {
-                            result = await _Socket.ReceiveAsync(AS, System.Threading.CancellationToken.None).ConfigureAwait(false);
-                            if (result.Count > 0)
+                            try
                             {
-                                MS.Write(AS.Array, AS.Offset, result.Count);
+                                result = await _Socket.ReceiveAsync(AS, Token).ConfigureAwait(false);
+                                if (result.Count > 0)
+                                {
+                                    MS.Write(AS.Array, AS.Offset, result.Count);
+                                }
                             }
+                            catch(Exception Error)
+                            {
+                                if(Error is OperationCanceledException)
+                                {
+                                    await _Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None);
+                                    goto Exit;
+                                }
+                            }
+                           
                         }
                         while (!result.EndOfMessage);
                         MessageReceivedEvent?.Invoke(result.MessageType, MS.ToArray());
                     }
 
                 }
+
+            Exit:
+                return;
 
             });
         }

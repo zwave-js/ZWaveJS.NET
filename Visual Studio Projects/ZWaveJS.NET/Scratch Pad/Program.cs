@@ -23,21 +23,16 @@ namespace Scratch_Pad
 
         private static void _Driver_StartupErrorEvent(string Message)
         {
-        
+            Console.WriteLine(Message);
         }
 
         private static void _Driver_DriverReady()
         {
 
             _Driver.Controller.BackupNVMRaw((R, T) => {
-
                 Console.WriteLine(string.Format("Read: {0}, Total: {1}", R, T));
-
-            
             }).ContinueWith((R) => {
-
                 Console.WriteLine(R.Result.Length);
-            
             });
         }
 
