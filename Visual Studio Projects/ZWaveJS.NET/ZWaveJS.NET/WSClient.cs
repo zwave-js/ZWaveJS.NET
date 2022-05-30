@@ -29,7 +29,7 @@ namespace ZWaveJS.NET
             
         }
 
-        public async void Stop()
+        public void Stop()
         {
             if(CTS != null)
             {
@@ -39,14 +39,14 @@ namespace ZWaveJS.NET
 
         public async void Start()
         {
-            Start:
+        Start:
 
             try
             {
                 _Socket = new ClientWebSocket();
                 await _Socket.ConnectAsync(_Host, Token);
             }
-            catch(Exception Error)
+            catch (Exception Error)
             {
                 _Socket?.Dispose();
                 _Socket = null;
@@ -57,16 +57,17 @@ namespace ZWaveJS.NET
 
 
 
-            RecieveTask = Task.Run(async () => {
+            RecieveTask = Task.Run(async () =>
+            {
 
                 byte[] Buf = new byte[1024 * 8];
                 ArraySegment<byte> AS = new ArraySegment<byte>(Buf);
-                
-                while (_Socket.State != WebSocketState.Closed)
+                using (MemoryStream MS = new MemoryStream())
                 {
-                    WebSocketReceiveResult result = null;
-                    using (MemoryStream MS = new MemoryStream())
+
+                    while (_Socket.State != WebSocketState.Closed)
                     {
+                        WebSocketReceiveResult result = null;
                         do
                         {
                             try
@@ -77,20 +78,20 @@ namespace ZWaveJS.NET
                                     MS.Write(AS.Array, AS.Offset, result.Count);
                                 }
                             }
-                            catch(Exception Error)
+                            catch (Exception Error)
                             {
-                                if(Error is OperationCanceledException)
+                                if (Error is OperationCanceledException)
                                 {
                                     await _Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None);
                                     goto Exit;
                                 }
                             }
-                           
+
                         }
                         while (!result.EndOfMessage);
                         MessageReceivedEvent?.Invoke(result.MessageType, MS.ToArray());
+                        MS.SetLength(0);
                     }
-
                 }
 
             Exit:

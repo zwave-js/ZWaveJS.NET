@@ -367,18 +367,25 @@ namespace ZWaveJS.NET
         private void Server_NoneFatalError()
         {
             Client.Stop();
+
             Task.Run(async () =>
             {
+                System.Threading.Thread.Sleep(500);
                 InternalPrep();
+                Start();
             });
-            
+
             
         }
 
         private void Server_FatalError()
         {
             Client.Stop();
-            StartupErrorEvent?.Invoke("Driver could not start.");
+            Task.Run(async () =>
+            {
+                StartupErrorEvent?.Invoke("Driver could not start.");
+            });
+            
         }
 
         // Start Driver

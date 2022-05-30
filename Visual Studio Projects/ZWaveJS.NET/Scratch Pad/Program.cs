@@ -30,9 +30,14 @@ namespace Scratch_Pad
         {
 
             _Driver.Controller.BackupNVMRaw((R, T) => {
-                Console.WriteLine(string.Format("Read: {0}, Total: {1}", R, T));
+                Console.WriteLine(string.Format("Read B: {0}, Total B: {1}", R, T));
             }).ContinueWith((R) => {
                 Console.WriteLine(R.Result.Length);
+                _Driver.Controller.RestoreNVM(R.Result, (CR, CT) => {
+                    Console.WriteLine(string.Format("Read C: {0}, Tota C: {1}", CR, CT));
+                }, (SR, ST) => {
+                    Console.WriteLine(string.Format("Read S: {0}, Total S: {1}", SR, ST));
+                });
             });
         }
 
