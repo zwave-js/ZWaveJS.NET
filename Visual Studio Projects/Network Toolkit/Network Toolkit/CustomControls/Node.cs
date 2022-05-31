@@ -22,6 +22,14 @@ namespace Network_Toolkit.CustomControls
 
             this.ZwaveNode = Node;
 
+            Node.NodeInterviewCompleted += Node_NodeInterviewCompleted;
+            Node.NodeInterviewStarted += Node_NodeInterviewStarted;
+            Node.NodeInterviewFailed += Node_NodeInterviewFailed;
+            Node.NodeReady += Node_NodeReady;
+            Node.NodeAwake += Node_NodeAwake;
+            Node.NodeAsleep += Node_NodeAsleep;
+            Node.NodeDead += Node_NodeDead;
+            
             LBL_NodeID.Text = Node.id.ToString();
             LBL_Label.Text = Node.deviceConfig?.label ?? "Unknown";
             LBL_Description.Text = Node.deviceConfig?.description;
@@ -36,18 +44,7 @@ namespace Network_Toolkit.CustomControls
             {
                 PAN_Interviewed.BackColor = Color.White;
             }
-
-       
-
-            Node.NodeInterviewCompleted += Node_NodeInterviewCompleted;
-            Node.NodeInterviewStarted += Node_NodeInterviewStarted;
-            Node.NodeInterviewFailed += Node_NodeInterviewFailed;
-            Node.NodeReady += Node_NodeReady;
-            Node.NodeAwake += Node_NodeAwake;
-            Node.NodeAsleep += Node_NodeAsleep;
-            Node.NodeDead += Node_NodeDead;
-
-          
+        
         }
 
       
@@ -85,6 +82,7 @@ namespace Network_Toolkit.CustomControls
         {
             this.Invoke((MethodInvoker)delegate ()
             {
+                PAN_Ready.BackColor = Color.Black;
                 PAN_Interviewed.BackColor = Color.Red;
 
             });
@@ -106,6 +104,8 @@ namespace Network_Toolkit.CustomControls
             {
                 PAN_Interviewed.BackColor = Color.White;
                 PAN_Wake.BackColor = Color.White;
+                PAN_Ready.BackColor = Color.White;
+
                 LBL_Label.Text = Node.deviceConfig?.label;
                 LBL_Description.Text = Node.deviceConfig?.description;
             });
