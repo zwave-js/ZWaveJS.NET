@@ -15,14 +15,16 @@ namespace Network_Toolkit.Views
     public partial class NodeDetails : UserControl
     {
         public ZWaveNode ZwaveNode;
-        public NodeDetails(ZWaveNode Node)
+        private Driver Driver;
+        public NodeDetails(ZWaveNode Node, Driver Driver)
         {
             InitializeComponent();
             this.ZwaveNode = Node;
+            this.Driver = Driver;
 
             LBL_NodeID.Text = "#"+Node.id.ToString();
-            LBL_Label.Text = Node.deviceConfig.label;
-            LBL_Description.Text = Node.deviceConfig.description;
+            LBL_Label.Text = Node.deviceConfig?.label ?? "Unknown";
+            LBL_Description.Text = Node.deviceConfig?.description;
 
             new Task(async () => {
 
@@ -69,6 +71,49 @@ namespace Network_Toolkit.Views
 
             }).Start();
 
+        }
+
+        // Heal
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Driver.Controller.HealNode(ZwaveNode.id).ContinueWith((R) =>
+            {
+                if (R.Result)
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show("The node has been healed!", "Heal Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    });
+                }
+                else
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show("The node failed to heal!", "Heal Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+              
+            });
+        }
+
+
+        // Interview
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ZwaveNode.RefreshInfo().ContinueWith((R) =>
+            {
+                if (R.Result)
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show("The node has been interviewed", "Interview Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    });
+                }
+                else
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show("The node failed to get interviewed!", "Interview Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+            });
+           
         }
     }
 }

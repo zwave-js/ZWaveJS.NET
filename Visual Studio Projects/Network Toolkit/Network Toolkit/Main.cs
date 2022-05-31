@@ -103,7 +103,7 @@ namespace Network_Toolkit
 
         private void N_NodeSelectedEvent(ZWaveNode ZwaveNode)
         {
-            Views.NodeDetails ND = new Views.NodeDetails(ZwaveNode);
+            Views.NodeDetails ND = new Views.NodeDetails(ZwaveNode,_Driver);
             ND.Parent = PAN_ViewContainer;
 
             PAN_ViewContainer.Controls.Clear();

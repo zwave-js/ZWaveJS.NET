@@ -32,7 +32,16 @@ namespace Network_Toolkit.CustomControls
                 MarkReady();
             }
 
+            if(Node.interviewStage == "Complete")
+            {
+                PAN_Interviewed.BackColor = Color.White;
+            }
+
+       
+
             Node.NodeInterviewCompleted += Node_NodeInterviewCompleted;
+            Node.NodeInterviewStarted += Node_NodeInterviewStarted;
+            Node.NodeInterviewFailed += Node_NodeInterviewFailed;
             Node.NodeReady += Node_NodeReady;
             Node.NodeAwake += Node_NodeAwake;
             Node.NodeAsleep += Node_NodeAsleep;
@@ -41,48 +50,70 @@ namespace Network_Toolkit.CustomControls
           
         }
 
+      
+
         private void Node_NodeDead(ZWaveNode Node)
         {
-            this.Invoke((Action)delegate {
+            this.Invoke((MethodInvoker)delegate() {
                 SetStatus(Node.status);
             });
         }
 
         private void Node_NodeAsleep(ZWaveNode Node)
         {
-            this.Invoke((Action)delegate {
+            this.Invoke((MethodInvoker)delegate () {
                 SetStatus(Node.status);
             });
         }
 
         private void Node_NodeAwake(ZWaveNode Node)
         {
-            this.Invoke((Action)delegate {
+            this.Invoke((MethodInvoker)delegate () {
                 SetStatus(Node.status);
             });
         }
 
         private void Node_NodeReady(ZWaveNode Node)
         {
-            this.Invoke((Action)delegate {
+            this.Invoke((MethodInvoker)delegate () {
                 MarkReady();
             });
                 
         }
 
+        private void Node_NodeInterviewFailed(ZWaveNode Node, NodeInterviewFailedEventArgs Args)
+        {
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                PAN_Interviewed.BackColor = Color.Red;
+
+            });
+        }
+
+        private void Node_NodeInterviewStarted(ZWaveNode Node)
+        {
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                PAN_Interviewed.BackColor = Color.Black;
+ 
+            });
+        }
+
         private void Node_NodeInterviewCompleted(ZWaveNode Node)
         {
-            this.Invoke((Action)delegate {
-               LBL_Label.Text = Node.deviceConfig?.label;
-            LBL_Description.Text = Node.deviceConfig?.description;
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                PAN_Interviewed.BackColor = Color.White;
+                LBL_Label.Text = Node.deviceConfig?.label;
+                LBL_Description.Text = Node.deviceConfig?.description;
             });
 
-            
+
         }
 
         public void MarkReady()
         {
-            LBL_Ready.ForeColor = Color.White;
+            PAN_Ready.BackColor = Color.White;
         }
 
         public void SetStatus(Enums.NodeStatus Status)
@@ -92,17 +123,17 @@ namespace Network_Toolkit.CustomControls
                 // Alive
                 case Enums.NodeStatus.Alive:
                 case Enums.NodeStatus.Awake:
-                    LBL_Status.Text = "R";
+                    PAN_Wake.BackColor = Color.White;
                     break;
 
                 // A sleep
                 case  Enums.NodeStatus.Asleep:
-                    LBL_Status.Text = "«";
+                    PAN_Wake.BackColor = Color.Black;
                     break;
 
                 // daed
                 case Enums.NodeStatus.Dead:
-                    LBL_Status.Text = "N";
+                    PAN_Wake.BackColor = Color.Red;
                     break;
             }
         }
