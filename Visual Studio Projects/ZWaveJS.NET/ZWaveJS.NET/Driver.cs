@@ -26,7 +26,6 @@ namespace ZWaveJS.NET
         private bool Host = true;
 
         internal static bool Inited = false;
-
         private string _ZWaveJSDriverVersion;
         public string ZWaveJSDriverVersion
         {
@@ -336,6 +335,8 @@ namespace ZWaveJS.NET
             this.Host = false;
             
             InternalPrep();
+
+       
         }
 
         // Host Mode
@@ -345,17 +346,17 @@ namespace ZWaveJS.NET
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
-          
             
             Server.FatalError += Server_FatalError;
-            Server.NoneFatalError += Server_NoneFatalError;
-
+            
             this.SerialPort = SerialPort;
             this.Options = Options;
             this.WSAddress = new Uri("ws://127.0.0.1:" + ServerCommunicationPort);
             this.Host = true;
 
             InternalPrep();
+
+      
 
         }
 
@@ -370,18 +371,11 @@ namespace ZWaveJS.NET
             Client.MessageReceivedEvent += ProcessMessage;
         }
 
-        private void Server_NoneFatalError()
+        internal void Restart()
         {
-            Client.Stop();
-
-            Task.Run(async () =>
-            {
-                System.Threading.Thread.Sleep(1000);
-                InternalPrep();
-                Start();
-            });
-
-            
+            Destroy();
+            InternalPrep();
+            Start();
         }
 
         private void Server_FatalError()
@@ -389,7 +383,7 @@ namespace ZWaveJS.NET
             Client.Stop();
             Task.Run(async () =>
             {
-                StartupErrorEvent?.Invoke("Driver could not start.");
+                StartupErrorEvent?.Invoke("Driver failed to initialize.");
             });
             
         }
@@ -511,6 +505,7 @@ namespace ZWaveJS.NET
                 if (JO.Value<bool>("success"))
                 {
                     Controller C = JsonConvert.DeserializeObject<Controller>(JO.SelectToken("result.state.controller").ToString());
+                    C._Driver = this;
                     ZWaveNode[] Nodes = JsonConvert.DeserializeObject<ZWaveNode[]>(JO.SelectToken("result.state.nodes").ToString(), BoolConverter);
 
                     this.Controller = C;

@@ -124,6 +124,7 @@ namespace ZWaveJS.NET
             Driver.Callbacks.Add(ID, (JO) =>
             {
                 Result.SetResult(true);
+                _Driver.Restart();
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -478,6 +479,8 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        
+
         public NodesCollection Nodes { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty]
@@ -518,6 +521,7 @@ namespace ZWaveJS.NET
         public bool isHealNetworkActive { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public ControllerStatistics statistics { get; internal set; }
+        internal Driver _Driver;
 
     }
 }

@@ -14,12 +14,9 @@ namespace ZWaveJS.NET
         public delegate void FatalErrorEvent();
         public static event FatalErrorEvent FatalError;
 
-        public delegate void NoneFatalErrorEvent();
-        public static event NoneFatalErrorEvent NoneFatalError;
-
         internal static void Terminate()
         {
-            if(ServerProcess != null && !ServerProcess.HasExited)
+            if (ServerProcess != null && !ServerProcess.HasExited)
             {
                 ServerProcess.Kill();
             }
@@ -67,7 +64,7 @@ namespace ZWaveJS.NET
 
         }
 
-       
+
 
         private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -82,15 +79,6 @@ namespace ZWaveJS.NET
                         ServerProcess.Kill();
                     }
                     break;
-
-                case 2:
-                    NoneFatalError?.Invoke();
-                    if (!ServerProcess.HasExited)
-                    {
-                        ServerProcess.Kill();
-                    }
-                    break;
-
             }
         }
     }
