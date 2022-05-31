@@ -17,6 +17,14 @@ namespace ZWaveJS.NET
         public delegate void NoneFatalErrorEvent();
         public static event NoneFatalErrorEvent NoneFatalError;
 
+        internal static void Terminate()
+        {
+            if(ServerProcess != null && !ServerProcess.HasExited)
+            {
+                ServerProcess.Kill();
+            }
+        }
+
 
         internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
@@ -24,8 +32,6 @@ namespace ZWaveJS.NET
             {
                 throw new FileNotFoundException("No Platform Snapshot Image found (server.psi)");
             }
-
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
             JSS.NullValueHandling = NullValueHandling.Ignore;
@@ -86,11 +92,6 @@ namespace ZWaveJS.NET
                     break;
 
             }
-        }
-
-        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
-        {
-            ServerProcess.Kill();
         }
     }
 }

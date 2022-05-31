@@ -22,12 +22,22 @@ namespace Network_Toolkit
 
         private void Main_Load(object sender, EventArgs e)
         {
+            this.FormClosing += Main_FormClosing;
+
             Views.Connector Connector = new Views.Connector();
             Connector.StartConnectionEvent += Connector_StartConnectionEvent;
             Connector.StartConnectionWSEvent += Connector_StartConnectionWSEvent;
             Connector.Parent = PAN_ViewContainer;
 
             PAN_ViewContainer.Controls.Add(Connector);
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           if(_Driver != null)
+            {
+                _Driver.Destroy();
+            }
         }
 
         private void Connector_StartConnectionWSEvent(string WS, int Schema)

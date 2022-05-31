@@ -313,6 +313,12 @@ namespace ZWaveJS.NET
             MapControllerEvents();
         }
 
+        public void Destroy()
+        {
+            Client.Stop();
+            Server.Terminate();
+        }
+
         // Client Mode
         public Driver(Uri Server, int SchemaVersion = 0)
         {
