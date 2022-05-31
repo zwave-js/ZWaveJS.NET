@@ -100,13 +100,7 @@ namespace Network_Toolkit.Views
         {
             ZwaveNode.RefreshInfo().ContinueWith((R) =>
             {
-                if (R.Result)
-                {
-                    this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("The node has been interviewed", "Interview Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    });
-                }
-                else
+                if (!R.Result)
                 {
                     this.Invoke((MethodInvoker)delegate () {
                         MessageBox.Show("The node failed to get interviewed!", "Interview Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -114,6 +108,26 @@ namespace Network_Toolkit.Views
                 }
             });
            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Driver.Controller.RemoveFailedNode(ZwaveNode.id).ContinueWith((R) => {
+                if(R.Result)
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show("The node has been removed!", "Remove Failed Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    });
+                }
+                else
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show("The node could not get removed!", "Remove Failed Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+
+
+            });
         }
     }
 }

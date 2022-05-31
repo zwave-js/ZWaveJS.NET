@@ -39,6 +39,8 @@ namespace Network_Toolkit.CustomControls
             this.PAN_Interviewed = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.PAN_Wake = new System.Windows.Forms.Panel();
+            this.PAN_Dead = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.pan1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,9 +131,9 @@ namespace Network_Toolkit.CustomControls
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(81, 90);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 15);
+            this.label3.Size = new System.Drawing.Size(72, 15);
             this.label3.TabIndex = 9;
-            this.label3.Text = "Alive / Wake OR Dead";
+            this.label3.Text = "Alive / Wake";
             // 
             // PAN_Wake
             // 
@@ -141,11 +143,32 @@ namespace Network_Toolkit.CustomControls
             this.PAN_Wake.Size = new System.Drawing.Size(16, 16);
             this.PAN_Wake.TabIndex = 8;
             // 
+            // PAN_Dead
+            // 
+            this.PAN_Dead.BackColor = System.Drawing.Color.Black;
+            this.PAN_Dead.Location = new System.Drawing.Point(57, 108);
+            this.PAN_Dead.Name = "PAN_Dead";
+            this.PAN_Dead.Size = new System.Drawing.Size(16, 16);
+            this.PAN_Dead.TabIndex = 10;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.75F);
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(81, 108);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(37, 15);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Dead";
+            // 
             // Node
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.PAN_Dead);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.PAN_Wake);
             this.Controls.Add(this.label2);
@@ -177,5 +200,7 @@ namespace Network_Toolkit.CustomControls
         private System.Windows.Forms.Panel PAN_Interviewed;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel PAN_Wake;
+        private System.Windows.Forms.Panel PAN_Dead;
+        private System.Windows.Forms.Label label4;
     }
 }

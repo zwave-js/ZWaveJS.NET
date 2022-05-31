@@ -94,6 +94,7 @@ namespace Network_Toolkit.CustomControls
         {
             this.Invoke((MethodInvoker)delegate ()
             {
+                PAN_Ready.BackColor = Color.Black;
                 PAN_Interviewed.BackColor = Color.Black;
  
             });
@@ -104,6 +105,7 @@ namespace Network_Toolkit.CustomControls
             this.Invoke((MethodInvoker)delegate ()
             {
                 PAN_Interviewed.BackColor = Color.White;
+                PAN_Wake.BackColor = Color.White;
                 LBL_Label.Text = Node.deviceConfig?.label;
                 LBL_Description.Text = Node.deviceConfig?.description;
             });
@@ -124,16 +126,19 @@ namespace Network_Toolkit.CustomControls
                 case Enums.NodeStatus.Alive:
                 case Enums.NodeStatus.Awake:
                     PAN_Wake.BackColor = Color.White;
+                    PAN_Dead.BackColor = Color.Black;
                     break;
 
                 // A sleep
                 case  Enums.NodeStatus.Asleep:
                     PAN_Wake.BackColor = Color.Black;
+                    PAN_Dead.BackColor = Color.Black;
                     break;
 
                 // daed
                 case Enums.NodeStatus.Dead:
-                    PAN_Wake.BackColor = Color.Red;
+                    PAN_Wake.BackColor = Color.Black;
+                    PAN_Dead.BackColor = Color.Red;
                     break;
             }
         }
