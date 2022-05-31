@@ -33,7 +33,7 @@ namespace ZWaveJS.NET
 
             ProcessStartInfo PSI = new ProcessStartInfo();
             PSI.RedirectStandardError = true;
-          
+
 
 #if NET45
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
@@ -50,13 +50,9 @@ namespace ZWaveJS.NET
 
             PSI.FileName = "server.psi";
             PSI.UseShellExecute = false;
-
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-                PSI.WindowStyle = ProcessWindowStyle.Hidden;
-                PSI.CreateNoWindow = true;
-            }
             
+            PSI.WindowStyle = ProcessWindowStyle.Hidden;
+            PSI.CreateNoWindow = true;
             ServerProcess = new Process();
             ServerProcess.EnableRaisingEvents = true;
             ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;

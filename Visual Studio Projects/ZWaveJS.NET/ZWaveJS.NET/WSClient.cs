@@ -63,13 +63,11 @@ namespace ZWaveJS.NET
                 byte[] Buf = new byte[1024 * 8];
                 ArraySegment<byte> AS = new ArraySegment<byte>(Buf);
 
-
-                while (_Socket.State != WebSocketState.Closed)
+                using (MemoryStream MS = new MemoryStream())
                 {
-
-                    WebSocketReceiveResult result = null;
-                    using (MemoryStream MS = new MemoryStream())
+                    while (_Socket.State != WebSocketState.Closed)
                     {
+                        WebSocketReceiveResult result = null;
                         do
                         {
                             try
@@ -92,12 +90,10 @@ namespace ZWaveJS.NET
                         }
                         while (!result.EndOfMessage);
                         MessageReceivedEvent?.Invoke(result.MessageType, MS.ToArray());
+                        MS.Seek(0, SeekOrigin.Begin);
+                        MS.SetLength(0);
                     }
-
-
                 }
-
-
             Exit:
                 return;
 
