@@ -264,7 +264,15 @@ namespace Network_Toolkit
                 PAN_ViewContainer.Controls.Add(S2);
             });
 
-            return "";
+            string[] Parts = Partial.Split(new string[] {"-"},StringSplitOptions.RemoveEmptyEntries);
+
+            string _DSK = (string)this.Invoke((Func<string>)delegate () {
+                DSK D = new DSK(Parts);
+                D.ShowDialog();
+                return D.TXT_Pin.Text;
+            });
+
+            return _DSK;
         }
 
 
