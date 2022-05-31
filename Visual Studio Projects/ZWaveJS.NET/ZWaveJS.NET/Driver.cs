@@ -490,7 +490,7 @@ namespace ZWaveJS.NET
                 switch (ErrorCode)
                 {
                     case "schema_incompatible":
-                        StartupErrorEvent?.Invoke("Client and Server schema Mismatch");
+                        StartupErrorEvent?.Invoke("Client and Server schema mismatch");
                         break;
 
                 }

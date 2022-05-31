@@ -83,6 +83,7 @@ namespace ZWaveJS.NET
                                 if (Error is OperationCanceledException)
                                 {
                                     await _Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None);
+                                    _Socket.Dispose();
                                     goto Exit;
                                 }
                             }
