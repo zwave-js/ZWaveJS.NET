@@ -123,8 +123,17 @@ namespace ZWaveJS.NET
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(true);
-                _Driver.Restart();
+                if (JO.Value<bool>("success"))
+                {
+                    Result.SetResult(true);
+                    _Driver.Restart();
+                }
+                else
+                {
+                    Result.SetResult(false);
+                }
+                
+                
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -213,7 +222,7 @@ namespace ZWaveJS.NET
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(true);
+                Result.SetResult(JO.Value<bool>("success"));
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

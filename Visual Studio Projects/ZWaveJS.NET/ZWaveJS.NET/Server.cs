@@ -68,18 +68,23 @@ namespace ZWaveJS.NET
 
         private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            int Code = Convert.ToInt32(e.Data);
-
-            switch (Code)
+            int Code;
+            if (int.TryParse(e.Data, out Code))
             {
-                case 1:
-                    FatalError?.Invoke();
-                    if (!ServerProcess.HasExited)
-                    {
-                        ServerProcess.Kill();
-                    }
-                    break;
+
+                switch (Code)
+                {
+                    case 1:
+                        FatalError?.Invoke();
+                        if (!ServerProcess.HasExited)
+                        {
+                            ServerProcess.Kill();
+                        }
+                        break;
+                }
             }
+
+
         }
     }
 }

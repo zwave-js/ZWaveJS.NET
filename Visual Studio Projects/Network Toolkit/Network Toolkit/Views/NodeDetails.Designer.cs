@@ -205,6 +205,7 @@ namespace Network_Toolkit.Views
             this.button7.TabIndex = 42;
             this.button7.Text = "Event Monitor";
             this.button7.UseVisualStyleBackColor = false;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button8
             // 

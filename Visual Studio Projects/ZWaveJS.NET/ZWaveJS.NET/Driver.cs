@@ -159,7 +159,7 @@ namespace ZWaveJS.NET
                 ZWaveNode NNI = JsonConvert.DeserializeObject<ZWaveNode>(JO.SelectToken("event.nodeState").ToString(),BoolConverter);
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                this.Controller.Nodes.ReplaceInformation(NNI);
+                this.Controller.Nodes.ReplaceInformation(NNI, N);
                 N.Trigger_NodeReady();
             });
 

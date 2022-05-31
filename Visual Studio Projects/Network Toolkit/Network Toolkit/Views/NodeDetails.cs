@@ -129,5 +129,12 @@ namespace Network_Toolkit.Views
 
             });
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Event E = new Event(ZwaveNode);
+            E.Show();
+
+        }
     }
 }

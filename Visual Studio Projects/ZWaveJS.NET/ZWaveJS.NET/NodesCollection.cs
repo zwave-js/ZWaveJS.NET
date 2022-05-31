@@ -22,14 +22,12 @@ namespace ZWaveJS.NET
             Nodes.Add(Node);
         }
 
-        internal void ReplaceInformation(ZWaveNode Node)
+        internal void ReplaceInformation(ZWaveNode Source, ZWaveNode Target)
         {
-            ZWaveNode CN = Get(Node.id);
-
             PropertyInfo[] infos = typeof(ZWaveNode).GetProperties();
             foreach (PropertyInfo info in infos)
             {
-                info.SetValue(CN, info.GetValue(Node, null), null);
+                info.SetValue(Target, info.GetValue(Source, null), null);
             }
         }
 

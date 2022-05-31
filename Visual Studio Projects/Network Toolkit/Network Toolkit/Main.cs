@@ -52,12 +52,22 @@ namespace Network_Toolkit
 
         private void Connector_StartConnectionEvent(string SerialPort, ZWaveJS.NET.ZWaveOptions Options)
         {
-            LBL_Status.Text = string.Format("Connecting...");
+            LBL_Status.Text = string.Format("Fetching PSI...");
+            Helpers.DownloadPSI().ContinueWith((R) => {
 
-            _Driver = new Driver(SerialPort, Options);
-            _Driver.DriverReady += _Driver_DriverReady;
-            _Driver.StartupErrorEvent += _Driver_StartupErrorEvent;
-            _Driver.Start();
+                this.Invoke((MethodInvoker)delegate () {
+
+                    LBL_Status.Text = string.Format("Connecting...");
+
+                    _Driver = new Driver(SerialPort, Options);
+                    _Driver.DriverReady += _Driver_DriverReady;
+                    _Driver.StartupErrorEvent += _Driver_StartupErrorEvent;
+                    _Driver.Start();
+
+                });
+            
+            });
+            
         }
 
         private void _Driver_StartupErrorEvent(string Message)

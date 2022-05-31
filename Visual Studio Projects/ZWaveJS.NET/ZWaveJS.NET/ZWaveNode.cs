@@ -150,7 +150,7 @@ namespace ZWaveJS.NET
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(true);
+                Result.SetResult(JO.Value<bool>("success"));
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -172,7 +172,7 @@ namespace ZWaveJS.NET
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(true);
+                Result.SetResult(JO.Value<bool>("success"));
             });
 
             FileInfo FI = new FileInfo(FileName);
