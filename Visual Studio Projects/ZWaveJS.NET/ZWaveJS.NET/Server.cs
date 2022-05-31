@@ -50,7 +50,6 @@ namespace ZWaveJS.NET
 
             PSI.FileName = "server.psi";
             PSI.UseShellExecute = false;
-            
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
             PSI.CreateNoWindow = true;
             ServerProcess = new Process();

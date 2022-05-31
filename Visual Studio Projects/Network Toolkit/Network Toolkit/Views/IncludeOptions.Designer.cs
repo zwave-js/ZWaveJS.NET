@@ -41,9 +41,9 @@ namespace Network_Toolkit.Views
             this.button1 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -186,6 +186,16 @@ namespace Network_Toolkit.Views
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Include";
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(128, 48);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(164, 17);
+            this.checkBox2.TabIndex = 37;
+            this.checkBox2.Text = "Prefer S0 over no encryption.";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.checkBox1);
@@ -201,22 +211,12 @@ namespace Network_Toolkit.Views
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(142, 48);
+            this.checkBox1.Location = new System.Drawing.Point(128, 48);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(214, 17);
             this.checkBox1.TabIndex = 36;
             this.checkBox1.Text = "Remove from Start Start Provisioning list";
             this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(142, 48);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(164, 17);
-            this.checkBox2.TabIndex = 37;
-            this.checkBox2.Text = "Prefer S0 over no encryption.";
-            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // IncludeOptions
             // 

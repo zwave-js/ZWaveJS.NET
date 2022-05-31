@@ -73,8 +73,6 @@ namespace Network_Toolkit
                 ShowDefault();
             });
             
-
-            
             _Driver.Controller.NodeAdded += Controller_NodeAdded;
             _Driver.Controller.NodeRemoved += Controller_NodeRemoved;
 
@@ -223,6 +221,15 @@ namespace Network_Toolkit
 
         private InclusionGrant HandleIG(InclusionGrant IG)
         {
+            this.Invoke((MethodInvoker) delegate() {
+                Views.S2 S2 = new Views.S2();
+                S2.Parent = PAN_ViewContainer;
+
+                PAN_ViewContainer.Controls.Clear();
+                PAN_ViewContainer.Controls.Add(S2);
+            });
+            
+
             InclusionGrant _IG = (InclusionGrant)this.Invoke((Func<InclusionGrant>)delegate {
                 InclusionGrantPrompt IGP = new InclusionGrantPrompt(IG);
                 IGP.ShowDialog();
@@ -239,7 +246,15 @@ namespace Network_Toolkit
 
         private string HandleDSK(string Partial)
         {
-            return "e442";
+            this.Invoke((MethodInvoker)delegate () {
+                Views.S2 S2 = new Views.S2();
+                S2.Parent = PAN_ViewContainer;
+
+                PAN_ViewContainer.Controls.Clear();
+                PAN_ViewContainer.Controls.Add(S2);
+            });
+
+            return "";
         }
 
 

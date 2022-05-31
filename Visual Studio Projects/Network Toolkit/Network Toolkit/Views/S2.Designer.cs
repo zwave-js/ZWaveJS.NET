@@ -1,7 +1,7 @@
 ﻿
 namespace Network_Toolkit.Views
 {
-    partial class NIFWait
+    partial class S2
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,9 +29,19 @@ namespace Network_Toolkit.Views
         /// </summary>
         private void InitializeComponent()
         {
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
+            this.label1.Location = new System.Drawing.Point(19, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(297, 20);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Waiting for S2 Bootstrap to complete...";
             // 
             // label2
             // 
@@ -40,26 +50,16 @@ namespace Network_Toolkit.Views
             this.label2.Location = new System.Drawing.Point(18, 14);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(390, 29);
-            this.label2.TabIndex = 23;
+            this.label2.TabIndex = 25;
             this.label2.Text = "ZWave Device Inclusion / Exclusion";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
-            this.label1.Location = new System.Drawing.Point(19, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(330, 20);
-            this.label1.TabIndex = 24;
-            this.label1.Text = "Waiting for Node Information Frame (NIF)...";
-            // 
-            // NIFWait
+            // S2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
-            this.Name = "NIFWait";
+            this.Name = "S2";
             this.Size = new System.Drawing.Size(600, 499);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -68,7 +68,7 @@ namespace Network_Toolkit.Views
 
         #endregion
 
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

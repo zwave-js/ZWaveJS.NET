@@ -132,6 +132,12 @@
     <Compile Include="Views\NVM.Designer.cs">
       <DependentUpon>NVM.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\S2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\S2.Designer.cs">
+      <DependentUpon>S2.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CustomControls\Node.resx">
       <DependentUpon>Node.cs</DependentUpon>
     </EmbeddedResource>
@@ -171,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\NVM.resx">
       <DependentUpon>NVM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\S2.resx">
+      <DependentUpon>S2.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

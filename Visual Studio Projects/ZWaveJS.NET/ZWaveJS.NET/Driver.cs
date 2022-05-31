@@ -370,7 +370,7 @@ namespace ZWaveJS.NET
 
             Task.Run(async () =>
             {
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(1000);
                 InternalPrep();
                 Start();
             });

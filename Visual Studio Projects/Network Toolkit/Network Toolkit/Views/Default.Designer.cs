@@ -47,7 +47,7 @@ namespace Network_Toolkit.Views
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F);
-            this.label1.Location = new System.Drawing.Point(19, 61);
+            this.label1.Location = new System.Drawing.Point(19, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(412, 20);
             this.label1.TabIndex = 25;
