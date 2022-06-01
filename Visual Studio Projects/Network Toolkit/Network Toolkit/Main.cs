@@ -183,7 +183,7 @@ namespace Network_Toolkit
             {
                 _Driver.Controller.BeginExclusion((bool)OBJ).ContinueWith((R) =>
                 {
-                    if (R.Result)
+                    if (R.Result.Success)
                     {
                         this.Invoke((MethodInvoker)delegate () {
                             Views.NIFWait NIF = new Views.NIFWait();
@@ -192,9 +192,15 @@ namespace Network_Toolkit
                             PAN_ViewContainer.Controls.Clear();
                             PAN_ViewContainer.Controls.Add(NIF);
                         });
+                    }
+                    else
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show(R.Result.Message, "Failed To Start Exclusion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        });
 
                     }
-                   
+
 
                 });
             }
@@ -215,7 +221,7 @@ namespace Network_Toolkit
 
                 _Driver.Controller.BeginInclusion(IO).ContinueWith((R) =>
                 {
-                    if (R.Result)
+                    if (R.Result.Success)
                     {
 
                         this.Invoke((MethodInvoker)delegate () {
@@ -228,7 +234,14 @@ namespace Network_Toolkit
                        
 
                     }
-                   
+                    else
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show(R.Result.Message, "Failed To Start Inclsuion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        });
+
+                    }
+
 
                 });
             }

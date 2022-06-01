@@ -28,7 +28,23 @@ namespace Network_Toolkit.Views
 
             new Task(async () => {
 
-                ValueID[] VIDs = await Node.GetDefinedValueIDs();
+                ValueID[] VIDs = null;
+                CMDResult Res = await Node.GetDefinedValueIDs();
+
+                if (Res.Success)
+                {
+                    VIDs = Res.ResultPayload as ValueID[];
+                }
+                else
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show(Res.Message, "Failed To Obtain Value IDs", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+
+                    return;
+                }
+                
+
                 var CCGroups = VIDs.GroupBy((VID) => VID.commandClassName).OrderBy((G) => G.Key);
 
                 foreach (var Group in CCGroups)
@@ -45,8 +61,38 @@ namespace Network_Toolkit.Views
 
                     foreach (ValueID VID in Group)
                     {
-                        ValueMetadata VMD = await Node.GetValueMetadata(VID);
-                        JObject V = await Node.GetValue(VID);
+                        CMDResult VMDCMD = await Node.GetValueMetadata(VID);
+                        ValueMetadata VMD = null;
+                        if (VMDCMD.Success)
+                        {
+                            VMD = VMDCMD.ResultPayload as ValueMetadata;
+                        }
+                        else
+                        {
+                            this.Invoke((MethodInvoker)delegate () {
+                                MessageBox.Show(Res.Message, "Failed To Obtain Value Meatadata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            });
+
+                            return;
+                        }
+
+
+                        CMDResult VCMD = await Node.GetValue(VID);
+                        JObject V = null;
+                        if (VCMD.Success)
+                        {
+                            V = VCMD.ResultPayload as JObject;
+                        }
+                        else
+                        {
+                            this.Invoke((MethodInvoker)delegate () {
+                                MessageBox.Show(Res.Message, "Failed To Obtain Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            });
+
+                            return;
+                        }
+
+                      
 
                         ListViewItem LVI = new ListViewItem(VMD.label);
                         LVI.Group = LVG;
@@ -78,16 +124,16 @@ namespace Network_Toolkit.Views
         {
             Driver.Controller.HealNode(ZwaveNode.id).ContinueWith((R) =>
             {
-                if (R.Result)
+                if (R.Result.Success)
                 {
                     this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("The node has been healed!", "Heal Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("The Node has been healed!", "Node Healed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     });
                 }
                 else
                 {
                     this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("The node failed to heal!", "Heal Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(R.Result.Message ?? "", "Failed To Heal Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
               
@@ -100,10 +146,10 @@ namespace Network_Toolkit.Views
         {
             ZwaveNode.RefreshInfo().ContinueWith((R) =>
             {
-                if (!R.Result)
+                if (!R.Result.Success)
                 {
                     this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("The node failed to get interviewed!", "Interview Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(R.Result.Message, "Failed To Interview Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
             });
@@ -113,16 +159,16 @@ namespace Network_Toolkit.Views
         private void button5_Click(object sender, EventArgs e)
         {
             Driver.Controller.RemoveFailedNode(ZwaveNode.id).ContinueWith((R) => {
-                if(R.Result)
+                if(R.Result.Success)
                 {
                     this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("The node has been removed!", "Remove Failed Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("The node has been removed!", "Node Removed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     });
                 }
                 else
                 {
                     this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("The node could not get removed!", "Remove Failed Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(R.Result.Message, "Failed To Remove Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
 

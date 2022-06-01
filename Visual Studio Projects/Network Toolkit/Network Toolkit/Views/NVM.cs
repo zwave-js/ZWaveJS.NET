@@ -32,11 +32,21 @@ namespace Network_Toolkit.Views
             {
                 _Driver.Controller.BackupNVMRaw(Progress).ContinueWith((R) =>
                 {
-                    File.WriteAllBytes(SFD.FileName, R.Result);
+                    if (R.Result.Success)
+                    {
+                        File.WriteAllBytes(SFD.FileName, R.Result.ResultPayload as byte[]);
 
-                    this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("NVM backup has completed", "Backup NVM", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    });
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show("NVM backup has completed", "Backup NVM Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        });
+                    }
+                    else
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show(R.Result.Message, "Failed To Backup NVM", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        });
+                    }
+                   
 
                 });
             }
@@ -44,8 +54,6 @@ namespace Network_Toolkit.Views
 
         private void Progress(int Read, int Total)
         {
-
-
             this.Invoke((MethodInvoker)delegate () {
                 PB_Progress.Value = Convert.ToInt32(((decimal)Read / (decimal)Total) * 100);
             });
@@ -69,10 +77,20 @@ namespace Network_Toolkit.Views
 
                 _Driver.Controller.RestoreNVM(Data,_Convert,Write).ContinueWith((R) =>
                 {
+                    if (R.Result.Success)
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show("NVM restore has completed. Please allow 60 seconds for the Driver to restart.", "Restore NVM Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        });
+                    }
+                    else
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show(R.Result.Message, "Failed To Restore NVM", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        });
+                    }
 
-                    this.Invoke((MethodInvoker)delegate () {
-                        MessageBox.Show("NVM restore has completed. Please allow 60 seconds for the Driver to restart.", "Restore NVM", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    });
+                   
                   
                 });
             }
