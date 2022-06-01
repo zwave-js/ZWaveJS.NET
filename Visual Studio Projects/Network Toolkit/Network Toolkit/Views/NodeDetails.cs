@@ -191,7 +191,8 @@ namespace Network_Toolkit.Views
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            UpdateFirmware UF = new UpdateFirmware(ZwaveNode);
+            UF.ShowDialog();
         }
 
         private void button1_Click(object sender, EventArgs e)
