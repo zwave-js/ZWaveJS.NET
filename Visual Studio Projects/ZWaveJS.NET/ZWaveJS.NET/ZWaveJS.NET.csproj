@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>3.0.0-alpha.5</Version>
+    <Version>3.0.0-alpha.6</Version>
     <Authors>Marcus Davies</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>ZWave JS</Company>

@@ -36,7 +36,7 @@ namespace ZWaveJS.NET
             Request.Add("commandClass", CommandClass);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.Client.Send(RequestPL);
+            Driver.Client.SendAsync(RequestPL);
 
             return Result.Task;
         }
@@ -69,7 +69,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.Client.Send(RequestPL);
+            Driver.Client.SendAsync(RequestPL);
 
             return Result.Task;
         }

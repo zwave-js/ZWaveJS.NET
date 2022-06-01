@@ -19,6 +19,7 @@ namespace ZWaveJS.NET
             if (ServerProcess != null && !ServerProcess.HasExited)
             {
                 ServerProcess.Kill();
+                ServerProcess = null;
             }
         }
 
@@ -76,10 +77,6 @@ namespace ZWaveJS.NET
                 {
                     case 1:
                         FatalError?.Invoke();
-                        if (!ServerProcess.HasExited)
-                        {
-                            ServerProcess.Kill();
-                        }
                         break;
                 }
             }

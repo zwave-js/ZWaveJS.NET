@@ -13,19 +13,20 @@ namespace ZWaveJS.NET
 {
     public class Driver
     {
-        internal static WSClient Client;
+        internal static WatsonWebsocket.WatsonWsClient Client;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
+        internal static CustomBooleanJsonConverter BoolConverter;
+        internal static bool Inited = false;
+
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private static int SchemaVersionID = 17;
-        internal static CustomBooleanJsonConverter BoolConverter;
-
         private string SerialPort;
         private ZWaveOptions Options;
         private Uri WSAddress;
         private bool Host = true;
 
-        internal static bool Inited = false;
+        
         private string _ZWaveJSDriverVersion;
         public string ZWaveJSDriverVersion
         {
@@ -79,14 +80,14 @@ namespace ZWaveJS.NET
                 int Status = JO.SelectToken("event.status").Value<int>();
                 int Wait = 0;
 
-                if(JO.SelectToken("event.waitTime") != null)
+                if (JO.SelectToken("event.waitTime") != null)
                 {
                     Wait = JO.SelectToken("event.waitTime").Value<int>();
                 }
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_FirmwareUpdateFinished(Status, Wait);
-                
+
             });
 
 
@@ -156,7 +157,7 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("ready", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ZWaveNode NNI = JsonConvert.DeserializeObject<ZWaveNode>(JO.SelectToken("event.nodeState").ToString(),BoolConverter);
+                ZWaveNode NNI = JsonConvert.DeserializeObject<ZWaveNode>(JO.SelectToken("event.nodeState").ToString(), BoolConverter);
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 this.Controller.Nodes.ReplaceInformation(NNI, N);
@@ -259,10 +260,10 @@ namespace ZWaveJS.NET
                 NN.id = NID;
 
                 this.Controller.Nodes.AddNodeToCollection(NN);
-                this.Controller.Trigger_NodeAdded(NN,IR);
+                this.Controller.Trigger_NodeAdded(NN, IR);
             });
 
-            ControllerEventMap.Add("grant security classes", (JO) =>
+            ControllerEventMap.Add("grant security classes",  (JO) =>
             {
                 InclusionGrant RIG = JsonConvert.DeserializeObject<InclusionGrant>(JO.SelectToken("event.requested").ToString());
                 InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
@@ -273,10 +274,10 @@ namespace ZWaveJS.NET
                 Request.Add("inclusionGrant", SIG);
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                Client.Send(RequestPL);
+                Client.SendAsync(RequestPL);
             });
 
-            ControllerEventMap.Add("validate dsk and enter pin", (JO) =>
+            ControllerEventMap.Add("validate dsk and enter pin",  (JO) =>
             {
                 string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").Value<string>());
 
@@ -286,7 +287,7 @@ namespace ZWaveJS.NET
                 Request.Add("pin", DSK);
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                Client.Send(RequestPL);
+                Client.SendAsync(RequestPL);
             });
 
             ControllerEventMap.Add("heal network progress", (JO) =>
@@ -312,16 +313,12 @@ namespace ZWaveJS.NET
             MapControllerEvents();
         }
 
-        public void Destroy()
-        {
-            Client.Stop();
-            Server.Terminate();
-        }
+      
 
         // Client Mode
         public Driver(Uri Server, int SchemaVersion = 0)
         {
-            if(SchemaVersion > 0)
+            if (SchemaVersion > 0)
             {
                 SchemaVersionID = SchemaVersion;
             }
@@ -329,14 +326,13 @@ namespace ZWaveJS.NET
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
-           
+
 
             this.WSAddress = Server;
             this.Host = false;
-            
+
             InternalPrep();
 
-       
         }
 
         // Host Mode
@@ -346,9 +342,9 @@ namespace ZWaveJS.NET
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
-            
+
             Server.FatalError += Server_FatalError;
-            
+
             this.SerialPort = SerialPort;
             this.Options = Options;
             this.WSAddress = new Uri("ws://127.0.0.1:" + ServerCommunicationPort);
@@ -356,51 +352,16 @@ namespace ZWaveJS.NET
 
             InternalPrep();
 
-      
-
         }
 
-        private void InternalPrep()
-        {
-            if (this.Host)
-            {
-                Server.Start(SerialPort, Options, ServerCommunicationPort);
-            }
-            
-            Client = new WSClient(this.WSAddress);
-            Client.MessageReceivedEvent += ProcessMessage;
-        }
-
-        internal void Restart()
-        {
-            Destroy();
-            InternalPrep();
-            Start();
-        }
-
-        private void Server_FatalError()
-        {
-            Client.Stop();
-            Task.Run(async () =>
-            {
-                StartupErrorEvent?.Invoke("Driver failed to initialize.");
-            });
-            
-        }
-
-        // Start Driver
-        public void Start()
-        {
-            Client.Start();
-        }
+     
 
         // Proces Message
-        private void ProcessMessage(WebSocketMessageType _Type, byte[] Data)
+        private void WebsocketClient_MessageReceived(object sender, WatsonWebsocket.MessageReceivedEventArgs e)
         {
-
-            if (_Type == WebSocketMessageType.Text)
+            if (e.MessageType == WebSocketMessageType.Text)
             {
-                string Content = System.Text.Encoding.UTF8.GetString(Data);
+                string Content = System.Text.Encoding.UTF8.GetString(e.Data);
                 if (System.Diagnostics.Debugger.IsAttached)
                 {
                     System.Diagnostics.Debug.WriteLine(Content);
@@ -437,7 +398,7 @@ namespace ZWaveJS.NET
 
                     string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
 
-                    Client.Send(RequestPL);
+                    Client.SendAsync(RequestPL);
 
                     return;
                 }
@@ -469,6 +430,61 @@ namespace ZWaveJS.NET
             }
         }
 
+        public void Destroy()
+        {
+            if (Client != null)
+            {
+                if (Client.Connected)
+                {
+                    Client.Stop();
+                }
+
+                Client.Dispose();
+                Client = null;
+            }
+
+            Server.Terminate();
+
+
+        }
+
+        private void InternalPrep()
+        {
+            if (this.Host)
+            {
+                Server.Start(SerialPort, Options, ServerCommunicationPort);
+            }
+
+            Client = new WatsonWebsocket.WatsonWsClient(this.WSAddress);
+            Client.KeepAliveInterval = 15;
+            Client.MessageReceived += WebsocketClient_MessageReceived;
+
+        }
+
+        // Start Driver
+        public async void Start()
+        {
+            await Client.StartWithTimeoutAsync(60);
+        }
+
+        internal void Restart()
+        {
+            Destroy();
+            InternalPrep();
+            Start();
+        }
+
+        private void Server_FatalError()
+        {
+            Destroy();
+            StartupErrorEvent?.Invoke("Fatal ZWave Server Error.");
+        }
+
+      
+
+
+
+
         private void SetAPIVersionCB(JObject JO)
         {
             if (JO.Value<bool>("success"))
@@ -482,7 +498,7 @@ namespace ZWaveJS.NET
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
 
-                Client.Send(RequestPL);
+                Client.SendAsync(RequestPL);
             }
             else
             {
