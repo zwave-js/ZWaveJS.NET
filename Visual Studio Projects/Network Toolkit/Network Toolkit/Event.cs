@@ -14,6 +14,7 @@ namespace Network_Toolkit
     public partial class Event : Form
     {
         ZWaveNode _Node;
+        bool _Shown = false;
         public Event(ZWaveNode Node)
         {
 
@@ -25,30 +26,36 @@ namespace Network_Toolkit
             Node.ValueNotification += Node_ValueNotification;
             Node.Notification += Node_Notification;
             Node.StatisticsUpdated += Node_StatisticsUpdated;
+
+           
+
+           
         }
 
         private void Node_StatisticsUpdated(ZWaveNode Node, NodeStatistics Statistics)
         {
             this.Invoke((MethodInvoker)delegate ()
             {
-                LBL_CRX.Text = Statistics.commandsRX.ToString();
-                LBL_CRXD.Text = Statistics.commandsDroppedRX.ToString();
-
-                LBL_CTX.Text = Statistics.commandsTX.ToString();
-                LBL_CTXD.Text = Statistics.commandsDroppedTX.ToString();
-
-                LBL_RT.Text = Statistics.rtt.ToString();
-                LBL_TO.Text = Statistics.timeoutResponse.ToString();
+                LST_Stats.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals("CTX")).SubItems[1].Text = Statistics.commandsTX.ToString();
+                LST_Stats.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals("CTXD")).SubItems[1].Text = Statistics.commandsDroppedTX.ToString();
+                LST_Stats.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals("CRX")).SubItems[1].Text = Statistics.commandsRX.ToString();
+                LST_Stats.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals("CRXD")).SubItems[1].Text = Statistics.commandsDroppedRX.ToString();
+                LST_Stats.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals("TO")).SubItems[1].Text = Statistics.timeoutResponse.ToString();
+                LST_Stats.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals("RTT")).SubItems[1].Text = Statistics.rtt.ToString();
             });
         }
 
         private void Node_Notification(ZWaveNode Node, int ccId, Newtonsoft.Json.Linq.JObject Args)
         {
+           
             this.Invoke((MethodInvoker)delegate ()
             {
-                TXT_Log.Text += DateTime.Now.ToString("dd.MM.yyyy HH:mm") + " - " + "NOTIFICATION" + Environment.NewLine;
-                TXT_Log.Text += "----------------------------------------------------------------" + Environment.NewLine + Environment.NewLine;
-                TXT_Log.Text += Args.ToString(Newtonsoft.Json.Formatting.Indented) + Environment.NewLine + Environment.NewLine;
+                ListViewItem LVI = new ListViewItem(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                LVI.SubItems.Add("NOTIFICATION");
+                LVI.SubItems.Add(Args.ToString());
+                LST_Events.Items.Add(LVI);
+
+                LST_Events.Items[LST_Events.Items.Count - 1].EnsureVisible();
             });
 
         }
@@ -57,9 +64,12 @@ namespace Network_Toolkit
         {
             this.Invoke((MethodInvoker)delegate ()
             {
-                TXT_Log.Text += DateTime.Now.ToString("dd.MM.yyyy HH:mm") + " - " + "VALUE NOTIIFCATION" + Environment.NewLine;
-                TXT_Log.Text += "----------------------------------------------------------------" + Environment.NewLine + Environment.NewLine;
-                TXT_Log.Text += Args.ToString(Newtonsoft.Json.Formatting.Indented) + Environment.NewLine + Environment.NewLine;
+                ListViewItem LVI = new ListViewItem(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                LVI.SubItems.Add("VALUE NOTIFICATION");
+                LVI.SubItems.Add(Args.ToString());
+                LST_Events.Items.Add(LVI);
+
+                LST_Events.Items[LST_Events.Items.Count - 1].EnsureVisible();
             });
         }
 
@@ -67,9 +77,12 @@ namespace Network_Toolkit
         {
             this.Invoke((MethodInvoker)delegate ()
             {
-                TXT_Log.Text += DateTime.Now.ToString("dd.MM.yyyy HH:mm") + " - " + "VALUE UPDATED" + Environment.NewLine;
-                TXT_Log.Text += "----------------------------------------------------------------" + Environment.NewLine + Environment.NewLine;
-                TXT_Log.Text += Args.ToString(Newtonsoft.Json.Formatting.Indented) + Environment.NewLine + Environment.NewLine;
+                ListViewItem LVI = new ListViewItem(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                LVI.SubItems.Add("VALUE UPDATED");
+                LVI.SubItems.Add(Args.ToString());
+                LST_Events.Items.Add(LVI);
+
+                LST_Events.Items[LST_Events.Items.Count - 1].EnsureVisible();
             });
         }
 
@@ -89,6 +102,22 @@ namespace Network_Toolkit
             _Node.ValueNotification -= Node_ValueNotification;
             _Node.Notification -= Node_Notification;
             _Node.StatisticsUpdated -= Node_StatisticsUpdated;
+        }
+
+        private void Event_Shown(object sender, EventArgs e)
+        {
+            if (!_Shown)
+            {
+                foreach (ListViewItem LVI in LST_Stats.Items)
+                {
+                    LVI.SubItems.Add("");
+                }
+
+                Node_StatisticsUpdated(_Node, _Node.statistics);
+
+                _Shown = true;
+            }
+            
         }
     }
 }

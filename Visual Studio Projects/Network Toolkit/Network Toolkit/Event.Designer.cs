@@ -29,24 +29,24 @@ namespace Network_Toolkit
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Commands TX");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Commands TXD");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Commands RX");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("Commands RXD");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Timeouts");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Round Trip Time");
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.TXT_Log = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.LBL_CTX = new System.Windows.Forms.Label();
-            this.LBL_CTXD = new System.Windows.Forms.Label();
-            this.LBL_CRX = new System.Windows.Forms.Label();
-            this.LBL_CRXD = new System.Windows.Forms.Label();
-            this.LBL_TO = new System.Windows.Forms.Label();
-            this.LBL_RT = new System.Windows.Forms.Label();
+            this.LST_Events = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.LST_Stats = new System.Windows.Forms.ListView();
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,22 +74,12 @@ namespace Network_Toolkit
             this.label2.TabIndex = 22;
             this.label2.Text = "Device Events";
             // 
-            // TXT_Log
-            // 
-            this.TXT_Log.Location = new System.Drawing.Point(16, 117);
-            this.TXT_Log.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.TXT_Log.Multiline = true;
-            this.TXT_Log.Name = "TXT_Log";
-            this.TXT_Log.ReadOnly = true;
-            this.TXT_Log.Size = new System.Drawing.Size(523, 197);
-            this.TXT_Log.TabIndex = 7;
-            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(415, 466);
+            this.button1.Location = new System.Drawing.Point(415, 534);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(127, 42);
@@ -116,141 +106,81 @@ namespace Network_Toolkit
             this.label3.TabIndex = 25;
             this.label3.Text = "Network Statistics";
             // 
-            // label4
+            // LST_Events
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(18, 368);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(108, 16);
-            this.label4.TabIndex = 26;
-            this.label4.Text = "Commands TX";
+            this.LST_Events.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.LST_Events.HideSelection = false;
+            this.LST_Events.Location = new System.Drawing.Point(16, 116);
+            this.LST_Events.Name = "LST_Events";
+            this.LST_Events.Size = new System.Drawing.Size(526, 205);
+            this.LST_Events.TabIndex = 39;
+            this.LST_Events.UseCompatibleStateImageBehavior = false;
+            this.LST_Events.View = System.Windows.Forms.View.Details;
             // 
-            // label6
+            // columnHeader1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(18, 391);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(173, 16);
-            this.label6.TabIndex = 28;
-            this.label6.Text = "Commands TX Dropped";
+            this.columnHeader1.Text = "Date";
+            this.columnHeader1.Width = 117;
             // 
-            // label5
+            // columnHeader2
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(254, 391);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(174, 16);
-            this.label5.TabIndex = 30;
-            this.label5.Text = "Commands RX Dropped";
+            this.columnHeader2.Text = "Event Type";
+            this.columnHeader2.Width = 152;
             // 
-            // label7
+            // columnHeader3
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(254, 368);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(109, 16);
-            this.label7.TabIndex = 29;
-            this.label7.Text = "Commands RX";
+            this.columnHeader3.Text = "Object";
+            this.columnHeader3.Width = 211;
             // 
-            // label8
+            // LST_Stats
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(18, 415);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(64, 16);
-            this.label8.TabIndex = 31;
-            this.label8.Text = "Timeout";
+            this.LST_Stats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader4,
+            this.columnHeader5});
+            this.LST_Stats.HideSelection = false;
+            listViewItem7.Tag = "CTX";
+            listViewItem8.Tag = "CTXD";
+            listViewItem9.Tag = "CRX";
+            listViewItem10.Tag = "CRXD";
+            listViewItem11.Tag = "TO";
+            listViewItem12.Tag = "RTT";
+            this.LST_Stats.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
+            this.LST_Stats.Location = new System.Drawing.Point(12, 355);
+            this.LST_Stats.Name = "LST_Stats";
+            this.LST_Stats.Size = new System.Drawing.Size(531, 163);
+            this.LST_Stats.TabIndex = 40;
+            this.LST_Stats.UseCompatibleStateImageBehavior = false;
+            this.LST_Stats.View = System.Windows.Forms.View.Details;
             // 
-            // label9
+            // columnHeader4
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(254, 415);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(39, 16);
-            this.label9.TabIndex = 32;
-            this.label9.Text = "RTT";
+            this.columnHeader4.Text = "Measure";
+            this.columnHeader4.Width = 208;
             // 
-            // LBL_CTX
+            // columnHeader5
             // 
-            this.LBL_CTX.AutoSize = true;
-            this.LBL_CTX.Location = new System.Drawing.Point(201, 368);
-            this.LBL_CTX.Name = "LBL_CTX";
-            this.LBL_CTX.Size = new System.Drawing.Size(15, 16);
-            this.LBL_CTX.TabIndex = 33;
-            this.LBL_CTX.Text = "0";
-            // 
-            // LBL_CTXD
-            // 
-            this.LBL_CTXD.AutoSize = true;
-            this.LBL_CTXD.Location = new System.Drawing.Point(201, 391);
-            this.LBL_CTXD.Name = "LBL_CTXD";
-            this.LBL_CTXD.Size = new System.Drawing.Size(15, 16);
-            this.LBL_CTXD.TabIndex = 34;
-            this.LBL_CTXD.Text = "0";
-            // 
-            // LBL_CRX
-            // 
-            this.LBL_CRX.AutoSize = true;
-            this.LBL_CRX.Location = new System.Drawing.Point(442, 368);
-            this.LBL_CRX.Name = "LBL_CRX";
-            this.LBL_CRX.Size = new System.Drawing.Size(15, 16);
-            this.LBL_CRX.TabIndex = 35;
-            this.LBL_CRX.Text = "0";
-            // 
-            // LBL_CRXD
-            // 
-            this.LBL_CRXD.AutoSize = true;
-            this.LBL_CRXD.Location = new System.Drawing.Point(442, 391);
-            this.LBL_CRXD.Name = "LBL_CRXD";
-            this.LBL_CRXD.Size = new System.Drawing.Size(15, 16);
-            this.LBL_CRXD.TabIndex = 36;
-            this.LBL_CRXD.Text = "0";
-            // 
-            // LBL_TO
-            // 
-            this.LBL_TO.AutoSize = true;
-            this.LBL_TO.Location = new System.Drawing.Point(201, 415);
-            this.LBL_TO.Name = "LBL_TO";
-            this.LBL_TO.Size = new System.Drawing.Size(15, 16);
-            this.LBL_TO.TabIndex = 37;
-            this.LBL_TO.Text = "0";
-            // 
-            // LBL_RT
-            // 
-            this.LBL_RT.AutoSize = true;
-            this.LBL_RT.Location = new System.Drawing.Point(442, 421);
-            this.LBL_RT.Name = "LBL_RT";
-            this.LBL_RT.Size = new System.Drawing.Size(15, 16);
-            this.LBL_RT.TabIndex = 38;
-            this.LBL_RT.Text = "0";
+            this.columnHeader5.Text = "Value";
+            this.columnHeader5.Width = 246;
             // 
             // Event
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(555, 527);
-            this.Controls.Add(this.LBL_RT);
-            this.Controls.Add(this.LBL_TO);
-            this.Controls.Add(this.LBL_CRXD);
-            this.Controls.Add(this.LBL_CRX);
-            this.Controls.Add(this.LBL_CTXD);
-            this.Controls.Add(this.LBL_CTX);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label4);
+            this.ClientSize = new System.Drawing.Size(555, 600);
+            this.Controls.Add(this.LST_Stats);
+            this.Controls.Add(this.LST_Events);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.TXT_Log);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -258,6 +188,7 @@ namespace Network_Toolkit
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Device Events";
             this.Load += new System.EventHandler(this.Event_Load);
+            this.Shown += new System.EventHandler(this.Event_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -269,21 +200,15 @@ namespace Network_Toolkit
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox TXT_Log;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label LBL_CTX;
-        private System.Windows.Forms.Label LBL_CTXD;
-        private System.Windows.Forms.Label LBL_CRX;
-        private System.Windows.Forms.Label LBL_CRXD;
-        private System.Windows.Forms.Label LBL_TO;
-        private System.Windows.Forms.Label LBL_RT;
+        private System.Windows.Forms.ListView LST_Events;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ListView LST_Stats;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
     }
 }
