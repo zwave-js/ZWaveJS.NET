@@ -26,10 +26,6 @@ namespace Network_Toolkit
             Node.ValueNotification += Node_ValueNotification;
             Node.Notification += Node_Notification;
             Node.StatisticsUpdated += Node_StatisticsUpdated;
-
-           
-
-           
         }
 
         private void Node_StatisticsUpdated(ZWaveNode Node, NodeStatistics Statistics)
