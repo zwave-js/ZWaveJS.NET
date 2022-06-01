@@ -55,10 +55,7 @@ namespace Network_Toolkit.Views
                     this.Invoke((MethodInvoker)delegate () {
                         LST_Values.Groups.Add(LVG);
                     });
-
-                   
                     
-
                     foreach (ValueID VID in Group)
                     {
                         CMDResult VMDCMD = await Node.GetValueMetadata(VID);
@@ -69,7 +66,8 @@ namespace Network_Toolkit.Views
                         }
                         else
                         {
-                            this.Invoke((MethodInvoker)delegate () {
+                            this.Invoke((MethodInvoker)delegate ()
+                            {
                                 MessageBox.Show(Res.Message, "Failed To Obtain Value Meatadata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             });
 
@@ -85,30 +83,38 @@ namespace Network_Toolkit.Views
                         }
                         else
                         {
-                            this.Invoke((MethodInvoker)delegate () {
+                            this.Invoke((MethodInvoker)delegate ()
+                            {
                                 MessageBox.Show(Res.Message, "Failed To Obtain Value", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             });
 
                             return;
                         }
 
-                      
-
                         ListViewItem LVI = new ListViewItem(VMD.label);
+                        
+
                         LVI.Group = LVG;
-                       
-                            if (V.ContainsKey("value"))
-                            {
-                                LVI.SubItems.Add(V.SelectToken("value").ToString());
-                            }
-                            else
-                            {
-                                LVI.SubItems.Add("");
 
-                            }
+                        LVI.SubItems.Add(VID.endpoint.ToString());
+                        if (V.ContainsKey("value"))
+                        {
+                            LVI.SubItems.Add(V.SelectToken("value").ToString());
+                        }
+                        else
+                        {
+                            LVI.SubItems.Add("");
+
+                        }
+                        
+                        if (VMD.type == "number" && VMD.writeable)
+                        {
+                            LVI.Tag = VID;
+                        }
 
 
-                        this.Invoke((MethodInvoker)delegate () {
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
                             LST_Values.Items.Add(LVI);
                         });
 
@@ -180,6 +186,16 @@ namespace Network_Toolkit.Views
         {
             Event E = new Event(ZwaveNode);
             E.Show();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
 
         }
     }

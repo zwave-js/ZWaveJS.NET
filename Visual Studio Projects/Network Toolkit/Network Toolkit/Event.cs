@@ -24,6 +24,22 @@ namespace Network_Toolkit
             Node.ValueUpdated += Node_ValueUpdated;
             Node.ValueNotification += Node_ValueNotification;
             Node.Notification += Node_Notification;
+            Node.StatisticsUpdated += Node_StatisticsUpdated;
+        }
+
+        private void Node_StatisticsUpdated(ZWaveNode Node, NodeStatistics Statistics)
+        {
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                LBL_CRX.Text = Statistics.commandsRX.ToString();
+                LBL_CRXD.Text = Statistics.commandsDroppedRX.ToString();
+
+                LBL_CTX.Text = Statistics.commandsTX.ToString();
+                LBL_CTXD.Text = Statistics.commandsDroppedTX.ToString();
+
+                LBL_RT.Text = Statistics.rtt.ToString();
+                LBL_TO.Text = Statistics.timeoutResponse.ToString();
+            });
         }
 
         private void Node_Notification(ZWaveNode Node, int ccId, Newtonsoft.Json.Linq.JObject Args)
@@ -72,6 +88,7 @@ namespace Network_Toolkit
             _Node.ValueUpdated -= Node_ValueUpdated;
             _Node.ValueNotification -= Node_ValueNotification;
             _Node.Notification -= Node_Notification;
+            _Node.StatisticsUpdated -= Node_StatisticsUpdated;
         }
     }
 }
