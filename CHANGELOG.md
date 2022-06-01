@@ -6,6 +6,7 @@
 
  - Breaking Changes
    - The libary has been retargeted for **.NET Standard 2.0** and **.NET 4.5** to support a wider varitey of frameworks
+   - All ZWave methods, now return a task encapsulating a **CMDResult** instance, containing the response payload (if any) including the **success** property and any error message.
    - The **NodeInterviewFailed** event now returns a **NodeInterviewFailedEventArgs** instance and no longer a generic **JObject** instance
    - The controller events **ValidateDSK** and **GrantSecurityClasses** have been removed.
    - **BeginInclusion** and **ReplaceFailedNode** now require an **InclusionOptions** instance (which contains User callbacks)

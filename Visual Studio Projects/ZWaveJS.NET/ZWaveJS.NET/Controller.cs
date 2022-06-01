@@ -114,26 +114,22 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node, Result);
         }
 
-        public Task<bool> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress ConvertProgress = null, RestoreNVMProgress RestoreProgress = null)
+        public Task<CMDResult> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress ConvertProgress = null, RestoreNVMProgress RestoreProgress = null)
         {
             ConvertRestoreNVMProgressSub = ConvertProgress;
             RestoreNVMProgressSub = RestoreProgress;
 
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                if (JO.Value<bool>("success"))
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+                if (Res.Success)
                 {
-                    Result.SetResult(true);
                     _Driver.Restart();
                 }
-                else
-                {
-                    Result.SetResult(false);
-                }
-                
-                
+ 
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -147,16 +143,23 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<byte[]> BackupNVMRaw(BackupNVMProgress OnProgress = null)
+        public Task<CMDResult> BackupNVMRaw(BackupNVMProgress OnProgress = null)
         {
             BackupNVMProgressSub = OnProgress;
 
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<byte[]> Result = new TaskCompletionSource<byte[]>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                string B64 = JO.SelectToken("result.nvmData").ToString();
-                Result.SetResult(Convert.FromBase64String(B64));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    string B64 = JO.SelectToken("result.nvmData").ToString();
+                    Res.SetPayload(Convert.FromBase64String(B64));
+                }
+
+                Result.SetResult(Res);
+                
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -169,11 +172,14 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> ReplaceFailedNode(int NodeID, InclusionOptions Options)
+        public Task<CMDResult> ReplaceFailedNode(int NodeID, InclusionOptions Options)
         {
             ValidateDSKAndEnterPINSub = null;
             GrantSecurityClassesSub = null;
             AbortSub = null;
+
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             switch (Options.strategy)
             {
@@ -189,15 +195,16 @@ namespace ZWaveJS.NET
             {
                 if(ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {
-                    throw new InvalidOperationException("S2 Security require userCallbacks to be provided");
+                    CMDResult Res = new CMDResult("ZWJS.NET.ERR.001", "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
                 }
             }
-
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> _Options = new Dictionary<string, object>();
@@ -215,14 +222,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> RemoveFailedNode(int NodeID)
+        public Task<CMDResult> RemoveFailedNode(int NodeID)
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult RES = new CMDResult(JO);
+                Result.SetResult(RES);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -237,14 +245,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> HealNode(int NodeID)
+        public Task<CMDResult> HealNode(int NodeID)
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -259,20 +268,20 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> BeginHealingNetwork()
+        public Task<CMDResult> BeginHealingNetwork()
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                bool _Result = JO.Value<bool>("success");
-                if (_Result)
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
                 {
                     this.isHealNetworkActive = true;
                 }
 
-                Result.SetResult(_Result);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -286,16 +295,21 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> StopHealingNetwork()
+        public Task<CMDResult> StopHealingNetwork()
         {
             
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                this.isHealNetworkActive = false;
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    this.isHealNetworkActive = false;
+                }
+
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -309,11 +323,14 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> BeginInclusion(InclusionOptions Options)
+        public Task<CMDResult> BeginInclusion(InclusionOptions Options)
         {
             ValidateDSKAndEnterPINSub = null;
             GrantSecurityClassesSub = null;
             AbortSub = null;
+
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             switch (Options.strategy)
             {
@@ -329,16 +346,17 @@ namespace ZWaveJS.NET
             {
                 if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {
-                    throw new InvalidOperationException("S2 Security require userCallbacks to be provided");
+                    CMDResult Res = new CMDResult("ZWJS.NET.ERR.001", "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
                 }
 
             }
-
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> _Options = new Dictionary<string, object>();
@@ -356,14 +374,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> StopInclusion()
+        public Task<CMDResult> StopInclusion()
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -376,14 +395,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> UnprovisionSmartStartNode(int NodeID)
+        public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -398,14 +418,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> UnprovisionSmartStartNode(string DSK)
+        public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -421,14 +442,15 @@ namespace ZWaveJS.NET
         }
 
 
-        public Task<bool> ProvisionSmartStartNode(string QRCode)
+        public Task<CMDResult> ProvisionSmartStartNode(string QRCode)
         {
             Guid ID = Guid.NewGuid();
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -443,15 +465,16 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> BeginExclusion(bool unprovision = false)
+        public Task<CMDResult> BeginExclusion(bool unprovision = false)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -466,15 +489,16 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> StopExclusion()
+        public Task<CMDResult> StopExclusion()
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

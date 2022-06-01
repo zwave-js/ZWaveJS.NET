@@ -11,14 +11,21 @@ namespace ZWaveJS.NET
         internal Endpoint() { }
 
 
-        public Task<bool> SupportsCCAPI(int CommandClass)
+        public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.SelectToken("result.supported").Value<bool>());
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.SelectToken("result.supported").Value<bool>());
+                }
+                Result.SetResult(Res);
+
+              
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -34,14 +41,21 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<JObject> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
+        public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                }
+                Result.SetResult(Res);
+
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

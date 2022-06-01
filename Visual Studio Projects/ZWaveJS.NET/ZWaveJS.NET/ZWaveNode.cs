@@ -117,17 +117,23 @@ namespace ZWaveJS.NET
             NodeInterviewFailed?.Invoke(this, Args);
         }
 
-        public Task<LifelineHealthCheckSummary> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
+        public Task<CMDResult> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
         {
             LifelineHealthCheckProgressSub = OnProgress;
 
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<LifelineHealthCheckSummary> Result = new TaskCompletionSource<LifelineHealthCheckSummary>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                LifelineHealthCheckSummary LLHCS =  JsonConvert.DeserializeObject<LifelineHealthCheckSummary>(JO.SelectToken("result.summary").ToString());
-                Result.SetResult(LLHCS);
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    LifelineHealthCheckSummary LLHCS = JsonConvert.DeserializeObject<LifelineHealthCheckSummary>(JO.SelectToken("result.summary").ToString());
+                    Res.SetPayload(LLHCS);
+                }
+                
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -143,14 +149,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> AbortFirmwareUpdate()
+        public Task<CMDResult> AbortFirmwareUpdate()
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -165,14 +172,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> BeginFirmwareUpdate(string FileName)
+        public Task<CMDResult> BeginFirmwareUpdate(string FileName)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             FileInfo FI = new FileInfo(FileName);
@@ -191,14 +199,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> RefreshInfo()
+        public Task<CMDResult> RefreshInfo()
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(true);
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -212,14 +221,21 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<JObject> GetValue(ValueID ValueID)
+        public Task<CMDResult> GetValue(ValueID ValueID)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<JObject>("result"));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.Value<JObject>("result"));
+                }
+
+                Result.SetResult(Res);
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -234,14 +250,15 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
+        public Task<CMDResult> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<bool>("success"));
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -262,14 +279,20 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<JObject> PollValue(ValueID ValueID)
+        public Task<CMDResult> PollValue(ValueID ValueID)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.Value<JObject>("result"));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.Value<JObject>("result"));
+                }
+
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -284,14 +307,23 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<ValueID[]> GetDefinedValueIDs()
+        public Task<CMDResult> GetDefinedValueIDs()
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<ValueID[]> Result = new TaskCompletionSource<ValueID[]>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JsonConvert.DeserializeObject<ValueID[]>(JO.SelectToken("result.valueIds").ToString()));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JsonConvert.DeserializeObject<ValueID[]>(JO.SelectToken("result.valueIds").ToString()));
+                }
+
+                Result.SetResult(Res);
+
+
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -306,14 +338,21 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<ValueMetadata> GetValueMetadata(ValueID VID)
+        public Task<CMDResult> GetValueMetadata(ValueID VID)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<ValueMetadata> Result = new TaskCompletionSource<ValueMetadata>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JsonConvert.DeserializeObject<ValueMetadata>(JO.SelectToken("result").ToString()));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JsonConvert.DeserializeObject<ValueMetadata>(JO.SelectToken("result").ToString()));
+                }
+
+                Result.SetResult(Res);
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -329,14 +368,20 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> SupportsCCAPI(int CommandClass)
+        public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.SelectToken("result.supported").Value<bool>());
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.SelectToken("result.supported").Value<bool>());
+                    
+                }
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -351,14 +396,20 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<JObject> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
+        public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<JObject> Result = new TaskCompletionSource<JObject>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                }
+                Result.SetResult(Res);
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -386,15 +437,20 @@ namespace ZWaveJS.NET
             return endpoints;
         }
 
-        public Task<int> GetEndpointCount()
+        public Task<CMDResult> GetEndpointCount()
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<int> Result = new TaskCompletionSource<int>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.SelectToken("result.count").Value<int>()) ;
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.SelectToken("result.count").Value<int>());
+                }
+                Result.SetResult(Res);
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -408,16 +464,23 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<Enums.SecurityClass> GetHighestSecurityClass()
+        public Task<CMDResult> GetHighestSecurityClass()
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<Enums.SecurityClass> Result = new TaskCompletionSource<Enums.SecurityClass>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                int Value = JO.SelectToken("result.highestSecurityClass").Value<int>();
-                Result.SetResult((Enums.SecurityClass)Value);
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    int Value = JO.SelectToken("result.highestSecurityClass").Value<int>();
+                    Res.SetPayload((Enums.SecurityClass)Value);
+                }
+                Result.SetResult(Res);
+
+               
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -431,15 +494,21 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<bool> HasSecurityClass(Enums.SecurityClass Class)
+        public Task<CMDResult> HasSecurityClass(Enums.SecurityClass Class)
         {
             Guid ID = Guid.NewGuid();
 
-            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             Driver.Callbacks.Add(ID, (JO) =>
             {
-                Result.SetResult(JO.SelectToken("result.hasSecurityClass").Value<bool>());
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.SelectToken("result.hasSecurityClass").Value<bool>());
+                }
+                Result.SetResult(Res);
+              
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
