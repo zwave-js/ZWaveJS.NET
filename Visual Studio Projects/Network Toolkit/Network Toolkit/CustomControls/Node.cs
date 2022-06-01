@@ -80,12 +80,16 @@ namespace Network_Toolkit.CustomControls
 
         private void Node_NodeInterviewFailed(ZWaveNode Node, NodeInterviewFailedEventArgs Args)
         {
-            this.Invoke((MethodInvoker)delegate ()
+            if (Args.isFinal)
             {
-                PAN_Ready.BackColor = Color.Black;
-                PAN_Interviewed.BackColor = Color.Red;
+                this.Invoke((MethodInvoker)delegate ()
+                {
+                    PAN_Ready.BackColor = Color.Black;
+                    PAN_Interviewed.BackColor = Color.Red;
 
-            });
+                });
+            }
+           
         }
 
         private void Node_NodeInterviewStarted(ZWaveNode Node)
