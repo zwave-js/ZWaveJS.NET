@@ -29,12 +29,12 @@ namespace Network_Toolkit
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Commands TX");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Commands TXD");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Commands RX");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("Commands RXD");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Timeouts");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Round Trip Time");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Commands TX");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Commands TXD");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Commands RX");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Commands RXD");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Timeouts");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Round Trip Time");
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -57,7 +57,7 @@ namespace Network_Toolkit
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(-5, -12);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(570, 94);
             this.panel1.TabIndex = 6;
@@ -79,8 +79,8 @@ namespace Network_Toolkit
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(415, 534);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Location = new System.Drawing.Point(416, 501);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(127, 42);
             this.button1.TabIndex = 23;
@@ -93,7 +93,7 @@ namespace Network_Toolkit
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 97);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 16);
+            this.label1.Size = new System.Drawing.Size(79, 13);
             this.label1.TabIndex = 24;
             this.label1.Text = "ZWave Events";
             // 
@@ -102,7 +102,7 @@ namespace Network_Toolkit
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(13, 336);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 16);
+            this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 25;
             this.label3.Text = "Network Statistics";
             // 
@@ -141,22 +141,22 @@ namespace Network_Toolkit
             this.columnHeader4,
             this.columnHeader5});
             this.LST_Stats.HideSelection = false;
-            listViewItem7.Tag = "CTX";
-            listViewItem8.Tag = "CTXD";
-            listViewItem9.Tag = "CRX";
-            listViewItem10.Tag = "CRXD";
-            listViewItem11.Tag = "TO";
-            listViewItem12.Tag = "RTT";
+            listViewItem1.Tag = "CTX";
+            listViewItem2.Tag = "CTXD";
+            listViewItem3.Tag = "CRX";
+            listViewItem4.Tag = "CRXD";
+            listViewItem5.Tag = "TO";
+            listViewItem6.Tag = "RTT";
             this.LST_Stats.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.LST_Stats.Location = new System.Drawing.Point(12, 355);
             this.LST_Stats.Name = "LST_Stats";
-            this.LST_Stats.Size = new System.Drawing.Size(531, 163);
+            this.LST_Stats.Size = new System.Drawing.Size(531, 139);
             this.LST_Stats.TabIndex = 40;
             this.LST_Stats.UseCompatibleStateImageBehavior = false;
             this.LST_Stats.View = System.Windows.Forms.View.Details;
@@ -175,7 +175,7 @@ namespace Network_Toolkit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(555, 600);
+            this.ClientSize = new System.Drawing.Size(555, 562);
             this.Controls.Add(this.LST_Stats);
             this.Controls.Add(this.LST_Events);
             this.Controls.Add(this.label3);
@@ -183,7 +183,7 @@ namespace Network_Toolkit
             this.Controls.Add(this.button1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Event";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Device Events";

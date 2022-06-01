@@ -91,6 +91,12 @@
     <Compile Include="Event.Designer.cs">
       <DependentUpon>Event.cs</DependentUpon>
     </Compile>
+    <Compile Include="HealthCheck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HealthCheck.Designer.cs">
+      <DependentUpon>HealthCheck.cs</DependentUpon>
+    </Compile>
     <Compile Include="InclusionGrantPrompt.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -161,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Event.resx">
       <DependentUpon>Event.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HealthCheck.resx">
+      <DependentUpon>HealthCheck.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InclusionGrantPrompt.resx">
       <DependentUpon>InclusionGrantPrompt.cs</DependentUpon>

@@ -120,6 +120,7 @@ namespace Network_Toolkit.Views
             this.button4.TabIndex = 35;
             this.button4.Text = "Health Check";
             this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // LBL_NodeID
             // 

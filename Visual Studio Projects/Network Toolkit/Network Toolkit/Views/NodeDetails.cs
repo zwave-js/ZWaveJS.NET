@@ -198,5 +198,11 @@ namespace Network_Toolkit.Views
         {
 
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            HealthCheck HC = new HealthCheck(ZwaveNode);
+            HC.ShowDialog();
+        }
     }
 }
