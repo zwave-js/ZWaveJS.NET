@@ -32,25 +32,11 @@ namespace Scratch_Pad
 
         private static void _Driver_DriverReady()
         {
-            AssociationAddress AA = new AssociationAddress();
-            AA.nodeId = 16;
-            AA.endpoint = 0;
-
-            List<AssociationAddress> Targets = new List<AssociationAddress>();
-
-            AssociationAddress G = new AssociationAddress();
-            G.nodeId = 1;
-            Targets.Add(G);
-
-
-
-
-
-
-            _Driver.Controller.AddAssociations(AA,1,Targets.ToArray()).ContinueWith((R) => {
-
-                var Something = "ToBreak";
-            
+            InclusionOptions IO = new InclusionOptions();
+            IO.strategy = Enums.InclusionStrategy.Security_S2;
+            _Driver.Controller.ReplaceFailedNode(4, IO).ContinueWith((R) =>
+            {
+                string Break = ";";
             });
            
         }

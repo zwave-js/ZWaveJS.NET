@@ -294,7 +294,6 @@ namespace ZWaveJS.NET
 
             switch (Options.strategy)
             {
-                case Enums.InclusionStrategy.Default:
                 case Enums.InclusionStrategy.Security_S2:
                     ValidateDSKAndEnterPINSub = Options.userCallbacks?.validateDSKAndEnterPIN ?? null;
                     GrantSecurityClassesSub = Options.userCallbacks?.grantSecurityClasses ?? null;
@@ -302,7 +301,17 @@ namespace ZWaveJS.NET
                     break;
             }
 
-            if(Options.strategy == Enums.InclusionStrategy.Default || Options.strategy == Enums.InclusionStrategy.Security_S2)
+            if (Options.strategy == Enums.InclusionStrategy.Default)
+            {
+                if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
+                {
+                    CMDResult Res = new CMDResult("ZWJS.NET.ERR.002", "Invalid Strategy for 'ReplaceFailedNode' Valid Strategies are : [Insecure, Security_S0, Security_S2]", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+                }
+            }
+
+            if (Options.strategy == Enums.InclusionStrategy.Security_S2)
             {
                 if(ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {

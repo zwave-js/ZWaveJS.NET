@@ -17,6 +17,9 @@ namespace Network_Toolkit.Views
         public delegate void StartInclusionExclusion(object Options);
         public event StartInclusionExclusion StartInclusionExclusionEvent;
 
+        public delegate void SmartStart();
+        public event SmartStart SmartStartEvent;
+
         public delegate void StartInclusionReplace(InclusionOptions Options, int NodeID);
         public event StartInclusionReplace StartInclusionReplaceEvent;
         private int ReplaceNodeID;
@@ -33,6 +36,8 @@ namespace Network_Toolkit.Views
 
             ReplaceNodeID = ReplaceNode;
 
+            button2.Enabled = false;
+            label7.Enabled = false;
             GP_Exclude.Enabled = false;
             button5.Enabled = false;
             label1.Enabled = false;
@@ -110,6 +115,12 @@ namespace Network_Toolkit.Views
             {
                 StartInclusionExclusionEvent?.Invoke(IO);
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SmartStartEvent?.Invoke();
+           
         }
     }
 }

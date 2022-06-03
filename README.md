@@ -77,7 +77,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Replace Failed Node
    - [x] Smart Start
 
- - [ ] Node
+ - [x] Node
    - [x] Node Info
    - [x] Health Checks
    - [x] Network Statistics
@@ -96,7 +96,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Interview Events (Started, Completed, Failed)
    - [x] Update Firmware
    - [x] Update Firmware Progress Event Subscription
-   - [ ] Association Management
+   - [x] Association Management
   
   ## Brief Example
 ```c#

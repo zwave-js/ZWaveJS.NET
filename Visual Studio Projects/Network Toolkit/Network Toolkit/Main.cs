@@ -171,21 +171,36 @@ namespace Network_Toolkit
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Views.NVM NVM = new Views.NVM(_Driver);
-            NVM.Parent = PAN_ViewContainer;
+            if(_Driver != null)
+            {
+                Views.NVM NVM = new Views.NVM(_Driver);
+                NVM.Parent = PAN_ViewContainer;
 
-            PAN_ViewContainer.Controls.Clear();
-            PAN_ViewContainer.Controls.Add(NVM);
+                PAN_ViewContainer.Controls.Clear();
+                PAN_ViewContainer.Controls.Add(NVM);
+            }
+           
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Views.IncludeOptions Include = new Views.IncludeOptions();
-            Include.StartInclusionExclusionEvent += Include_StartInclusionEvent;
-            Include.Parent = PAN_ViewContainer;
+            if(_Driver != null)
+            {
+                Views.IncludeOptions Include = new Views.IncludeOptions();
+                Include.StartInclusionExclusionEvent += Include_StartInclusionEvent;
+                Include.SmartStartEvent += Include_SmartStartEvent;
+                Include.Parent = PAN_ViewContainer;
 
-            PAN_ViewContainer.Controls.Clear();
-            PAN_ViewContainer.Controls.Add(Include);
+                PAN_ViewContainer.Controls.Clear();
+                PAN_ViewContainer.Controls.Add(Include);
+            }
+           
+        }
+
+        private void Include_SmartStartEvent()
+        {
+            SmartStart SS = new SmartStart(_Driver);
+            SS.ShowDialog();
         }
 
         private void Include_StartInclusionReplaceEvent(InclusionOptions Options, int NodeID)
@@ -339,6 +354,9 @@ namespace Network_Toolkit
             return _DSK;
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
