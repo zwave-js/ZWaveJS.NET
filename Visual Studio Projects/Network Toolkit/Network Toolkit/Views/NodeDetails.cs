@@ -212,7 +212,7 @@ namespace Network_Toolkit.Views
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Associations A = new Associations(ZwaveNode);
+            Associations A = new Associations(ZwaveNode, Driver);
             A.ShowDialog();
         }
     }

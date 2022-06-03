@@ -31,19 +31,19 @@ namespace Network_Toolkit
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.NUM_EP = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.COM_Group = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.LST_Associations = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUM_EP)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -70,12 +70,13 @@ namespace Network_Toolkit
             this.label2.TabIndex = 22;
             this.label2.Text = "Association Management";
             // 
-            // numericUpDown1
+            // NUM_EP
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(47, 125);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(182, 20);
-            this.numericUpDown1.TabIndex = 8;
+            this.NUM_EP.Location = new System.Drawing.Point(47, 125);
+            this.NUM_EP.Name = "NUM_EP";
+            this.NUM_EP.Size = new System.Drawing.Size(182, 20);
+            this.NUM_EP.TabIndex = 8;
+            this.NUM_EP.ValueChanged += new System.EventHandler(this.NUM_EP_ValueChanged);
             // 
             // label1
             // 
@@ -86,14 +87,14 @@ namespace Network_Toolkit
             this.label1.TabIndex = 9;
             this.label1.Text = "Endpoint";
             // 
-            // comboBox1
+            // COM_Group
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(47, 174);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(182, 21);
-            this.comboBox1.TabIndex = 10;
-            this.comboBox1.Text = "Select Group";
+            this.COM_Group.FormattingEnabled = true;
+            this.COM_Group.Location = new System.Drawing.Point(47, 174);
+            this.COM_Group.Name = "COM_Group";
+            this.COM_Group.Size = new System.Drawing.Size(182, 21);
+            this.COM_Group.TabIndex = 10;
+            this.COM_Group.Text = "Select Group";
             // 
             // label3
             // 
@@ -104,18 +105,28 @@ namespace Network_Toolkit
             this.label3.TabIndex = 11;
             this.label3.Text = "Association Group";
             // 
-            // listView1
+            // LST_Associations
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.LST_Associations.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(47, 230);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(405, 142);
-            this.listView1.TabIndex = 12;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.LST_Associations.HideSelection = false;
+            this.LST_Associations.Location = new System.Drawing.Point(47, 230);
+            this.LST_Associations.Name = "LST_Associations";
+            this.LST_Associations.Size = new System.Drawing.Size(405, 142);
+            this.LST_Associations.TabIndex = 12;
+            this.LST_Associations.UseCompatibleStateImageBehavior = false;
+            this.LST_Associations.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Taregt Node";
+            this.columnHeader1.Width = 156;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Target Endpoint";
+            this.columnHeader2.Width = 200;
             // 
             // label4
             // 
@@ -168,16 +179,6 @@ namespace Network_Toolkit
             this.button3.Text = "+";
             this.button3.UseVisualStyleBackColor = false;
             // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Taregt Node";
-            this.columnHeader1.Width = 156;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Target Endpoint";
-            this.columnHeader2.Width = 200;
-            // 
             // Associations
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -187,19 +188,20 @@ namespace Network_Toolkit
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.LST_Associations);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.COM_Group);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.NUM_EP);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Associations";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Association Management";
+            this.Load += new System.EventHandler(this.Associations_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUM_EP)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,11 +211,11 @@ namespace Network_Toolkit
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown NUM_EP;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox COM_Group;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView LST_Associations;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;

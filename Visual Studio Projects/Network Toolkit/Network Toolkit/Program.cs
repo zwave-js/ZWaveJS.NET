@@ -19,4 +19,24 @@ namespace Network_Toolkit
             Application.Run(new Splash());
         }
     }
+
+    public class ComboObject
+    {
+        public ComboObject(string Label, object Value)
+        {
+            this.Label = Label;
+            this.Value = Value;
+        }
+
+        public override string ToString()
+        {
+            return this.Label;
+        }
+
+
+        public string Label { get; private set; }
+        public object Value { get; private set; }
+    }
+        
+
 }
