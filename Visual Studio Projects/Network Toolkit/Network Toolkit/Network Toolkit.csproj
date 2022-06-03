@@ -78,7 +78,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <Reference Include="ZWaveJS.NET, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZWaveJS.NET.3.0.0-alpha.7\lib\net45\ZWaveJS.NET.dll</HintPath>
+      <HintPath>..\packages\ZWaveJS.NET.3.0.0-alpha.8\lib\net45\ZWaveJS.NET.dll</HintPath>
     </Reference>
     <Reference Include="zxing, Version=0.16.8.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <HintPath>..\packages\ZXing.Net.0.16.8\lib\net45\zxing.dll</HintPath>
@@ -129,6 +129,12 @@
     </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewAssociation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewAssociation.Designer.cs">
+      <DependentUpon>NewAssociation.cs</DependentUpon>
     </Compile>
     <Compile Include="SmartStart.cs">
       <SubType>Form</SubType>
@@ -218,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewAssociation.resx">
+      <DependentUpon>NewAssociation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SmartStart.resx">
       <DependentUpon>SmartStart.cs</DependentUpon>

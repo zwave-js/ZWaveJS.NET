@@ -20,7 +20,7 @@ namespace Network_Toolkit
             InitializeComponent();
             _Node = Node;
             _Driver = Driver;
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,11 +41,13 @@ namespace Network_Toolkit
             COM_Group.Items.Add(new ComboObject("Select Group", null));
             COM_Group.Text = "Select Group";
 
-            _Driver.Controller.GetAssociationGroups(_Node.id, Convert.ToInt32(NUM_EP.Value)).ContinueWith((R) => {
+            _Driver.Controller.GetAssociationGroups(_Node.id, Convert.ToInt32(NUM_EP.Value)).ContinueWith((R) =>
+            {
 
                 if (R.Result.Success)
                 {
-                    this.Invoke((MethodInvoker)delegate () {
+                    this.Invoke((MethodInvoker)delegate ()
+                    {
 
 
                         Dictionary<int, AssociationGroup> Groups = R.Result.ResultPayload as Dictionary<int, AssociationGroup>;
@@ -60,7 +62,8 @@ namespace Network_Toolkit
                 }
                 else
                 {
-                    this.Invoke((MethodInvoker)delegate () {
+                    this.Invoke((MethodInvoker)delegate ()
+                    {
                         MessageBox.Show(R.Result.Message, "Failed To Get Association Groups", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
@@ -79,25 +82,27 @@ namespace Network_Toolkit
             LST_Associations.Items.Clear();
             ComboObject CO = COM_Group.SelectedItem as ComboObject;
 
-            if(CO.Value == null)
+            if (CO.Value == null)
             {
                 return;
-                   
+
             }
 
 
-            _Driver.Controller.GetAssociations(_Node.id, Convert.ToInt32(NUM_EP.Value)).ContinueWith((R) => {
+            _Driver.Controller.GetAssociations(_Node.id, Convert.ToInt32(NUM_EP.Value)).ContinueWith((R) =>
+            {
 
                 if (R.Result.Success)
                 {
-                    this.Invoke((MethodInvoker)delegate () {
+                    this.Invoke((MethodInvoker)delegate ()
+                    {
                         Dictionary<int, AssociationAddress[]> Associations = R.Result.ResultPayload as Dictionary<int, AssociationAddress[]>;
 
                         foreach (AssociationAddress ASS in Associations[(int)CO.Value])
                         {
                             ListViewItem LVI = new ListViewItem(ASS.nodeId.ToString());
                             LVI.Tag = ASS;
-                            if(ASS.endpoint == null)
+                            if (ASS.endpoint == null)
                             {
                                 LVI.SubItems.Add("0 (root)");
                             }
@@ -113,7 +118,8 @@ namespace Network_Toolkit
                 }
                 else
                 {
-                    this.Invoke((MethodInvoker)delegate () {
+                    this.Invoke((MethodInvoker)delegate ()
+                    {
                         MessageBox.Show(R.Result.Message, "Failed To Get Associations", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
@@ -123,7 +129,7 @@ namespace Network_Toolkit
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(LST_Associations.SelectedItems.Count > 0)
+            if (LST_Associations.SelectedItems.Count > 0)
             {
                 AssociationAddress Target = LST_Associations.SelectedItems[0].Tag as AssociationAddress;
 
@@ -133,23 +139,70 @@ namespace Network_Toolkit
 
                 ComboObject CO = COM_Group.SelectedItem as ComboObject;
 
-                _Driver.Controller.RemoveAssociations(Source, (int)CO.Value, new AssociationAddress[] { Target }).ContinueWith((R) => {
+                _Driver.Controller.RemoveAssociations(Source, (int)CO.Value, new AssociationAddress[] { Target }).ContinueWith((R) =>
+                {
 
                     if (R.Result.Success)
                     {
-                        this.Invoke((MethodInvoker)delegate () {
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
                             LST_Associations.Items.Remove(LST_Associations.SelectedItems[0]);
                         });
                     }
                     else
                     {
-                        this.Invoke((MethodInvoker)delegate () {
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
                             MessageBox.Show(R.Result.Message, "Failed To Remove Association", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         });
                     }
-                
+
                 });
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            NewAssociation NA = new NewAssociation();
+            if (NA.ShowDialog() == DialogResult.OK)
+            {
+                AssociationAddress AA = new AssociationAddress();
+                AA.nodeId = Convert.ToInt32(NA.NUM_Node.Value);
+                if (NA.NUM_EP.Value > 0)
+                {
+                    AA.endpoint = Convert.ToInt32(NA.NUM_EP.Value);
+                }
+
+                AssociationAddress Source = new AssociationAddress();
+                Source.nodeId = _Node.id;
+                Source.endpoint = Convert.ToInt32(NUM_EP.Value);
+
+                ComboObject CO = COM_Group.SelectedItem as ComboObject;
+
+                List<AssociationAddress> Targets = new List<AssociationAddress>();
+                Targets.Add(AA);
+                
+                _Driver.Controller.AddAssociations(Source, (int)CO.Value, Targets.ToArray()).ContinueWith((R) =>
+                {
+
+                    if (R.Result.Success)
+                    {
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
+                            COM_Group_SelectedValueChanged(this, null);
+
+                        });
+                    }
+                    else
+                    {
+                        MessageBox.Show(R.Result.Message, "Failed To Add Association", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+
+                });
+            }
+
+
         }
     }
 }
