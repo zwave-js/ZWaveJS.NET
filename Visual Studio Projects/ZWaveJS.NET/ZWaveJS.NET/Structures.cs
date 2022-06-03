@@ -22,10 +22,41 @@ namespace ZWaveJS.NET
         }
     }
 
+    public class SmartStartProvisioningEntry
+    {
+        internal SmartStartProvisioningEntry() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string dsk { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int[] securityClasses { get; private set; }
+        public int version { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int[] requestedSecurityClasses { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int genericDeviceClass { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int specificDeviceClass { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int installerIconType { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int manufacturerId { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productType { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productId { get; private set; }
+        [Newtonsoft.Json.JsonProperty]
+        public decimal applicationVersion { get; private set; }
+
+
+    }
+
     public class AssociationAddress
     {
         [Newtonsoft.Json.JsonProperty]
         public int nodeId { get;  set; }
+
+        [Newtonsoft.Json.JsonProperty]
         public int endpoint { get;  set; }
     }
 

@@ -95,6 +95,7 @@ namespace Network_Toolkit
             this.COM_Group.Size = new System.Drawing.Size(182, 21);
             this.COM_Group.TabIndex = 10;
             this.COM_Group.Text = "Select Group";
+            this.COM_Group.SelectedValueChanged += new System.EventHandler(this.COM_Group_SelectedValueChanged);
             // 
             // label3
             // 
@@ -110,17 +111,19 @@ namespace Network_Toolkit
             this.LST_Associations.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+            this.LST_Associations.FullRowSelect = true;
             this.LST_Associations.HideSelection = false;
             this.LST_Associations.Location = new System.Drawing.Point(47, 230);
+            this.LST_Associations.MultiSelect = false;
             this.LST_Associations.Name = "LST_Associations";
-            this.LST_Associations.Size = new System.Drawing.Size(405, 142);
+            this.LST_Associations.Size = new System.Drawing.Size(418, 142);
             this.LST_Associations.TabIndex = 12;
             this.LST_Associations.UseCompatibleStateImageBehavior = false;
             this.LST_Associations.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Taregt Node";
+            this.columnHeader1.Text = "Target Node";
             this.columnHeader1.Width = 156;
             // 
             // columnHeader2
@@ -164,6 +167,7 @@ namespace Network_Toolkit
             this.button2.TabIndex = 25;
             this.button2.Text = "-";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 

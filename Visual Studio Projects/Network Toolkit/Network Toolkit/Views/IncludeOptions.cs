@@ -20,6 +20,9 @@ namespace Network_Toolkit.Views
         public delegate void SmartStart();
         public event SmartStart SmartStartEvent;
 
+        public delegate void SmartStartList();
+        public event SmartStartList SmartStartListEvent;
+
         public delegate void StartInclusionReplace(InclusionOptions Options, int NodeID);
         public event StartInclusionReplace StartInclusionReplaceEvent;
         private int ReplaceNodeID;
@@ -121,6 +124,13 @@ namespace Network_Toolkit.Views
         {
             SmartStartEvent?.Invoke();
            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            SmartStartListEvent?.Invoke();
+          
+
         }
     }
 }

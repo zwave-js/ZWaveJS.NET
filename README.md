@@ -1,3 +1,5 @@
+![Image](./Readme.png)  
+
 # ZWaveJS.NET
 
 
@@ -7,16 +9,16 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/alerts/)
 
 
-ZWaveJS.NET is a class library developed for .NET 4.5 and .NET Standard 2.0, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
+ZWaveJS.NET is a class library developed for .NET 4.5 and .NET Standard 2.0, that opens up the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
 
-The library closely follows the structure of the zwave-js API. 
+The library  strictly follows the structure of the zwave-js API. 
 
 Examples:  
 
 ```c#
 Driver.Controller.BeginHealingNetwork()
 Driver.Controller.Nodes.Get(4).GetDefinedValueIDs()
-Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)
+Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
 Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
 ```  
 
@@ -65,38 +67,34 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Controller Info
    - [x] NVM Restore/Backup
    - [x] Network Statistics
-   - [x] Inclusion (Unsecured, S0 & S2 Security)
-   - [x] S2 Security inclusion Event hooks (needed to guide users in a UI for pairing S2 devices)
-   - [x] Exclusion
-   - [x] Inclusion, Exclusion Started, Stopped Event Subscription
-   - [x] Node Added/Removed Event Subscription
-   - [x] Heal Network
-   - [x] Heal Network Progress Event Subscription
-   - [x] Heal Node
+   - [x] Node Inclusion (Unsecured, S0 & S2 Security)
+   - [x] Smart Start
+   - [x] Smart Start Provisioning entry management
+   - [x] Node Exclusion
+   - [x] Network Healing
    - [x] Remove Failed Node
    - [x] Replace Failed Node
-   - [x] Smart Start
+   - [x] Node added/removed events
+   - [x] Inclusion/Exclusion started/stopped events
+   - [x] Network Heal progress/completed events
+   - [x] Network statistics updated events
 
  - [x] Node
    - [x] Node Info
-   - [x] Health Checks
+   - [x] Network Health Checks
    - [x] Network Statistics
-   - [x] Set name & location
-   - [x] Updating Values
-   - [x] Polling Values
-   - [x] Fetching Value
+   - [x] Updating, Polling & Fetching Values
    - [x] CCAPI Invoke (and its endpoints)
    - [x] Obtain Value IDs
-   - [x] Obtain Value Meta Data
-   - [x] Node Ready, Asleep, Awake, Dead Event Subscription
-   - [x] Value Updated Event Subscription
-   - [x] Notification Event Subscription
-   - [x] Value Notification Event Subscription
+   - [x] Obtain Value Metadata
    - [x] Interview Node
-   - [x] Interview Events (Started, Completed, Failed)
-   - [x] Update Firmware
-   - [x] Update Firmware Progress Event Subscription
    - [x] Association Management
+   - [x] Firmware Updates
+   - [x] Node Ready, Asleep, Awake & Dead events
+   - [x] Value Updated, Notification & Value Notification events 
+   - [x] Interview Started, Completed & Failed events
+   - [x] Node Network Statistics updated events
+
   
   ## Brief Example
 ```c#
@@ -124,13 +122,13 @@ private static void _Driver_DriverReady()
     VID.endpoint = 0;
 
     // Support for set Value Options
-    ZWaveJS.NET.SetValueOptions SVO = new  ZWaveJS.NET.SetValueOptions();
+    ZWaveJS.NET.SetValueAPIOptions SVO = new  ZWaveJS.NET.SetValueAPIOptions();
     SVO.transitionDuration = "2s";
     SVO.volume = 30;
 
     // All methods returns a task, as to not block the UI
     _Driver.Controller.Nodes.Get(4).SetValue(VID, 200, SVO).ContinueWith((res) => {
-        if (res.Result) {
+        if (res.Result.Success) {
             Console.WriteLine("Value Updated");
         }
     });

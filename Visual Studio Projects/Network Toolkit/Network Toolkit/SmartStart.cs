@@ -61,6 +61,7 @@ namespace Network_Toolkit
             }
 
             Camera = new VideoCaptureDevice(((ComboObject)COM_Cams.SelectedItem).Value.ToString());
+            Camera.SetCameraProperty(CameraControlProperty.Focus, 1, CameraControlFlags.Auto);
             Camera.NewFrame += Cam_NewFrame;
 
             Camera.Start();

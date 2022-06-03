@@ -46,6 +46,8 @@ namespace Network_Toolkit.Views
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.GP_Exclude = new System.Windows.Forms.GroupBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.GP_Exclude.SuspendLayout();
             this.SuspendLayout();
@@ -227,12 +229,14 @@ namespace Network_Toolkit.Views
             // 
             // GP_Exclude
             // 
+            this.GP_Exclude.Controls.Add(this.label8);
+            this.GP_Exclude.Controls.Add(this.button3);
             this.GP_Exclude.Controls.Add(this.checkBox1);
             this.GP_Exclude.Controls.Add(this.button1);
             this.GP_Exclude.Controls.Add(this.label6);
             this.GP_Exclude.Location = new System.Drawing.Point(23, 317);
             this.GP_Exclude.Name = "GP_Exclude";
-            this.GP_Exclude.Size = new System.Drawing.Size(556, 93);
+            this.GP_Exclude.Size = new System.Drawing.Size(556, 142);
             this.GP_Exclude.TabIndex = 37;
             this.GP_Exclude.TabStop = false;
             this.GP_Exclude.Tag = "";
@@ -247,6 +251,28 @@ namespace Network_Toolkit.Views
             this.checkBox1.TabIndex = 36;
             this.checkBox1.Text = "Remove from Start Start Provisioning list";
             this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(115)))), ((int)(((byte)(185)))));
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.ForeColor = System.Drawing.Color.White;
+            this.button3.Location = new System.Drawing.Point(12, 71);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(95, 34);
+            this.button3.TabIndex = 37;
+            this.button3.Text = "Provisioning List";
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(127, 82);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(136, 13);
+            this.label8.TabIndex = 40;
+            this.label8.Text = "Manage Smart Start Entries";
             // 
             // IncludeOptions
             // 
@@ -284,5 +310,7 @@ namespace Network_Toolkit.Views
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button button3;
     }
 }

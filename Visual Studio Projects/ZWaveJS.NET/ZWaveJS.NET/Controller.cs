@@ -115,6 +115,38 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node, Result);
         }
 
+        public Task<CMDResult> GetProvisioningEntries()
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+
+                if (Res.Success)
+                {
+                    SmartStartProvisioningEntry[] Entries = JsonConvert.DeserializeObject<SmartStartProvisioningEntry[]>(JO.SelectToken("result.entries").ToString());
+                    Res.SetPayload(Entries);
+                }
+                Result.SetResult(Res);
+
+            });
+
+          
+
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetProvisioningEntries);
+          
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.SendAsync(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<CMDResult> RemoveAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
             Guid ID = Guid.NewGuid();

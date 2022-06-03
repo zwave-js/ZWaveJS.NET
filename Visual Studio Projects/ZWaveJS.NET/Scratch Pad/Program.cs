@@ -32,11 +32,14 @@ namespace Scratch_Pad
 
         private static void _Driver_DriverReady()
         {
-            InclusionOptions IO = new InclusionOptions();
-            IO.strategy = Enums.InclusionStrategy.Security_S2;
-            _Driver.Controller.ReplaceFailedNode(4, IO).ContinueWith((R) =>
+          
+            _Driver.Controller.GetProvisioningEntries().ContinueWith((R) =>
             {
-                string Break = ";";
+                _Driver.Controller.UnprovisionSmartStartNode(((SmartStartProvisioningEntry[])R.Result.ResultPayload)[0].dsk).ContinueWith((D) => {
+
+                 
+                
+                });
             });
            
         }

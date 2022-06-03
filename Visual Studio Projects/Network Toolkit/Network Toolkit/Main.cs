@@ -189,12 +189,19 @@ namespace Network_Toolkit
                 Views.IncludeOptions Include = new Views.IncludeOptions();
                 Include.StartInclusionExclusionEvent += Include_StartInclusionEvent;
                 Include.SmartStartEvent += Include_SmartStartEvent;
+                Include.SmartStartListEvent += Include_SmartStartListEvent;
                 Include.Parent = PAN_ViewContainer;
 
                 PAN_ViewContainer.Controls.Clear();
                 PAN_ViewContainer.Controls.Add(Include);
             }
            
+        }
+
+        private void Include_SmartStartListEvent()
+        {
+            SSList SS = new SSList(_Driver);
+            SS.ShowDialog();
         }
 
         private void Include_SmartStartEvent()
@@ -205,6 +212,16 @@ namespace Network_Toolkit
 
         private void Include_StartInclusionReplaceEvent(InclusionOptions Options, int NodeID)
         {
+            switch (Options.strategy)
+            {
+                case Enums.InclusionStrategy.Security_S2:
+                    Options.userCallbacks = new InclusionUserCallbacks();
+                    Options.userCallbacks.grantSecurityClasses = HandleIG;
+                    Options.userCallbacks.validateDSKAndEnterPIN = HandleDSK;
+                    Options.userCallbacks.abort = HandleAbort;
+                    break;
+            }
+
             _Driver.Controller.ReplaceFailedNode(NodeID, Options).ContinueWith((R) =>
             {
                 if (R.Result.Success)

@@ -38,7 +38,7 @@ namespace Network_Toolkit
             LST_Associations.Items.Clear();
 
             COM_Group.Items.Clear();
-            COM_Group.Items.Add(new ComboObject("Select Group", "Select Group"));
+            COM_Group.Items.Add(new ComboObject("Select Group", null));
             COM_Group.Text = "Select Group";
 
             _Driver.Controller.GetAssociationGroups(_Node.id, Convert.ToInt32(NUM_EP.Value)).ContinueWith((R) => {
@@ -72,6 +72,55 @@ namespace Network_Toolkit
         private void NUM_EP_ValueChanged(object sender, EventArgs e)
         {
             ListGroups();
+        }
+
+        private void COM_Group_SelectedValueChanged(object sender, EventArgs e)
+        {
+            LST_Associations.Items.Clear();
+            ComboObject CO = COM_Group.SelectedItem as ComboObject;
+
+            if(CO.Value == null)
+            {
+                return;
+                   
+            }
+
+
+            _Driver.Controller.GetAssociations(_Node.id, Convert.ToInt32(NUM_EP.Value)).ContinueWith((R) => {
+
+                if (R.Result.Success)
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        Dictionary<int, AssociationAddress[]> Associations = R.Result.ResultPayload as Dictionary<int, AssociationAddress[]>;
+
+                        foreach (AssociationAddress ASS in Associations[(int)CO.Value])
+                        {
+                            ListViewItem LVI = new ListViewItem(ASS.nodeId.ToString());
+                            LVI.Tag = ASS;
+                            LVI.SubItems.Add(ASS.endpoint.ToString());
+                            LST_Associations.Items.Add(LVI);
+                        }
+                    });
+
+                }
+                else
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show(R.Result.Message, "Failed To Get Associations", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+
+            });
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(LST_Associations.SelectedItems.Count > 0)
+            {
+                AssociationAddress ASS = LST_Associations.SelectedItems[0].Tag as AssociationAddress;
+                ComboObject CO = COM_Group.SelectedItem as ComboObject;
+                _Driver.Controller.RemoveAssociations()
+            }
         }
     }
 }
