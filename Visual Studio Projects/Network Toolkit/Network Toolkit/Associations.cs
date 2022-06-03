@@ -97,8 +97,16 @@ namespace Network_Toolkit
                         {
                             ListViewItem LVI = new ListViewItem(ASS.nodeId.ToString());
                             LVI.Tag = ASS;
-                            LVI.SubItems.Add(ASS.endpoint.ToString());
+                            if(ASS.endpoint == null)
+                            {
+                                LVI.SubItems.Add("0 (root)");
+                            }
+                            else
+                            {
+                                LVI.SubItems.Add(ASS.endpoint.ToString());
+                            }
                             LST_Associations.Items.Add(LVI);
+
                         }
                     });
 
@@ -117,9 +125,30 @@ namespace Network_Toolkit
         {
             if(LST_Associations.SelectedItems.Count > 0)
             {
-                AssociationAddress ASS = LST_Associations.SelectedItems[0].Tag as AssociationAddress;
+                AssociationAddress Target = LST_Associations.SelectedItems[0].Tag as AssociationAddress;
+
+                AssociationAddress Source = new AssociationAddress();
+                Source.nodeId = _Node.id;
+                Source.endpoint = Convert.ToInt32(NUM_EP.Value);
+
                 ComboObject CO = COM_Group.SelectedItem as ComboObject;
-                _Driver.Controller.RemoveAssociations()
+
+                _Driver.Controller.RemoveAssociations(Source, (int)CO.Value, new AssociationAddress[] { Target }).ContinueWith((R) => {
+
+                    if (R.Result.Success)
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            LST_Associations.Items.Remove(LST_Associations.SelectedItems[0]);
+                        });
+                    }
+                    else
+                    {
+                        this.Invoke((MethodInvoker)delegate () {
+                            MessageBox.Show(R.Result.Message, "Failed To Remove Association", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        });
+                    }
+                
+                });
             }
         }
     }

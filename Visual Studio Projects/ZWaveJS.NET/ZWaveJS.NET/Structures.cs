@@ -57,7 +57,7 @@ namespace ZWaveJS.NET
         public int nodeId { get;  set; }
 
         [Newtonsoft.Json.JsonProperty]
-        public int endpoint { get;  set; }
+        public int? endpoint { get;  set; }
     }
 
     public class AssociationGroup
