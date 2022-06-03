@@ -32,7 +32,7 @@ namespace Network_Toolkit
                     _Node.FirmwareUpdateFinished -= _Node_FirmwareUpdateFinished;
 
                     this.Invoke((MethodInvoker)delegate () {
-                        this.Close();
+                        MessageBox.Show("The Firmware update has been aborted.", "Firmware Update Aborted", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
                 else
@@ -75,29 +75,34 @@ namespace Network_Toolkit
             _Node.FirmwareUpdateFinished -= _Node_FirmwareUpdateFinished;
 
             string Message = "";
+            MessageBoxIcon Icon = MessageBoxIcon.Error;
 
             switch (Status)
             {
                 case 253:
                     Message = "The firmware for node "+Node.id+"  has been updated. Activation is pending.";
+                    Icon = MessageBoxIcon.Information;
                     break;
 
                 case 254:
                     Message = "The firmware for node "+Node.id+" has been updated.";
+                    Icon = MessageBoxIcon.Information;
                     break;
 
                 case 255:
                     Message = "The firmware for node "+Node.id+" has been updated. A restart is required (which may happen automatically)";
+                    Icon = MessageBoxIcon.Information;
                     break;
 
                 default:
-                    Message = "The firmware for node " + Node.id + " failed to get updated. Error Code: ${data.payload.status}";
+                    Message = "The firmware for node " + Node.id + " failed to get updated. Error Code: "+Status;
+                    Icon = MessageBoxIcon.Error;
                     break;
             }
            
 
             this.Invoke((MethodInvoker)delegate () {
-                MessageBox.Show(Message, "Firmware Updated", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Message, "Firmware Updated", MessageBoxButtons.OK, Icon);
             });
 
 
@@ -128,7 +133,12 @@ namespace Network_Toolkit
 
         private void UpdateFirmware_FormClosing(object sender, FormClosingEventArgs e)
         {
-            button1_Click(this, null);
+            _Node.AbortFirmwareUpdate().ContinueWith((R) =>
+            {
+                _Node.FirmwareUpdateProgress -= _Node_FirmwareUpdateProgress;
+                _Node.FirmwareUpdateFinished -= _Node_FirmwareUpdateFinished;
+
+            });
         }
     }
 }

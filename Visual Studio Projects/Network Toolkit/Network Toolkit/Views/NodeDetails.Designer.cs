@@ -108,6 +108,7 @@ namespace Network_Toolkit.Views
             this.button3.TabIndex = 34;
             this.button3.Text = "Asso MGMT";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 

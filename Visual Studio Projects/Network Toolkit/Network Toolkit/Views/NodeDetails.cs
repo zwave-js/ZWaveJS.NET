@@ -14,6 +14,10 @@ namespace Network_Toolkit.Views
 {
     public partial class NodeDetails : UserControl
     {
+
+        public delegate void StartReplace(int NodeID);
+        public event StartReplace StartReplaceEvent;
+
         public ZWaveNode ZwaveNode;
         private Driver Driver;
         public NodeDetails(ZWaveNode Node, Driver Driver)
@@ -197,13 +201,18 @@ namespace Network_Toolkit.Views
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            StartReplaceEvent?.Invoke(ZwaveNode.id);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             HealthCheck HC = new HealthCheck(ZwaveNode);
             HC.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

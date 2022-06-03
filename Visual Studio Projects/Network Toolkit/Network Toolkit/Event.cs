@@ -26,6 +26,34 @@ namespace Network_Toolkit
             Node.ValueNotification += Node_ValueNotification;
             Node.Notification += Node_Notification;
             Node.StatisticsUpdated += Node_StatisticsUpdated;
+            Node.NodeAwake += Node_NodeAwake;
+            Node.NodeAsleep += Node_NodeAsleep;
+        }
+
+        private void Node_NodeAsleep(ZWaveNode Node)
+        {
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                ListViewItem LVI = new ListViewItem(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                LVI.SubItems.Add("SLEEP");
+                LVI.SubItems.Add("{}");
+                LST_Events.Items.Add(LVI);
+
+                LST_Events.Items[LST_Events.Items.Count - 1].EnsureVisible();
+            });
+        }
+
+        private void Node_NodeAwake(ZWaveNode Node)
+        {
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                ListViewItem LVI = new ListViewItem(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                LVI.SubItems.Add("AWAKE");
+                LVI.SubItems.Add("{}");
+                LST_Events.Items.Add(LVI);
+
+                LST_Events.Items[LST_Events.Items.Count - 1].EnsureVisible();
+            });
         }
 
         private void Node_StatisticsUpdated(ZWaveNode Node, NodeStatistics Statistics)
@@ -98,6 +126,8 @@ namespace Network_Toolkit
             _Node.ValueNotification -= Node_ValueNotification;
             _Node.Notification -= Node_Notification;
             _Node.StatisticsUpdated -= Node_StatisticsUpdated;
+            _Node.NodeAwake -= Node_NodeAwake;
+            _Node.NodeAsleep -= Node_NodeAsleep;
         }
 
         private void Event_Shown(object sender, EventArgs e)

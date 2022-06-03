@@ -17,9 +17,32 @@ namespace Network_Toolkit.Views
         public delegate void StartInclusionExclusion(object Options);
         public event StartInclusionExclusion StartInclusionExclusionEvent;
 
+        public delegate void StartInclusionReplace(InclusionOptions Options, int NodeID);
+        public event StartInclusionReplace StartInclusionReplaceEvent;
+        private int ReplaceNodeID;
+
+
         public IncludeOptions()
         {
             InitializeComponent();
+        }
+
+        public IncludeOptions(int ReplaceNode)
+        {
+            InitializeComponent();
+
+            ReplaceNodeID = ReplaceNode;
+
+            GP_Exclude.Enabled = false;
+            button5.Enabled = false;
+            label1.Enabled = false;
+            checkBox2.Enabled = false;
+
+            label2.Text = "ZWave Device Replacement Strategy";
+
+
+
+
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -28,7 +51,14 @@ namespace Network_Toolkit.Views
             IO.strategy = Enums.InclusionStrategy.Insecure;
 
 
-            StartInclusionExclusionEvent?.Invoke(IO);
+            if (ReplaceNodeID > 0)
+            {
+                StartInclusionReplaceEvent?.Invoke(IO, ReplaceNodeID);
+            }
+            else
+            {
+                StartInclusionExclusionEvent?.Invoke(IO);
+            }
 
         }
 
@@ -53,8 +83,17 @@ namespace Network_Toolkit.Views
             InclusionOptions IO = new InclusionOptions();
             IO.strategy = Enums.InclusionStrategy.Security_S2;
 
-
-            StartInclusionExclusionEvent?.Invoke(IO);
+            if (ReplaceNodeID > 0)
+            {
+                StartInclusionReplaceEvent?.Invoke(IO, ReplaceNodeID);
+            }
+            else
+            {
+                StartInclusionExclusionEvent?.Invoke(IO);
+            }
+           
+            
+            
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -63,7 +102,14 @@ namespace Network_Toolkit.Views
             IO.strategy = Enums.InclusionStrategy.Security_S0;
 
 
-            StartInclusionExclusionEvent?.Invoke(IO);
+            if (ReplaceNodeID > 0)
+            {
+                StartInclusionReplaceEvent?.Invoke(IO, ReplaceNodeID);
+            }
+            else
+            {
+                StartInclusionExclusionEvent?.Invoke(IO);
+            }
         }
     }
 }

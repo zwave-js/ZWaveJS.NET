@@ -171,9 +171,9 @@ namespace Network_Toolkit
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this.label3.Location = new System.Drawing.Point(18, 429);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 17);
+            this.label3.Size = new System.Drawing.Size(92, 17);
             this.label3.TabIndex = 27;
-            this.label3.Text = "Round (1-5)";
+            this.label3.Text = "Rounds (1-5)";
             // 
             // HealthCheck
             // 

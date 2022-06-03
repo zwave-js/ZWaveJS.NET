@@ -116,8 +116,22 @@ namespace Network_Toolkit
             Views.NodeDetails ND = new Views.NodeDetails(ZwaveNode,_Driver);
             ND.Parent = PAN_ViewContainer;
 
+            ND.StartReplaceEvent += ND_StartReplaceEvent;
+         
+
             PAN_ViewContainer.Controls.Clear();
             PAN_ViewContainer.Controls.Add(ND);
+        }
+
+        private void ND_StartReplaceEvent(int NodeID)
+        {
+            Views.IncludeOptions IO = new Views.IncludeOptions(NodeID);
+            IO.StartInclusionReplaceEvent += Include_StartInclusionReplaceEvent;
+            IO.Parent = PAN_ViewContainer;
+
+
+            PAN_ViewContainer.Controls.Clear();
+            PAN_ViewContainer.Controls.Add(IO);
         }
 
         private void Controller_NodeRemoved(ZWaveNode Node)
@@ -174,7 +188,34 @@ namespace Network_Toolkit
             PAN_ViewContainer.Controls.Add(Include);
         }
 
-       
+        private void Include_StartInclusionReplaceEvent(InclusionOptions Options, int NodeID)
+        {
+            _Driver.Controller.ReplaceFailedNode(NodeID, Options).ContinueWith((R) =>
+            {
+                if (R.Result.Success)
+                {
+
+                    this.Invoke((MethodInvoker)delegate () {
+                        Views.NIFWait NIF = new Views.NIFWait();
+                        NIF.Parent = PAN_ViewContainer;
+
+                        PAN_ViewContainer.Controls.Clear();
+                        PAN_ViewContainer.Controls.Add(NIF);
+                    });
+
+
+                }
+                else
+                {
+                    this.Invoke((MethodInvoker)delegate () {
+                        MessageBox.Show(R.Result.Message, "Failed To Start Inclsuion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+
+                }
+
+
+            });
+        }
 
         private void Include_StartInclusionEvent(object OBJ)
         {

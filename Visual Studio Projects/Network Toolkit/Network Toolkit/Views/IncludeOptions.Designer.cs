@@ -42,10 +42,10 @@ namespace Network_Toolkit.Views
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.GP_Exclude = new System.Windows.Forms.GroupBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.GP_Exclude.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -65,6 +65,7 @@ namespace Network_Toolkit.Views
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(336, 13);
             this.label1.TabIndex = 26;
+            this.label1.Tag = "";
             this.label1.Text = "S2 if supported, S0 ONLY if required, else no security. (recommended)";
             // 
             // label3
@@ -103,6 +104,7 @@ namespace Network_Toolkit.Views
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(95, 34);
             this.button5.TabIndex = 30;
+            this.button5.Tag = "";
             this.button5.Text = "Default";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -193,20 +195,22 @@ namespace Network_Toolkit.Views
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(164, 17);
             this.checkBox2.TabIndex = 37;
+            this.checkBox2.Tag = "";
             this.checkBox2.Text = "Prefer S0 over no encryption.";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // GP_Exclude
             // 
-            this.groupBox2.Controls.Add(this.checkBox1);
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Location = new System.Drawing.Point(23, 280);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(556, 93);
-            this.groupBox2.TabIndex = 37;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Exclusion";
+            this.GP_Exclude.Controls.Add(this.checkBox1);
+            this.GP_Exclude.Controls.Add(this.button1);
+            this.GP_Exclude.Controls.Add(this.label6);
+            this.GP_Exclude.Location = new System.Drawing.Point(23, 280);
+            this.GP_Exclude.Name = "GP_Exclude";
+            this.GP_Exclude.Size = new System.Drawing.Size(556, 93);
+            this.GP_Exclude.TabIndex = 37;
+            this.GP_Exclude.TabStop = false;
+            this.GP_Exclude.Tag = "";
+            this.GP_Exclude.Text = "Exclusion";
             // 
             // checkBox1
             // 
@@ -222,15 +226,15 @@ namespace Network_Toolkit.Views
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.GP_Exclude);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
             this.Name = "IncludeOptions";
             this.Size = new System.Drawing.Size(600, 499);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.GP_Exclude.ResumeLayout(false);
+            this.GP_Exclude.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -249,7 +253,7 @@ namespace Network_Toolkit.Views
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox GP_Exclude;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
     }
