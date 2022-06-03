@@ -15,6 +15,10 @@ namespace ZWaveJS.NET
 
         internal class Commands
         {
+            public const string RemoveAssociations = "controller.remove_associations";
+            public const string AddAssociations = "controller.add_associations";
+            public const string GetAssociationGroups = "controller.get_association_groups";
+            public const string GetAssociations = "controller.get_associations";
             public const string UnprovisionSmartStartNode = "controller.unprovision_smart_start_node";
             public const string ProvisionSmartStartNode = "controller.provision_smart_start_node";
             public const string SetAPIVersion = "set_api_schema";

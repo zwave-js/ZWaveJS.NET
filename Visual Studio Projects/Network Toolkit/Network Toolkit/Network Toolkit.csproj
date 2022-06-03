@@ -73,6 +73,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Associations.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Associations.Designer.cs">
+      <DependentUpon>Associations.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\Node.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -165,6 +171,9 @@
     <Compile Include="Views\S2.Designer.cs">
       <DependentUpon>S2.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Associations.resx">
+      <DependentUpon>Associations.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\Node.resx">
       <DependentUpon>Node.cs</DependentUpon>
     </EmbeddedResource>

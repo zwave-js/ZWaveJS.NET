@@ -22,6 +22,28 @@ namespace ZWaveJS.NET
         }
     }
 
+    public class AssociationAddress
+    {
+        [Newtonsoft.Json.JsonProperty]
+        public int nodeId { get;  set; }
+        public int endpoint { get;  set; }
+    }
+
+    public class AssociationGroup
+    {
+
+        internal AssociationGroup() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int maxNodes { get; internal set; }
+
+        [Newtonsoft.Json.JsonProperty]
+        public bool isLifeline { get; internal set; }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string label { get; internal set; }
+    }
+
     public class InclusionGrant
     {
         public Enums.SecurityClass[] securityClasses { get; set; }

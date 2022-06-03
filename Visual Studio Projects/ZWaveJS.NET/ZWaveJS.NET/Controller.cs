@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 namespace ZWaveJS.NET
 {
     public class Controller
@@ -112,6 +113,116 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeAdded(ZWaveNode Node, InclusionResult Result)
         {
             NodeAdded?.Invoke(Node, Result);
+        }
+
+        public Task<CMDResult> RemoveAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.RemoveAssociations);
+            Request.Add("nodeId", Source.nodeId);
+            Request.Add("endpoint", Source.endpoint);
+            Request.Add("group", Group);
+            Request.Add("associations", Targets);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.SendAsync(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<CMDResult> AddAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.AddAssociations);
+            Request.Add("nodeId", Source.nodeId);
+            Request.Add("endpoint", Source.endpoint);
+            Request.Add("group", Group);
+            Request.Add("associations", Targets);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.SendAsync(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<CMDResult> GetAssociations(int Node, int Endpoint)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Dictionary<int, AssociationAddress[]> Associations = JsonConvert.DeserializeObject<Dictionary<int, AssociationAddress[]>>(JO.SelectToken("result.associations").ToString());
+                    Res.SetPayload(Associations);
+                }
+
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetAssociations);
+            Request.Add("nodeId", Node);
+            Request.Add("endpoint", Endpoint);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.SendAsync(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<CMDResult> GetAssociationGroups(int Node, int Endpoint)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    Dictionary<int,AssociationGroup> Groups = JsonConvert.DeserializeObject<Dictionary<int, AssociationGroup>>(JO.SelectToken("result.groups").ToString());
+                    Res.SetPayload(Groups);
+                }
+
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetAssociationGroups);
+            Request.Add("nodeId",Node);
+            Request.Add("endpoint", Endpoint);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Client.SendAsync(RequestPL);
+
+            return Result.Task;
         }
 
         public Task<CMDResult> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress ConvertProgress = null, RestoreNVMProgress RestoreProgress = null)

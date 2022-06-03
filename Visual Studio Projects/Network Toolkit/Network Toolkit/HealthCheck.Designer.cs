@@ -93,6 +93,7 @@ namespace Network_Toolkit
             this.columnHeader7,
             this.columnHeader8,
             this.columnHeader5});
+            this.LST_Rounds.FullRowSelect = true;
             this.LST_Rounds.HideSelection = false;
             this.LST_Rounds.Location = new System.Drawing.Point(21, 212);
             this.LST_Rounds.Name = "LST_Rounds";

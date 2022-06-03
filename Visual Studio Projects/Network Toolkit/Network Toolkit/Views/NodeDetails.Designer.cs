@@ -159,6 +159,7 @@ namespace Network_Toolkit.Views
             this.Property,
             this.Endpoint,
             this.Value});
+            this.LST_Values.FullRowSelect = true;
             this.LST_Values.HideSelection = false;
             this.LST_Values.Location = new System.Drawing.Point(23, 213);
             this.LST_Values.Name = "LST_Values";

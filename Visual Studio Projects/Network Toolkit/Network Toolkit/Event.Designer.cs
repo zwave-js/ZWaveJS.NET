@@ -112,6 +112,7 @@ namespace Network_Toolkit
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+            this.LST_Events.FullRowSelect = true;
             this.LST_Events.HideSelection = false;
             this.LST_Events.Location = new System.Drawing.Point(16, 116);
             this.LST_Events.Name = "LST_Events";
@@ -140,6 +141,7 @@ namespace Network_Toolkit
             this.LST_Stats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader5});
+            this.LST_Stats.FullRowSelect = true;
             this.LST_Stats.HideSelection = false;
             listViewItem1.Tag = "CTX";
             listViewItem2.Tag = "CTXD";

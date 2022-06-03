@@ -17,9 +17,9 @@ namespace Scratch_Pad
            
 
             ZWaveOptions ZWO = new ZWaveOptions();
-            _Driver = new Driver("COM4", ZWO);
+            _Driver = new Driver("COM3", ZWO);
             _Driver.DriverReady += _Driver_DriverReady;
-            _Driver.StartupErrorEvent += _Driver_StartupErrorEvent;
+           
             _Driver.Start();
 
             Console.ReadLine();
@@ -32,8 +32,26 @@ namespace Scratch_Pad
 
         private static void _Driver_DriverReady()
         {
-     
-            _Driver.Controller.Nodes.Get(4).GetEndpointCount()
+            AssociationAddress AA = new AssociationAddress();
+            AA.nodeId = 16;
+            AA.endpoint = 0;
+
+            List<AssociationAddress> Targets = new List<AssociationAddress>();
+
+            AssociationAddress G = new AssociationAddress();
+            G.nodeId = 1;
+            Targets.Add(G);
+
+
+
+
+
+
+            _Driver.Controller.AddAssociations(AA,1,Targets.ToArray()).ContinueWith((R) => {
+
+                var Something = "ToBreak";
+            
+            });
            
         }
 
