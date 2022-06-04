@@ -180,6 +180,12 @@
     <Compile Include="Views\IncludeOptions.Designer.cs">
       <DependentUpon>IncludeOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\NetworkHeal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\NetworkHeal.Designer.cs">
+      <DependentUpon>NetworkHeal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\NIFWait.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -258,6 +264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\IncludeOptions.resx">
       <DependentUpon>IncludeOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\NetworkHeal.resx">
+      <DependentUpon>NetworkHeal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\NIFWait.resx">
       <DependentUpon>NIFWait.cs</DependentUpon>

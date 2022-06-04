@@ -373,6 +373,14 @@ namespace Network_Toolkit
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (_Driver != null)
+            {
+                Views.NetworkHeal NH = new Views.NetworkHeal(_Driver);
+                NH.Parent = PAN_ViewContainer;
+
+                PAN_ViewContainer.Controls.Clear();
+                PAN_ViewContainer.Controls.Add(NH);
+            }
 
         }
     }
