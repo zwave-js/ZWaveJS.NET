@@ -37,21 +37,11 @@ namespace ZWaveJS.NET
 
             ProcessStartInfo PSI = new ProcessStartInfo();
             PSI.RedirectStandardError = true;
-
-
-#if NET45
+            
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
             PSI.EnvironmentVariables.Add("SERIAL_PORT", SerialPort);
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
-#endif
-
-#if NETSTANDARD2_0
-            PSI.Environment.Add("CONFIG", _Config);
-            PSI.Environment.Add("SERIAL_PORT", SerialPort);
-            PSI.Environment.Add("WS_PORT", WSPort.ToString());
-#endif
-
-
+            
             PSI.FileName = "server.psi";
             PSI.UseShellExecute = false;
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
