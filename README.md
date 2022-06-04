@@ -171,6 +171,6 @@ private static void Program_Notification(ZWaveNode Node, int ccId, JObject Args)
 ```
 
 ## Network Toolkit Demo Application.
-The Network Toolkit Application (NET 4.5) serves as a reference, in how the library can be used, but at the same time, can be used as a tool to manage your network. You can download the toolkit demo from the Release pages here, on Github - The source code is also availlable.
+The Network Toolkit Application (NET 4.5) serves as a reference, in how the library can be used, but at the same time, can be used as a tool to manage your network. You can download the toolkit demo from the Release pages here, on Github - The source code is also available.
 
 ![Image](./Toolkit.PNG) 
