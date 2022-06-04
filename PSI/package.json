@@ -16,5 +16,5 @@
     "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
     "outputPath": "dist"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.2.1"
 }
