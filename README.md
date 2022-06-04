@@ -9,8 +9,6 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/zwave-js/zwavejs.net)
 
 
-
-
 ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the zwave-js Driver in .NET, allowing its runtime to be used directly in .NET applications.  
 
 ## Supported Targets
@@ -31,6 +29,41 @@ Driver.Controller.Nodes.Get(4).GetDefinedValueIDs()
 Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
 Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
 ```  
+
+## Features
+
+ - [x] Controller
+   - [x] Controller Info
+   - [x] NVM Restore/Backup
+   - [x] Network Statistics
+   - [x] Node Inclusion (Unsecured, S0 & S2 Security)
+   - [x] Smart Start
+   - [x] Smart Start Provisioning entry management
+   - [x] Node Exclusion
+   - [x] Network Healing
+   - [x] Remove Failed Node
+   - [x] Replace Failed Node
+   - [x] Multicast support
+   - [x] Node added/removed events
+   - [x] Inclusion/Exclusion started/stopped events
+   - [x] Network Heal progress/completed events
+   - [x] Network statistics updated events
+
+ - [x] Node
+   - [x] Node Info
+   - [x] Network Health Checks
+   - [x] Network Statistics
+   - [x] Updating, Polling & Fetching Values
+   - [x] CCAPI Invoke (and its endpoints)
+   - [x] Obtain Value IDs
+   - [x] Obtain Value Metadata
+   - [x] Interview Node
+   - [x] Association Management
+   - [x] Firmware Updates
+   - [x] Node Ready, Asleep, Awake & Dead events
+   - [x] Value Updated, Notification & Value Notification events 
+   - [x] Interview Started, Completed & Failed events
+   - [x] Node Network Statistics updated events
 
 ## Getting Started.
 
@@ -71,43 +104,7 @@ The class library contains most of the methods you will need, from including a s
 
 All releases will be published to nuget, so search for **ZWaveJS.NET** and install it, the **nupkg** file will also be attached to the release here, on Github, along with the platform PSI files.
 
-## Current implementation milestones 
-
- - [x] Controller
-   - [x] Controller Info
-   - [x] NVM Restore/Backup
-   - [x] Network Statistics
-   - [x] Node Inclusion (Unsecured, S0 & S2 Security)
-   - [x] Smart Start
-   - [x] Smart Start Provisioning entry management
-   - [x] Node Exclusion
-   - [x] Network Healing
-   - [x] Remove Failed Node
-   - [x] Replace Failed Node
-   - [x] Multicast support
-   - [x] Node added/removed events
-   - [x] Inclusion/Exclusion started/stopped events
-   - [x] Network Heal progress/completed events
-   - [x] Network statistics updated events
-
- - [x] Node
-   - [x] Node Info
-   - [x] Network Health Checks
-   - [x] Network Statistics
-   - [x] Updating, Polling & Fetching Values
-   - [x] CCAPI Invoke (and its endpoints)
-   - [x] Obtain Value IDs
-   - [x] Obtain Value Metadata
-   - [x] Interview Node
-   - [x] Association Management
-   - [x] Firmware Updates
-   - [x] Node Ready, Asleep, Awake & Dead events
-   - [x] Value Updated, Notification & Value Notification events 
-   - [x] Interview Started, Completed & Failed events
-   - [x] Node Network Statistics updated events
-
-  
-  ## Brief Example
+## Brief Example
 ```c#
 static ZWaveJS.NET.Driver _Driver;
 static void Main(string[] args)
@@ -172,3 +169,8 @@ private static void Program_Notification(ZWaveNode Node, int ccId, JObject Args)
    // Do something with Args
 }
 ```
+
+## Network Toolkit Demo Application.
+The Network Toolkit Application serves as a reference, in how the libary can be used, but at the same time, can be used as a tool to manage your network. You can download the toolkit demo from the Release pages here, on Github - The source code is also availlable.
+
+![Image](./Toolkit.PNG) 
