@@ -117,8 +117,8 @@ namespace ZWaveJS.NET
 
         public VirtualNode GetMulticastGroup(int[] Nodes)
         {
-            VirtualNode MNG = new VirtualNode(Nodes);
-            return MNG;
+            VirtualNode VN = new VirtualNode(Nodes);
+            return VN;
         }
 
         public Task<CMDResult> GetProvisioningEntries()
