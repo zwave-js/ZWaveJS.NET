@@ -11,7 +11,7 @@
 
 
 
-ZWaveJS.NET is a class library developed for .NET 4.5 and .NET Standard 2.0, that opens up the zwave-js Driver in .NET, allowing its runtime to be used directly in .NET applications.  
+ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the zwave-js Driver in .NET, allowing its runtime to be used directly in .NET applications.  
 
 ## Supported Targets
  - NET 4.5 
