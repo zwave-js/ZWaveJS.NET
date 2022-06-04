@@ -34,6 +34,8 @@ namespace ZWaveJS.NET
 
         public static Task<bool> DownloadPSI()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
             if (!File.Exists("server.psi"))
             {
