@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32510.428
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWaveJS.NET", "ZWaveJS.NET\ZWaveJS.NET.csproj", "{98625F2D-8F29-4DDD-9E83-7C8607803FE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratch Pad", "Scratch Pad\Scratch Pad.csproj", "{255257D9-F1D0-4F9A-B38A-350A2B064E6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98625F2D-8F29-4DDD-9E83-7C8607803FE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98625F2D-8F29-4DDD-9E83-7C8607803FE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98625F2D-8F29-4DDD-9E83-7C8607803FE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98625F2D-8F29-4DDD-9E83-7C8607803FE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{255257D9-F1D0-4F9A-B38A-350A2B064E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{255257D9-F1D0-4F9A-B38A-350A2B064E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{255257D9-F1D0-4F9A-B38A-350A2B064E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{255257D9-F1D0-4F9A-B38A-350A2B064E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F749D72-A780-4AE4-84A8-BA0597A464D9}
+	EndGlobalSection
+EndGlobal

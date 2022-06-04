@@ -4,6 +4,7 @@
 **/obj/*
 **/bin/*
 **/.vs/*
+**/packages/*
 
 # Node Stuff
 **/node_modules/*

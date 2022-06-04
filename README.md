@@ -1,24 +1,69 @@
-# ZWaveJS.NET
+![Image](./Readme.png)  
 
+# ZWaveJS.NET
 
 ![Nuget](https://img.shields.io/static/v1?label=license&message=MIT&color=green)
 ![Nuget](https://img.shields.io/nuget/v/zwavejs.net)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/context:javascript)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/alerts/)
+[![DeepScan grade](https://deepscan.io/api/teams/17652/projects/21245/branches/606186/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=17652&pid=21245&bid=606186)
+![GitHub issues](https://img.shields.io/github/issues-raw/zwave-js/zwavejs.net)
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/zwave-js/zwavejs.net)
 
 
-ZWaveJS.NET is a class library developed in .NET Core 3.1, that exposes the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
+ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the zwave-js Driver in .NET, allowing its runtime to be used directly in .NET applications.  
 
-The library closely follows the structure of the zwave-js API. 
+## Supported Targets
+ - NET 4.5 
+ - NET 4.8 
+ - NET 5.0 
+ - NET Standard 2.0  
+ - NET Standard 2.1  
+ - NET Core 3.1
+
+The library strictly follows the structure of the zwave-js API. 
 
 Examples:  
 
 ```c#
 Driver.Controller.BeginHealingNetwork()
 Driver.Controller.Nodes.Get(4).GetDefinedValueIDs()
-Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueOptions Options = null)
+Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
 Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
 ```  
+
+## Features
+
+ - [x] Controller
+   - [x] Controller Info
+   - [x] NVM Restore/Backup
+   - [x] Network Statistics
+   - [x] Node Inclusion (Unsecured, S0 & S2 Security)
+   - [x] Smart Start
+   - [x] Smart Start Provisioning entry management
+   - [x] Node Exclusion
+   - [x] Network Healing
+   - [x] Remove Failed Node
+   - [x] Replace Failed Node
+   - [x] Multicast support
+   - [x] Node added/removed events
+   - [x] Inclusion/Exclusion started/stopped events
+   - [x] Network Heal progress/completed events
+   - [x] Network statistics updated events
+
+ - [x] Node
+   - [x] Node Info
+   - [x] Network Health Checks
+   - [x] Network Statistics
+   - [x] Updating, Polling & Fetching Values
+   - [x] CCAPI Invoke (and its endpoints)
+   - [x] Obtain Value IDs
+   - [x] Obtain Value Metadata
+   - [x] Interview Node
+   - [x] Association Management
+   - [x] Firmware Updates
+   - [x] Node Ready, Asleep, Awake & Dead events
+   - [x] Value Updated, Notification & Value Notification events 
+   - [x] Interview Started, Completed & Failed events
+   - [x] Node Network Statistics updated events
 
 ## Getting Started.
 
@@ -38,8 +83,7 @@ and it contains everything necessary for .NET to work with zwave-js.
 
 **server.psi** files are platform specific, but the assembly isn't - it will run on windows, OSX and Linux, and the platform specifics i.e **node** are contained in **server.psi**.
 
-## Running On Linux.
-We can't automate an image build that is guaranteed to work across distros, but you can build one with ease.  
+## Building yor own platform specific binary.
 
 To build an image for your platform:
  - Clone the repo
@@ -60,46 +104,7 @@ The class library contains most of the methods you will need, from including a s
 
 All releases will be published to nuget, so search for **ZWaveJS.NET** and install it, the **nupkg** file will also be attached to the release here, on Github, along with the platform PSI files.
 
-## Current implementation milestones 
-
- - [ ] Controller
-   - [x] Controller Info
-   - [ ] NVM Restore/Backup
-   - [x] Network Statistics
-   - [x] Inclusion (Unsecured, S0 & S2 Security)
-   - [x] S2 Security inclusion Event hooks (needed to guide users in a UI for pairing S2 devices)
-   - [x] Exclusion
-   - [x] Inclusion, Exclusion Started, Stopped Event Subscription
-   - [x] Node Added/Removed Event Subscription
-   - [x] Heal Network
-   - [x] Heal Network Progress Event Subscription
-   - [x] Heal Node
-   - [x] Remove Failed Node
-   - [x] Replace Failed Node
-   - [ ] Smart Start
-
- - [ ] Node
-   - [x] Node Info
-   - [ ] Health Checks
-   - [x] Network Statistics
-   - [x] Set name & location
-   - [x] Updating Values
-   - [x] Polling Values
-   - [x] Fetching Value
-   - [x] CCAPI Invoke (and its endpoints)
-   - [x] Obtain Value IDs
-   - [x] Obtain Value Meta Data
-   - [x] Node Ready, Asleep, Awake, Dead Event Subscription
-   - [x] Value Updated Event Subscription
-   - [x] Notification Event Subscription
-   - [x] Value Notification Event Subscription
-   - [x] Interview Node
-   - [x] Interview Events (Started, Completed, Failed)
-   - [x] Update Firmware
-   - [x] Update Firmware Progress Event Subscription
-   - [ ] Association Management
-  
-  ## Brief Example
+## Brief Example
 ```c#
 static ZWaveJS.NET.Driver _Driver;
 static void Main(string[] args)
@@ -125,13 +130,13 @@ private static void _Driver_DriverReady()
     VID.endpoint = 0;
 
     // Support for set Value Options
-    ZWaveJS.NET.SetValueOptions SVO = new  ZWaveJS.NET.SetValueOptions();
+    ZWaveJS.NET.SetValueAPIOptions SVO = new  ZWaveJS.NET.SetValueAPIOptions();
     SVO.transitionDuration = "2s";
     SVO.volume = 30;
 
     // All methods returns a task, as to not block the UI
     _Driver.Controller.Nodes.Get(4).SetValue(VID, 200, SVO).ContinueWith((res) => {
-        if (res.Result) {
+        if (res.Result.Success) {
             Console.WriteLine("Value Updated");
         }
     });
@@ -164,3 +169,8 @@ private static void Program_Notification(ZWaveNode Node, int ccId, JObject Args)
    // Do something with Args
 }
 ```
+
+## Network Toolkit Demo Application.
+The Network Toolkit Application (NET 4.5) serves as a reference, in how the library can be used, but at the same time, can be used as a tool to manage your network. You can download the toolkit demo from the Release pages here, on Github - The source code is also available.
+
+![Image](./Toolkit.PNG) 

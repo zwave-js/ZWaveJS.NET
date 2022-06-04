@@ -1,3 +1,27 @@
+## v3.0.0
+
+ - Versions
+   - ZWave JS Driver Version: 9.3.0
+   - ZWave JS Server Version: 1.17.0 (Schema Version 17)
+
+ - Breaking Changes
+   - The libary has been retargeted for **.NET Standard 2.0** and **.NET 4.5** to support a wider varitey of frameworks
+   - All ZWave methods, now return a task encapsulating a **CMDResult** instance, containing the response payload (if any) including the **success** property and any error message.
+   - The **NodeInterviewFailed** event now returns a **NodeInterviewFailedEventArgs** instance and no longer a generic **JObject** instance
+   - The controller events **ValidateDSK** and **GrantSecurityClasses** have been removed.
+   - **BeginInclusion** and **ReplaceFailedNode** now require an **InclusionOptions** instance (which contains User callbacks)
+   - The **NodeRemoved** event now returns the **ZWaveNode** instance and no longer just it's ID.
+   - The **NodeAdded** event now also returns an instance of **InclusionResult**.
+   - **SetValueOptions** has been renamed to **SetValueAPIOptions**
+   - **ValueMetaData** has been renamed to **ValueMetadata**
+
+ - New Features
+   - Added **BackupNVMRaw** method and associated user callbacks
+   - Added **RestoreNVM** method and associated user callbacks
+   - Added **CheckLifelineHealth** method and associated user callbacks
+   - Added **Smart Start** methods and associated user callbacks
+   - Added **Multicast** support
+
 ## v2.0.0
 
  - Versions
