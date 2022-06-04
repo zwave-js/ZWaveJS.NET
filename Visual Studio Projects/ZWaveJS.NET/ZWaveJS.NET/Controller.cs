@@ -115,6 +115,12 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node, Result);
         }
 
+        public VirtualNode GetMulticastGroup(int[] Nodes)
+        {
+            VirtualNode MNG = new VirtualNode(Nodes);
+            return MNG;
+        }
+
         public Task<CMDResult> GetProvisioningEntries()
         {
             Guid ID = Guid.NewGuid();
@@ -131,8 +137,6 @@ namespace ZWaveJS.NET
                 Result.SetResult(Res);
 
             });
-
-          
 
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

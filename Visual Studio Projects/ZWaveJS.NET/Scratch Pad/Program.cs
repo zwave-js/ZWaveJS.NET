@@ -32,15 +32,19 @@ namespace Scratch_Pad
 
         private static void _Driver_DriverReady()
         {
-          
-            _Driver.Controller.GetProvisioningEntries().ContinueWith((R) =>
-            {
-                _Driver.Controller.UnprovisionSmartStartNode(((SmartStartProvisioningEntry[])R.Result.ResultPayload)[0].dsk).ContinueWith((D) => {
 
-                 
-                
-                });
-            });
+            VirtualNode VN = _Driver.Controller.GetMulticastGroup(new int[] { 2,3,4,6,7});
+            VN.GetDefinedValueIDs();
+            VN.GetEndpointCount();
+            VN.SetValue();
+            VN.SupportsCCAPI();
+            VN.InvokeCCAPI();
+
+
+
+           
+
+          
            
         }
 

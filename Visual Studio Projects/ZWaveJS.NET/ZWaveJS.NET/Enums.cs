@@ -15,6 +15,7 @@ namespace ZWaveJS.NET
 
         internal class Commands
         {
+         
             public const string RemoveAssociations = "controller.remove_associations";
             public const string AddAssociations = "controller.add_associations";
             public const string GetAssociationGroups = "controller.get_association_groups";
@@ -54,6 +55,11 @@ namespace ZWaveJS.NET
             public const string BackUpNVM = "controller.backup_nvm_raw";
             public const string RestoreNVM = "controller.restore_nvm";
             public const string CheckLifelineHealth = "node.check_lifeline_health";
+            public const string MCGetEndpointCount = "multicast_group.get_endpoint_count";
+            public const string MCSetValue = "multicast_group.set_value";
+            public const string MCGetDefinedValueIDs = "multicast_group.get_defined_value_ids";
+            public const string MCSupportsCCAPI = "multicast_group.supports_cc_api";
+            public const string MCInvokeCCAPI = "multicast_group.invoke_cc_api";
         }
 
         public enum SecurityClass

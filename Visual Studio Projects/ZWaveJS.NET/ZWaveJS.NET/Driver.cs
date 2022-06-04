@@ -523,6 +523,7 @@ namespace ZWaveJS.NET
                     Controller C = JsonConvert.DeserializeObject<Controller>(JO.SelectToken("result.state.controller").ToString());
                     C._Driver = this;
                     ZWaveNode[] Nodes = JsonConvert.DeserializeObject<ZWaveNode[]>(JO.SelectToken("result.state.nodes").ToString(), BoolConverter);
+                    Nodes = Nodes.Where((N) => !N.isControllerNode).ToArray();
 
                     this.Controller = C;
                     this.Controller.Nodes = new NodesCollection(Nodes);
