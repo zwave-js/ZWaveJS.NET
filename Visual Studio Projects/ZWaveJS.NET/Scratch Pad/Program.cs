@@ -36,9 +36,7 @@ namespace Scratch_Pad
             VirtualNode VN = _Driver.Controller.GetMulticastGroup(new int[] { 2,3,4,6,7});
             VN.GetDefinedValueIDs();
             VN.GetEndpointCount();
-            VN.SetValue();
-            VN.SupportsCCAPI();
-            VN.InvokeCCAPI();
+        
 
 
 
