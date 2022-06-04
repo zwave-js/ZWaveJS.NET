@@ -9,9 +9,9 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/zwave-js/ZWaveJS.NET.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/zwave-js/ZWaveJS.NET/alerts/)
 
 
-ZWaveJS.NET is a class library developed for .NET 4.5 and .NET Standard 2.0, that opens up the zwave-js Driver in .NET, opening up the ability to use its runtime directly in .NET applications.  
+ZWaveJS.NET is a class library developed for .NET 4.5 and .NET Standard 2.0, that opens up the zwave-js Driver in .NET, allowing its runtime to be used directly in .NET applications.  
 
-The library  strictly follows the structure of the zwave-js API. 
+The library strictly follows the structure of the zwave-js API. 
 
 Examples:  
 
@@ -74,6 +74,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
    - [x] Network Healing
    - [x] Remove Failed Node
    - [x] Replace Failed Node
+   - [x] Multicast support
    - [x] Node added/removed events
    - [x] Inclusion/Exclusion started/stopped events
    - [x] Network Heal progress/completed events

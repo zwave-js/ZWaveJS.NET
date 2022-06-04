@@ -20,6 +20,7 @@
    - Added **RestoreNVM** method and associated user callbacks
    - Added **CheckLifelineHealth** method and associated user callbacks
    - Added **Smart Start** methods and associated user callbacks
+   - Added **Multicast** support
 
 ## v2.0.0
 
