@@ -22,7 +22,7 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private static int SchemaVersionID = 17;
         private string SerialPort;
-        private ZWaveOptions Options;
+        internal ZWaveOptions Options;
         private Uri WSAddress;
         private bool Host = true;
 

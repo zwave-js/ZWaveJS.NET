@@ -9,38 +9,72 @@ namespace ZWaveJS.NET
         public ZWaveOptions()
         {
             this.logConfig = new CFGLogConfig();
-            this.logConfig.enabled = false;
-            this.logConfig.logToFile = false;
-            this.logConfig.level = Enums.LogLevel.Debug;
-            this.logConfig.filename = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js.log");
-
             this.interview = new CFGInterview();
-            this.interview.queryAllUserCodes = false;
-
             this.storage = new CFGStorage();
-            this.storage.throttle = "normal";
-            this.storage.cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js-cache");
-
             this.securityKeys = new CFGSecurityKeys();
             this.timeouts = new CFGTimeouts();
-
             this.enableSoftReset = false;
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;
         }
 
         public CFGTimeouts timeouts { get; set; }
-        public CFGLogConfig logConfig { get; private set; }
-        public CFGStorage storage { get; private set; }
+        public CFGLogConfig logConfig { get; set; }
+        public CFGStorage storage { get; set; }
         public bool enableSoftReset { get; set; }
         public CFGSecurityKeys securityKeys { get; set; }
         public CFGInterview interview { get; set; }
         public bool disableOptimisticValueUpdate { get; set; }
         public bool emitValueUpdateAfterSetValue { get; set; }
+
+        internal bool MissingKeys(bool IncludeS2, bool IncludeS0)
+        {
+            if(this.securityKeys == null)
+                return true;
+
+            if (this.securityKeys.S0_Legacy == null && IncludeS0)
+                return true;
+
+            if (this.securityKeys.S2_AccessControl == null && IncludeS2)
+                return true;
+
+            if (this.securityKeys.S2_Authenticated == null && IncludeS2)
+                return true;
+
+            if (this.securityKeys.S2_Unauthenticated == null && IncludeS2)
+                return true;
+
+            return false;
+
+        }
+
+        internal bool CheckKeyLength()
+        {
+            if (this.securityKeys != null && this.securityKeys.S0_Legacy != null && this.securityKeys.S0_Legacy.Length != 32)
+                return false;
+
+            if (this.securityKeys != null && this.securityKeys.S2_AccessControl != null && this.securityKeys.S2_AccessControl.Length != 32)
+                return false;
+
+            if (this.securityKeys != null && this.securityKeys.S2_Authenticated != null && this.securityKeys.S2_Authenticated.Length != 32)
+                return false;
+
+            if (this.securityKeys != null && this.securityKeys.S2_Unauthenticated != null && this.securityKeys.S2_Unauthenticated.Length != 32)
+                return false;
+
+            return true;
+
+
+        }
     }
 
     public class CFGInterview
     {
+        public CFGInterview()
+        {
+            this.queryAllUserCodes = false;
+        }
+
         public bool queryAllUserCodes { get; set; }
     }
 
@@ -56,6 +90,14 @@ namespace ZWaveJS.NET
 
     public class CFGLogConfig
     {
+        public CFGLogConfig()
+        {
+            this.enabled = false;
+            this.logToFile = false;
+            this.level = Enums.LogLevel.Debug;
+            this.filename = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js.log");
+        }
+
         public bool logToFile { get; set; }
         public bool enabled { get; set; }
         public Enums.LogLevel level { get; set; }
@@ -65,6 +107,13 @@ namespace ZWaveJS.NET
 
     public class CFGStorage
     {
+
+        public CFGStorage()
+        {
+            this.throttle = "normal";
+            this.cacheDir = Path.Combine(Directory.GetCurrentDirectory(), "zwave-js-cache");
+        }
+
         public string cacheDir { get; set; }
         public string deviceConfigPriorityDir { get; set; }
         public string throttle { get; set; }

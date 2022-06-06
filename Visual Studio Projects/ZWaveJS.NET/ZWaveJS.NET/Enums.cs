@@ -13,6 +13,14 @@ namespace ZWaveJS.NET
             Mac
         }
 
+        internal class ErrorCodes
+        {
+            public const string MissingS2Callbacks = "ZWJS.NET.ERR.001";
+            public const string InvalidStrategy = "ZWJS.NET.ERR.002";
+            public const string MissingKeys = "ZWJS.NET.ERR.003";
+            public const string InvalidkeyLength = "ZWJS.NET.ERR.004";
+        }
+
         internal class Commands
         {
          

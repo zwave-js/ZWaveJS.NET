@@ -1,3 +1,16 @@
+- v3.0.1
+  
+  - Versions
+    - ZWave JS Driver Version: 9.3.0
+    - ZWave JS Server Version: 1.17.0 (Schema Version 17)
+
+  - Internal changes
+    - The **CFGLogConfig** and **CFGStorage** classes can now be set exclusively.
+    - The child classes of **ZWaveOptions** are now instanciated with default values when calling their constructors.
+
+  - Fixes
+    - Any inclusion or replace node method now checks that Security Keys are present if needed.
+
 - v3.0.0
 
   - Versions

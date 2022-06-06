@@ -17,6 +17,7 @@ namespace Scratch_Pad
            
 
             ZWaveOptions ZWO = new ZWaveOptions();
+           
             _Driver = new Driver("COM3", ZWO);
             _Driver.DriverReady += _Driver_DriverReady;
            
@@ -32,10 +33,13 @@ namespace Scratch_Pad
 
         private static void _Driver_DriverReady()
         {
+            var ddd = new InclusionOptions();
+            ddd.strategy = Enums.InclusionStrategy.Security_S0;
+            _Driver.Controller.ReplaceFailedNode(4, ddd).ContinueWith((R) => {
 
-            VirtualNode VN = _Driver.Controller.GetMulticastGroup(new int[] { 2,3,4,6,7});
-            VN.GetDefinedValueIDs();
-            VN.GetEndpointCount();
+                var Res = R;
+            
+            });
         
 
 
