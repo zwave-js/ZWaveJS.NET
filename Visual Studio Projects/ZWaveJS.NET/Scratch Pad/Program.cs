@@ -17,6 +17,7 @@ namespace Scratch_Pad
            
 
             ZWaveOptions ZWO = new ZWaveOptions();
+            ZWO.logConfig = new CFGLogConfig();
            
             _Driver = new Driver("COM3", ZWO);
             _Driver.DriverReady += _Driver_DriverReady;

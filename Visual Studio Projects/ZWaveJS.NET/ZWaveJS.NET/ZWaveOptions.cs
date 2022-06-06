@@ -21,9 +21,9 @@ namespace ZWaveJS.NET
         public CFGTimeouts timeouts { get; set; }
         public CFGLogConfig logConfig { get; set; }
         public CFGStorage storage { get; set; }
-        public bool enableSoftReset { get; set; }
         public CFGSecurityKeys securityKeys { get; set; }
         public CFGInterview interview { get; set; }
+        public bool enableSoftReset { get; set; }
         public bool disableOptimisticValueUpdate { get; set; }
         public bool emitValueUpdateAfterSetValue { get; set; }
 

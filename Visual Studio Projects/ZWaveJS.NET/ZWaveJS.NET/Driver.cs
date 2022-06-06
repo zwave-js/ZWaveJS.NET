@@ -17,15 +17,15 @@ namespace ZWaveJS.NET
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         internal static CustomBooleanJsonConverter BoolConverter;
         internal static bool Inited = false;
+        internal ZWaveOptions Options;
 
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private static int SchemaVersionID = 17;
         private string SerialPort;
-        internal ZWaveOptions Options;
+
         private Uri WSAddress;
         private bool Host = true;
-
         
         private string _ZWaveJSDriverVersion;
         public string ZWaveJSDriverVersion
@@ -49,7 +49,6 @@ namespace ZWaveJS.NET
         public Controller Controller { get; internal set; }
         public delegate void DriverReadyEvent();
         public event DriverReadyEvent DriverReady;
-
         public delegate void StartupError(string Message);
         public event StartupError StartupErrorEvent;
 
