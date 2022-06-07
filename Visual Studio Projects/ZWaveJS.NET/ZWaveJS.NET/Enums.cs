@@ -10,6 +10,7 @@ namespace ZWaveJS.NET
         {
             Windows,
             Linux,
+            LinuxARM,
             Mac
         }
 

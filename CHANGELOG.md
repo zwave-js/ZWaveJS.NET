@@ -1,4 +1,4 @@
-- v3.0.1
+- v3.1.0
   
   - Versions
     - ZWave JS Driver Version: 9.3.0
@@ -7,6 +7,12 @@
   - Internal changes
     - The **CFGLogConfig** and **CFGStorage** classes can now be set exclusively.
     - The child classes of **ZWaveOptions** are now instanciated with default values when calling their constructors.
+    - The **DownloadPSI** method now pulls down version locked binaries, to remove the potential for incompatible Binary/library combinations
+
+  - New Fearures  
+    - Added ARM prebuilt binary (Debian, RPi)
+    - **DownloadPSI** now accepts a boolean value stating to download the PSI evan if it already exists,
+      This allows to pull down updated driver images, after updating to the latest library.
 
   - Fixes
     - Any inclusion or replace node method now checks that Security Keys are present if needed.
