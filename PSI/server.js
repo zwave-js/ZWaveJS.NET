@@ -1,4 +1,4 @@
-const { Driver, ZWaveError, ZWaveErrorCodes } = require("zwave-js");
+const { Driver } = require("zwave-js");
 const { ZwavejsServer } = require("@zwave-js/server");
 
 console.log("ZWaveJS.NET: Preparing server...");
@@ -21,19 +21,25 @@ if (driverOptions.securityKeys) {
 console.log("ZWaveJS.NET: Instantiating driver...");
 const driver = new Driver(serialPort, driverOptions);
 const server = new ZwavejsServer(driver, { port: wsPort, host: "localhost" });
-driver.on("error", (e) => {
-    /*
-    if (e instanceof ZWaveError && e.code === ZWaveErrorCodes.Driver_Failed) {
-        process.stderr.write("2\n");
-    }
-    */
-});
+driver.on("error", (e) => {});
 
 driver.on("driver ready", () => {
     server.start();
 });
 
 console.log("ZWaveJS.NET: Starting driver...");
-driver.start().catch((e) => {
+driver.start()
+.then(() =>{
+    process.on("beforeExit",CleanUp);
+})
+.catch((e) => {
     process.stderr.write("1\n");
-});
+})
+
+const CleanUp = async (code) =>{
+    console.log("ZWaveJS.NET: Cleaning up...");
+    await server.destroy();
+    await driver.destroy();
+    process.exit(0);
+
+}
