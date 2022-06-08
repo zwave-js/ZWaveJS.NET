@@ -11,7 +11,7 @@
 
   - New Fearures  
     - Added ARM prebuilt binary (Debian, RPi)
-    - A new **DeleteAndDownloadPSI** method - this will delete and pull down the latest PSI for the library version you're using.
+    - The **DownloadPSI** method - now has an optional override, allwowing the PSI to be focibly downloaded, i.e to ensure you have the correct version.
 
   - Fixes
     - Any inclusion or replace node method now checks that Security Keys are present if needed.
