@@ -615,32 +615,19 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-
+        
         public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            Driver.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", NodeID);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
-
-            return Result.Task;
+            return _UnprovisionSmartStartNode(NodeID);
         }
 
         public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
         {
+            return _UnprovisionSmartStartNode(DSK);
+        }
+
+        private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
+        {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
@@ -654,7 +641,7 @@ namespace ZWaveJS.NET
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", DSK);
+            Request.Add("dskOrNodeId", dskOrNodeId);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.SendAsync(RequestPL);

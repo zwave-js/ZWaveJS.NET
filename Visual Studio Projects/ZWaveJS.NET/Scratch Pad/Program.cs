@@ -13,9 +13,6 @@ namespace Scratch_Pad
         static void Main(string[] args)
         {
 
-
-           
-
             ZWaveOptions ZWO = new ZWaveOptions();
             ZWO.logConfig = new CFGLogConfig();
            
