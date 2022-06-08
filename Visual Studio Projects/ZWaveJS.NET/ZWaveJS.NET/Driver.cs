@@ -375,8 +375,14 @@ namespace ZWaveJS.NET
                 {
                     if (Callbacks.ContainsKey(MessageID))
                     {
-                        Callbacks[MessageID].Invoke(JO);
-                        Callbacks.Remove(MessageID);
+                        // Guard against race condition
+                        try
+                        {
+                            Callbacks[MessageID].Invoke(JO);
+                            Callbacks.Remove(MessageID);
+                        }
+                        catch (Exception Error) { }
+                        
                     }
 
                     return;
@@ -473,8 +479,17 @@ namespace ZWaveJS.NET
                 JO.Add("zwaveErrorCode", Enums.ErrorCodes.WSConnectionError);
                 JO.Add("zwaveErrorMessage", "The Connection to the Server was interrupted. It is unknown if the command was successfull, assuming false. The connection will be restored.");
 
-                Callbacks[ID].Invoke(JO);
-                Callbacks.Remove(ID);
+                // Guard against race condition
+                try
+                {
+                    Callbacks[ID].Invoke(JO);
+                    Callbacks.Remove(ID);
+                }
+                catch(Exception Error)
+                {
+                    continue;
+                }
+                
 
             }
             Restart();
