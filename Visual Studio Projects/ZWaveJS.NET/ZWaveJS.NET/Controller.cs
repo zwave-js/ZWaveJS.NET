@@ -271,12 +271,12 @@ namespace ZWaveJS.NET
             Driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
                 if (Res.Success)
                 {
                     _Driver.Restart();
                 }
- 
+                Result.SetResult(Res);
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

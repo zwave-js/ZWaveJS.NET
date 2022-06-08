@@ -439,6 +439,8 @@ namespace ZWaveJS.NET
         {
             if (Client != null)
             {
+                Client.MessageReceived -= WebsocketClient_MessageReceived;
+                Client.ServerDisconnected -= Client_ServerDisconnected;
                 if (Client.Connected)
                 {
                     Client.Stop();
@@ -489,7 +491,6 @@ namespace ZWaveJS.NET
                 {
                     continue;
                 }
-                
 
             }
             Restart();
@@ -502,9 +503,11 @@ namespace ZWaveJS.NET
             await Client.StartWithTimeoutAsync(60);
         }
 
-        internal void Restart()
+        async internal void Restart()
         {
             Destroy();
+
+            await Task.Delay(5000);
             InternalPrep();
             Start();
         }
