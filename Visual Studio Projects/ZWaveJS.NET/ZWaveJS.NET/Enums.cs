@@ -20,6 +20,7 @@ namespace ZWaveJS.NET
             public const string InvalidStrategy = "ZWJS.NET.ERR.002";
             public const string MissingKeys = "ZWJS.NET.ERR.003";
             public const string InvalidkeyLength = "ZWJS.NET.ERR.004";
+            public const string WSConnectionError = "ZWJS.NET.ERR.005";
         }
 
         internal class Commands

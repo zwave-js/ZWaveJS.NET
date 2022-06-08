@@ -41,12 +41,58 @@ namespace ZWaveJS.NET
             }
         }
 
-        public static Task<bool> DownloadPSI(bool Force = false)
+        public static Task<bool> DeleteAndDownloadPSI()
+        {
+            
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
+            Version V = Assembly.GetExecutingAssembly().GetName().Version;
+            string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/{VER}/download/{FN}";
+            URI = URI.Replace("{VER}", string.Format("v{0}.{1}.{2}", V.Major, V.Minor, V.Build));
+            switch (RunningPlatform())
+            {
+                case Enums.Platform.Windows:
+                    URI = URI.Replace("{FN}", WinBinary);
+                    break;
+
+                case Enums.Platform.Mac:
+                    URI = URI.Replace("{FN}", MacOSBinary);
+                    break;
+
+                case Enums.Platform.Linux:
+                    URI = URI.Replace("{FN}", UnixBinary);
+                    break;
+
+                case Enums.Platform.LinuxARM:
+                    URI = URI.Replace("{FN}", UnixBinaryARM);
+                    break;
+            }
+
+            if (File.Exists("server.psi"))
+            {
+                File.Delete("server.psi");
+            }
+
+            using (WebClient WC = new WebClient())
+            {
+                WC.DownloadFileCompleted += (s, e) =>
+                {
+                    Result.SetResult(true);
+                };
+                WC.DownloadFileAsync(new Uri(URI), "server.psi");
+            }
+            
+            return Result.Task;
+        }
+
+        public static Task<bool> DownloadPSI()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
-            if (!File.Exists("server.psi") || Force)
+            if (!File.Exists("server.psi"))
             {
                 Version V = Assembly.GetExecutingAssembly().GetName().Version;
                 string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/{VER}/download/{FN}";

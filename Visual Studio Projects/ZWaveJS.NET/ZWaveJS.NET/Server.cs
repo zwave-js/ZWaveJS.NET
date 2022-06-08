@@ -18,11 +18,9 @@ namespace ZWaveJS.NET
         {
             if (ServerProcess != null && !ServerProcess.HasExited)
             {
-                ServerProcess.Kill();
-                ServerProcess = null;
+                ServerProcess.StandardInput.WriteLine("KILL");
             }
         }
-
 
         internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
@@ -37,6 +35,7 @@ namespace ZWaveJS.NET
 
             ProcessStartInfo PSI = new ProcessStartInfo();
             PSI.RedirectStandardError = true;
+            PSI.RedirectStandardInput = true;
             
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
             PSI.EnvironmentVariables.Add("SERIAL_PORT", SerialPort);
@@ -52,7 +51,6 @@ namespace ZWaveJS.NET
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
             ServerProcess.BeginErrorReadLine();
-
         }
 
 
@@ -62,7 +60,6 @@ namespace ZWaveJS.NET
             int Code;
             if (int.TryParse(e.Data, out Code))
             {
-
                 switch (Code)
                 {
                     case 1:

@@ -44,7 +44,7 @@ driver.start()
 })
 
 const HandleInput = async (Data) =>{
-    if(Data.toString() === "KILL"){
+    if(Data.toString().trim() === "KILL"){
         console.log("ZWaveJS.NET: Cleaning up...");
         if(ServerStarted) await server.destroy();
         if(DriverStarted) await driver.destroy();

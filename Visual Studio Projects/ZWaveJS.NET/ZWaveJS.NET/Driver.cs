@@ -457,6 +457,27 @@ namespace ZWaveJS.NET
             Client = new WatsonWebsocket.WatsonWsClient(this.WSAddress);
             Client.KeepAliveInterval = 15;
             Client.MessageReceived += WebsocketClient_MessageReceived;
+            Client.ServerDisconnected += Client_ServerDisconnected;
+            Client.EnableStatistics = false;
+
+        }
+
+        private void Client_ServerDisconnected(object sender, EventArgs e)
+        {
+            // Signal waiting callbacks
+            Guid[] Keys = Callbacks.Keys.ToArray();
+            foreach (Guid ID in Keys)
+            {
+                JObject JO = new JObject();
+                JO.Add("success", false);
+                JO.Add("zwaveErrorCode", Enums.ErrorCodes.WSConnectionError);
+                JO.Add("zwaveErrorMessage", "The Connection to the Server was interrupted. It is unknown if the command was successfull, assuming false. The connection will be restored.");
+
+                Callbacks[ID].Invoke(JO);
+                Callbacks.Remove(ID);
+
+            }
+            Restart();
 
         }
 
