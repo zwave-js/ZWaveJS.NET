@@ -11,11 +11,11 @@
 
   - New Fearures  
     - Added ARM prebuilt binary (Debian, RPi)
-    - **DownloadPSI** now accepts a boolean value stating to download the PSI evan if it already exists,
-      This allows to pull down updated driver images, after updating to the latest library.
+    - A new **DeleteAndDownloadPSI** method - this will delete and pull down the latest PSI for the library version you're using.
 
   - Fixes
     - Any inclusion or replace node method now checks that Security Keys are present if needed.
+    - Handle unexpected WS Disconnects.
 
 - v3.0.0
 
