@@ -10,19 +10,28 @@ namespace ZWaveJS.NET
 {
     public class Helpers
     {
-        private const string MACOSBIN = "server-macos.psi";
-        private const string WINBIN = "server-win.psi";
-        private const string UNIXBIN = "server-ubuntu.psi";
+        private const string MacOSBinary = "server-macos.psi";
+        private const string WinBinary = "server-win.psi";
+        private const string UnixBinary = "server-ubuntu.psi";
+        private const string UnixBinaryARM = "server-debian-arm.psi";
 
         internal static Enums.Platform RunningPlatform()
         {
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Unix:
-                    if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users"))
+                    if (Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users") && Directory.Exists("/Library"))
+                    {
                         return Enums.Platform.Mac;
+                    }
+                    else if (typeof(string).Assembly.GetName().ProcessorArchitecture == ProcessorArchitecture.Arm)
+                    {
+                        return Enums.Platform.LinuxARM;
+                    }
                     else
+                    {
                         return Enums.Platform.Linux;
+                    }
 
                 case PlatformID.MacOSX:
                     return Enums.Platform.Mac;
@@ -32,26 +41,34 @@ namespace ZWaveJS.NET
             }
         }
 
-        public static Task<bool> DownloadPSI()
+      
+
+        public static Task<bool> DownloadPSI(bool Force = false)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             TaskCompletionSource<bool> Result = new TaskCompletionSource<bool>();
-            if (!File.Exists("server.psi"))
+            if (!File.Exists("server.psi") || Force)
             {
-                string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/latest/download/{F}";
+                Version V = Assembly.GetExecutingAssembly().GetName().Version;
+                string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/download/{VER}/{FN}";
+                URI = URI.Replace("{VER}", string.Format("v{0}.{1}.{2}",V.Major,V.Minor,V.Build));
                 switch (RunningPlatform())
                 {
                     case Enums.Platform.Windows:
-                        URI = URI.Replace("{F}", WINBIN);
+                        URI = URI.Replace("{FN}", WinBinary);
                         break;
 
                     case Enums.Platform.Mac:
-                        URI = URI.Replace("{F}", MACOSBIN);
+                        URI = URI.Replace("{FN}", MacOSBinary);
                         break;
 
                     case Enums.Platform.Linux:
-                        URI = URI.Replace("{F}", UNIXBIN);
+                        URI = URI.Replace("{FN}", UnixBinary);
+                        break;
+
+                    case Enums.Platform.LinuxARM:
+                        URI = URI.Replace("{FN}", UnixBinaryARM);
                         break;
                 }
 

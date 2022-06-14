@@ -76,12 +76,18 @@ The library will connect to an already running instance of [zwave-js-server](htt
 The library will host its own zwave-js instance.  
 You might ask, if in this mode, **nodejs** and **npm** is needed on the host system - it is not!
 
-This is all possible with an accompanying file - **server.psi**.
+This is all possible with an accompanying file - **server.psi**. (Platform Support Image)  
 
 Its an executable that is running silently/hidden,  
 and it contains everything necessary for .NET to work with zwave-js.  
 
 **server.psi** files are platform specific, but the assembly isn't - it will run on windows, OSX and Linux, and the platform specifics i.e **node** are contained in **server.psi**.
+
+## Prebuilt PSI's
+ - Windows x64
+ - MacOS x64 (Should support Apple Silicon via Rosetta2)
+ - Ubuntu Linux x64
+ - Debian Arm 
 
 ## Building yor own platform specific binary.
 

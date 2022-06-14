@@ -13,16 +13,12 @@ namespace Scratch_Pad
         static void Main(string[] args)
         {
 
+            ZWaveJS.NET.Helpers.DownloadPSI().ContinueWith((R) => {
 
-           
+                var B = "sadsdsa";
+  
 
-            ZWaveOptions ZWO = new ZWaveOptions();
-            _Driver = new Driver("COM3", ZWO);
-            _Driver.DriverReady += _Driver_DriverReady;
-           
-            _Driver.Start();
-
-            Console.ReadLine();
+          });
         }
 
         private static void _Driver_StartupErrorEvent(string Message)
@@ -32,18 +28,13 @@ namespace Scratch_Pad
 
         private static void _Driver_DriverReady()
         {
+            var ddd = new InclusionOptions();
+            ddd.strategy = Enums.InclusionStrategy.Security_S0;
+            _Driver.Controller.ReplaceFailedNode(4, ddd).ContinueWith((R) => {
 
-            VirtualNode VN = _Driver.Controller.GetMulticastGroup(new int[] { 2,3,4,6,7});
-            VN.GetDefinedValueIDs();
-            VN.GetEndpointCount();
-        
-
-
-
-           
-
-          
-           
+                var Res = R;
+            
+            });
         }
 
         private static void Program_NodeDead(ZWaveNode Node)

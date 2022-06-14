@@ -17,15 +17,15 @@ namespace ZWaveJS.NET
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         internal static CustomBooleanJsonConverter BoolConverter;
         internal static bool Inited = false;
+        internal ZWaveOptions Options;
 
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private static int SchemaVersionID = 17;
         private string SerialPort;
-        private ZWaveOptions Options;
+
         private Uri WSAddress;
         private bool Host = true;
-
         
         private string _ZWaveJSDriverVersion;
         public string ZWaveJSDriverVersion
@@ -49,7 +49,6 @@ namespace ZWaveJS.NET
         public Controller Controller { get; internal set; }
         public delegate void DriverReadyEvent();
         public event DriverReadyEvent DriverReady;
-
         public delegate void StartupError(string Message);
         public event StartupError StartupErrorEvent;
 
@@ -376,8 +375,14 @@ namespace ZWaveJS.NET
                 {
                     if (Callbacks.ContainsKey(MessageID))
                     {
-                        Callbacks[MessageID].Invoke(JO);
-                        Callbacks.Remove(MessageID);
+                        // Guard against race condition
+                        try
+                        {
+                            Callbacks[MessageID].Invoke(JO);
+                            Callbacks.Remove(MessageID);
+                        }
+                        catch (Exception Error) { }
+                        
                     }
 
                     return;
@@ -434,6 +439,8 @@ namespace ZWaveJS.NET
         {
             if (Client != null)
             {
+                Client.MessageReceived -= WebsocketClient_MessageReceived;
+                Client.ServerDisconnected -= Client_ServerDisconnected;
                 if (Client.Connected)
                 {
                     Client.Stop();
@@ -458,6 +465,35 @@ namespace ZWaveJS.NET
             Client = new WatsonWebsocket.WatsonWsClient(this.WSAddress);
             Client.KeepAliveInterval = 15;
             Client.MessageReceived += WebsocketClient_MessageReceived;
+            Client.ServerDisconnected += Client_ServerDisconnected;
+            Client.EnableStatistics = false;
+
+        }
+
+        private void Client_ServerDisconnected(object sender, EventArgs e)
+        {
+            // Signal waiting callbacks
+            Guid[] Keys = Callbacks.Keys.ToArray();
+            foreach (Guid ID in Keys)
+            {
+                JObject JO = new JObject();
+                JO.Add("success", false);
+                JO.Add("zwaveErrorCode", Enums.ErrorCodes.WSConnectionError);
+                JO.Add("zwaveErrorMessage", "The Connection to the Server was interrupted. It is unknown if the command was successfull, assuming false. The connection will be restored.");
+
+                // Guard against race condition
+                try
+                {
+                    Callbacks[ID].Invoke(JO);
+                    Callbacks.Remove(ID);
+                }
+                catch(Exception Error)
+                {
+                    continue;
+                }
+
+            }
+            Restart();
 
         }
 
@@ -467,9 +503,11 @@ namespace ZWaveJS.NET
             await Client.StartWithTimeoutAsync(60);
         }
 
-        internal void Restart()
+        async internal void Restart()
         {
             Destroy();
+
+            await Task.Delay(5000);
             InternalPrep();
             Start();
         }

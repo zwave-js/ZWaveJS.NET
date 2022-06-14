@@ -271,12 +271,12 @@ namespace ZWaveJS.NET
             Driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
                 if (Res.Success)
                 {
                     _Driver.Restart();
                 }
- 
+                Result.SetResult(Res);
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -327,35 +327,56 @@ namespace ZWaveJS.NET
 
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
+            
             switch (Options.strategy)
             {
+                case Enums.InclusionStrategy.Default:
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidStrategy, "Invalid Strategy for 'ReplaceFailedNode' Valid Strategies are : [Insecure, Security_S0, Security_S2]", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+
                 case Enums.InclusionStrategy.Security_S2:
                     ValidateDSKAndEnterPINSub = Options.userCallbacks?.validateDSKAndEnterPIN ?? null;
                     GrantSecurityClassesSub = Options.userCallbacks?.grantSecurityClasses ?? null;
                     AbortSub = Options.userCallbacks?.abort ?? null;
                     break;
-            }
 
-            if (Options.strategy == Enums.InclusionStrategy.Default)
+            }
+            
+            if (Options.strategy == Enums.InclusionStrategy.Security_S2)
             {
                 if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {
-                    CMDResult Res = new CMDResult("ZWJS.NET.ERR.002", "Invalid Strategy for 'ReplaceFailedNode' Valid Strategies are : [Insecure, Security_S0, Security_S2]", false);
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+                }
+
+                if (_Driver.Options != null && _Driver.Options.MissingKeys(true, false))
+                {
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
                     return Result.Task;
                 }
             }
 
-            if (Options.strategy == Enums.InclusionStrategy.Security_S2)
+            if(Options.strategy == Enums.InclusionStrategy.Security_S0)
             {
-                if(ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
+                if (_Driver.Options != null && _Driver.Options.MissingKeys(false, true))
                 {
-                    CMDResult Res = new CMDResult("ZWJS.NET.ERR.001", "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
                     return Result.Task;
                 }
             }
+
+            if (_Driver.Options != null && !_Driver.Options.CheckKeyLength())
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
+                Result.SetResult(Res);
+                return Result.Task;
+            }
+
             
             Driver.Callbacks.Add(ID, (JO) =>
             {
@@ -497,18 +518,62 @@ namespace ZWaveJS.NET
                     AbortSub = Options.userCallbacks?.abort ?? null;
                     break;
             }
-
-            if (Options.strategy == Enums.InclusionStrategy.Default || Options.strategy == Enums.InclusionStrategy.Security_S2)
+            
+            if (Options.strategy == Enums.InclusionStrategy.Default)
             {
+
                 if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
                 {
-                    CMDResult Res = new CMDResult("ZWJS.NET.ERR.001", "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
                     Result.SetResult(Res);
                     return Result.Task;
                 }
 
+                if (_Driver.Options != null && _Driver.Options.MissingKeys(true, true))
+                {
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+                }
             }
-            
+
+            if (Options.strategy == Enums.InclusionStrategy.Security_S2)
+            {
+
+                if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
+                {
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+                }
+
+                if (_Driver.Options != null && _Driver.Options.MissingKeys(true, false))
+                {
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+                }
+            }
+
+            if (Options.strategy == Enums.InclusionStrategy.Security_S0)
+            {
+                if (_Driver.Options != null && _Driver.Options.MissingKeys(false, true))
+                {
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
+                    Result.SetResult(Res);
+                    return Result.Task;
+                }
+            }
+
+
+
+            if (_Driver.Options != null && !_Driver.Options.CheckKeyLength())
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
+                Result.SetResult(Res);
+                return Result.Task;
+            }
+
             Driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -550,32 +615,19 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-
+        
         public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            Driver.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", NodeID);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
-
-            return Result.Task;
+            return _UnprovisionSmartStartNode(NodeID);
         }
 
         public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
         {
+            return _UnprovisionSmartStartNode(DSK);
+        }
+
+        private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
+        {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
@@ -589,7 +641,7 @@ namespace ZWaveJS.NET
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", DSK);
+            Request.Add("dskOrNodeId", dskOrNodeId);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Client.SendAsync(RequestPL);
@@ -602,6 +654,20 @@ namespace ZWaveJS.NET
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            if(_Driver.Options != null && _Driver.Options.MissingKeys(true,true))
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
+                Result.SetResult(Res);
+                return Result.Task;
+            }
+
+            if (_Driver.Options != null && !_Driver.Options.CheckKeyLength())
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
+                Result.SetResult(Res);
+                return Result.Task;
+            }
 
             Driver.Callbacks.Add(ID, (JO) =>
             {

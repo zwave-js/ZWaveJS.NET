@@ -1,3 +1,22 @@
+- v3.1.0
+  
+  - Versions
+    - ZWave JS Driver Version: 9.3.0
+    - ZWave JS Server Version: 1.17.0 (Schema Version 17)
+
+  - Internal changes
+    - The **CFGLogConfig** and **CFGStorage** classes can now be set exclusively.
+    - The child classes of **ZWaveOptions** are now instanciated with default values when calling their constructors.
+    - The **DownloadPSI** method now pulls down version locked binaries, to remove the potential for incompatible Binary/library combinations
+
+  - New Fearures  
+    - Added ARM prebuilt binary (Debian, RPi)
+    - The **DownloadPSI** method - now has an optional override, allwowing the PSI to be focibly downloaded, i.e to ensure you have the correct version.
+
+  - Fixes
+    - Any inclusion or replace node method now checks that Security Keys are present if needed.
+    - Handle unexpected WS Disconnects.
+
 - v3.0.0
 
   - Versions
