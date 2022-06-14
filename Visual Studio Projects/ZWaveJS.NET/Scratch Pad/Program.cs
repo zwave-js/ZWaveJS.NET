@@ -15,7 +15,7 @@ namespace Scratch_Pad
 
             ZWaveJS.NET.Helpers.DownloadPSI().ContinueWith((R) => {
 
-                var break = "sadsdsa";
+                var B = "sadsdsa";
   
 
           });
