@@ -51,7 +51,7 @@ namespace ZWaveJS.NET
             if (!File.Exists("server.psi") || Force)
             {
                 Version V = Assembly.GetExecutingAssembly().GetName().Version;
-                string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/{VER}/download/{FN}";
+                string URI = "https://github.com/zwave-js/ZWaveJS.NET/releases/download/{VER}/{FN}";
                 URI = URI.Replace("{VER}", string.Format("v{0}.{1}.{2}",V.Major,V.Minor,V.Build));
                 switch (RunningPlatform())
                 {

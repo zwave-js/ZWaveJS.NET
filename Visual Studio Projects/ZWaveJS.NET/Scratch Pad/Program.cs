@@ -13,15 +13,12 @@ namespace Scratch_Pad
         static void Main(string[] args)
         {
 
-            ZWaveOptions ZWO = new ZWaveOptions();
-            ZWO.logConfig = new CFGLogConfig();
-           
-            _Driver = new Driver("COM3", ZWO);
-            _Driver.DriverReady += _Driver_DriverReady;
-           
-            _Driver.Start();
+            ZWaveJS.NET.Helpers.DownloadPSI().ContinueWith((R) => {
 
-            Console.ReadLine();
+                var break = "sadsdsa";
+  
+
+          });
         }
 
         private static void _Driver_StartupErrorEvent(string Message)
@@ -38,14 +35,6 @@ namespace Scratch_Pad
                 var Res = R;
             
             });
-        
-
-
-
-           
-
-          
-           
         }
 
         private static void Program_NodeDead(ZWaveNode Node)
