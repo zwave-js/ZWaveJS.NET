@@ -85,9 +85,9 @@ and it contains everything necessary for .NET to work with zwave-js.
 
 ## Prebuilt PSI's
  - Windows x64
- - MacOS x64 (Should support Apple Silicon via Rosetta2)
+ - MacOS x64 (Should support Apple Silicon via Rosetta 2)
  - Ubuntu Linux x64
- - Debian Arm 
+ - Debian ARM64
 
 ## Building yor own platform specific binary.
 
