@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [14]
+        node-version: [16]
         os: [windows-latest, macos-latest, ubuntu-latest, self-hosted]
         include:
           #  Define the binary names to use for uploads
