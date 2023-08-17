@@ -21,6 +21,7 @@ namespace ZWaveJS.NET
 
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
+        private Dictionary<string, Action<JObject>> DriverEventMap;
         private static int SchemaVersionID = 17;
         private string SerialPort;
 
@@ -51,6 +52,13 @@ namespace ZWaveJS.NET
         public event DriverReadyEvent DriverReady;
         public delegate void StartupError(string Message);
         public event StartupError StartupErrorEvent;
+
+        public delegate void LoggingEventDelegate(LoggingEventArgs args);
+        public event LoggingEventDelegate LoggingEvent;
+        internal void Trigger_LoggingEvent(LoggingEventArgs args)
+        {
+            LoggingEvent?.Invoke(args);
+        }
 
         private void MapNodeEvents()
         {
@@ -303,6 +311,26 @@ namespace ZWaveJS.NET
             });
         }
 
+        private void MapDriverEvents()
+        {
+            DriverEventMap.Add("logging", (JO) =>
+            {
+                LoggingEventArgs args = new LoggingEventArgs();
+                args.formattedMessage = JO.SelectToken("event.formattedMessage")?.Value<string>();
+                args.direction = JO.SelectToken("event.direction")?.Value<string>();
+                args.primaryTags = JO.SelectToken("event.primaryTags")?.Value<string>();
+                args.secondaryTags = JO.SelectToken("event.secondaryTags")?.Value<string>();
+                args.secondaryTagPadding = JO.SelectToken("event.secondaryTagPadding")?.Value<int>();
+                args.multiline = JO.SelectToken("event.multiline")?.Value<bool>();
+                args.timestamp = JO.SelectToken("event.timestamp")?.Value<string>();
+                args.label = JO.SelectToken("event.label")?.Value<string>();
+                args.message = JO.SelectToken("event.message")?.Value<string>();
+                args.level = JO.SelectToken("event.level")?.Value<string>();
+
+                Trigger_LoggingEvent(args);
+            });
+        }
+
         private void MapEvents()
         {
             NodeEventMap = new Dictionary<string, Action<JObject>>();
@@ -310,6 +338,9 @@ namespace ZWaveJS.NET
 
             ControllerEventMap = new Dictionary<string, Action<JObject>>();
             MapControllerEvents();
+
+            DriverEventMap = new Dictionary<string, Action<JObject>>();
+            MapDriverEvents();
         }
 
       
@@ -426,6 +457,13 @@ namespace ZWaveJS.NET
                             if (ControllerEventMap.ContainsKey(_Event))
                             {
                                 ControllerEventMap[_Event].Invoke(JO);
+                            }
+                            break;
+
+                        case "driver":
+                            if (DriverEventMap.ContainsKey(_Event))
+                            {
+                                DriverEventMap[_Event].Invoke(JO);
                             }
                             break;
 
@@ -571,6 +609,52 @@ namespace ZWaveJS.NET
                     DriverReady?.Invoke();
                 }
             }
+        }
+
+        public Task<CMDResult> StartListeningLogs()
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.StartListeningLogs);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Client.SendAsync(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<CMDResult> StopListeningLogs()
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.StopListeningLogs);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Client.SendAsync(RequestPL);
+
+            return Result.Task;
         }
     }
 }
