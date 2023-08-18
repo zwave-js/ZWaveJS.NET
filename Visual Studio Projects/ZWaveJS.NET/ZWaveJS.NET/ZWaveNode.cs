@@ -523,7 +523,32 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-       
+        // FIX ME
+        public Task<CMDResult> WaitForWakeup()
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            //Request.Add("command", Enums.Commands.HasSecurityClass);
+            Request.Add("nodeId", this.id);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Client.SendAsync(RequestPL);
+
+            return Result.Task;
+        }
+
+
 
         [Newtonsoft.Json.JsonProperty]
         internal Endpoint[] endpoints { get; set; }
