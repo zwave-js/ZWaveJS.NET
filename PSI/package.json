@@ -1,13 +1,13 @@
 {
-  "version": "3.1.0",
+  "version": "4.0.0",
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
-    "@zwave-js/server": "1.17.0",
-    "zwave-js": "9.4.0"
+    "@zwave-js/server": "1.30.0",
+    "zwave-js": "11.12.0"
   },
   "devDependencies": {
-    "pkg": "^5.7.0"
+    "pkg": "^5.8.1"
   },
   "scripts": {
     "build": "pkg . --compress GZip -t host"
@@ -15,6 +15,5 @@
   "pkg": {
     "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
     "outputPath": "dist"
-  },
-  "packageManager": "yarn@3.2.1"
+  }
 }

@@ -37,16 +37,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache-dependency-path: ./PSI/yarn.lock
-          cache: 'yarn'
 
       - name: Install dependencies
         working-directory: ./PSI
-        run: yarn install --immutable
+        run: npm install
 
       - name: Build PSI Image
         working-directory: ./PSI
-        run: yarn run build
+        run: npm run build
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
