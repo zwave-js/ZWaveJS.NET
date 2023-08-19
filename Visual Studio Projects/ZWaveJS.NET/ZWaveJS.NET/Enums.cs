@@ -70,6 +70,8 @@ namespace ZWaveJS.NET
             public const string MCGetDefinedValueIDs = "multicast_group.get_defined_value_ids";
             public const string MCSupportsCCAPI = "multicast_group.supports_cc_api";
             public const string MCInvokeCCAPI = "multicast_group.invoke_cc_api";
+            public const string StartListeningLogs = "driver.start_listening_logs";
+            public const string StopListeningLogs = "driver.stop_listening_logs";
         }
 
         public enum SecurityClass

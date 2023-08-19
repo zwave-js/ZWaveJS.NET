@@ -272,4 +272,18 @@ namespace ZWaveJS.NET
         public GrantSecurityClasses grantSecurityClasses { get; set; }
         public Abort abort { get; set; }
     }
+
+    public class LoggingEventArgs
+    {
+        public string formattedMessage { get; set; }
+        public string direction { get; set; }
+        public string primaryTags { get; set; }
+        public string secondaryTags { get; set; }
+        public int? secondaryTagPadding { get; set; }
+        public bool? multiline { get; set; }
+        public string timestamp { get; set; }
+        public string label { get; set; }
+        public string message { get; set; }
+        public string level { get; set; }
+    }
 }
