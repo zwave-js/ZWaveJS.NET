@@ -259,8 +259,11 @@ namespace ZWaveJS.NET
             ControllerEventMap.Add("node removed", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
+                int Reason = JO.SelectToken("event.reason").Value<int>();
+                Enums.RemoveNodeReason RNR = (Enums.RemoveNodeReason)Reason;
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                this.Controller.Trigger_NodeRemoved(N);
+
+                this.Controller.Trigger_NodeRemoved(N,RNR);
 
                 this.Controller.Nodes.RemoveNodeFromCollection(NID);
             });

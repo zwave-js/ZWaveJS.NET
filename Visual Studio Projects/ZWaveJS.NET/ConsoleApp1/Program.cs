@@ -32,14 +32,19 @@ namespace ConsoleApp1
         private static void D_DriverReady()
         {
 
+            D.Controller.NodeRemoved += Controller_NodeRemoved;
 
-            D.Controller.Nodes.Get(2).ValueUpdated += Program_ValueUpdated;
-            D.Controller.Nodes.Get(2).ValueNotification += Program_ValueNotification;
-
-
+            D.Controller.BeginExclusion();
 
 
 
+
+
+        }
+
+        private static void Controller_NodeRemoved(ZWaveNode Node, Enums.RemoveNodeReason Reason)
+        {
+            throw new NotImplementedException();
         }
 
         private static void Program_ValueNotification(ZWaveNode Node, ValueNotificationArgs Args)

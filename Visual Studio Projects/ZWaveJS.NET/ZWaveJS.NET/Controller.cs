@@ -101,11 +101,11 @@ namespace ZWaveJS.NET
             ExclusionStopped?.Invoke();
         }
 
-        public delegate void NodeRemovedEvent(ZWaveNode Node);
+        public delegate void NodeRemovedEvent(ZWaveNode Node, Enums.RemoveNodeReason Reason);
         public event NodeRemovedEvent NodeRemoved;
-        internal void Trigger_NodeRemoved(ZWaveNode Node)
+        internal void Trigger_NodeRemoved(ZWaveNode Node, Enums.RemoveNodeReason Reason)
         {
-            NodeRemoved?.Invoke(Node);
+            NodeRemoved?.Invoke(Node, Reason);
         }
 
         public delegate void NodeAddedEvent(ZWaveNode Node, InclusionResult Result);

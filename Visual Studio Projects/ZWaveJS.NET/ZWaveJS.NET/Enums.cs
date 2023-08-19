@@ -14,6 +14,8 @@ namespace ZWaveJS.NET
             Mac
         }
 
+
+
         internal class ErrorCodes
         {
             public const string MissingS2Callbacks = "ZWJS.NET.ERR.001";
@@ -102,6 +104,17 @@ namespace ZWaveJS.NET
             Awake,
             Dead,
             Alive
+        }
+
+        public enum RemoveNodeReason
+        {
+            Excluded,
+            ProxyExcluded,
+            RemoveFailed,
+            Replaced,
+            ProxyReplaced,
+            Reset,
+            SmartStartFailed,
         }
 
         public enum InclusionStrategy

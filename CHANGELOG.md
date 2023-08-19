@@ -14,12 +14,13 @@
       example : **NodeStatisticsUpdatedArgs**
     - The **ValueUpdated** event now uses a concreate class for the args parameter (**ValueUpdatedArgs**)
     - The **ValueNotification** event now uses a concreate class for the args parameter (**ValueNotificationArgs**)
+    - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
 
   - New Features  
     - Added **WaitForWakeUp** method
     - Added **Start/Stop ListeningLogs** method and the associated event.
     - Allow **target** and **firmwareFileFormat** to be specified on Node Firmware Updates
-    - Added **ValueAdded** and **ValueRemoved** events
+    - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
 
 - v3.1.0
   
