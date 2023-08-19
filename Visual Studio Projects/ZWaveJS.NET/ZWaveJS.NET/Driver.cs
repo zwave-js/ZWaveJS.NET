@@ -109,25 +109,33 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("value updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
+                ValueUpdatedArgs Args = JsonConvert.DeserializeObject<ValueUpdatedArgs>(JO.SelectToken("event.args").ToString());
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueUpdated(IJO);
+                N.Trigger_ValueUpdated(Args);
             });
 
             NodeEventMap.Add("value added", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
+                ValueAddedArgs Args = JsonConvert.DeserializeObject<ValueAddedArgs>(JO.SelectToken("event.args").ToString());
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueUpdated(IJO);
+                N.Trigger_ValueAdded(Args);
+            });
+
+            NodeEventMap.Add("value removed", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                ValueRemovedArgs Args = JsonConvert.DeserializeObject<ValueRemovedArgs>(JO.SelectToken("event.args").ToString());
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+                N.Trigger_ValueRemoved(Args);
             });
 
             NodeEventMap.Add("value notification", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
+                ValueNotificationArgs Args = JsonConvert.DeserializeObject<ValueNotificationArgs>(JO.SelectToken("event.args").ToString());
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueNotification(IJO);
+                N.Trigger_ValueNotification(Args);
             });
 
             NodeEventMap.Add("notification", (JO) =>

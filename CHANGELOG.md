@@ -1,3 +1,26 @@
+- v4.0.0
+
+  - Versions
+    - ZWave JS Driver Version: 11.12.0
+    - ZWave JS Server Version: 1.30.0 (Schema Version 30)
+
+  - Internal changes
+    - Switched to an alternative websocket client package
+
+  - Breaking Changes
+    - Removed support for **NET45**
+      The supported frameworks are as follows: **NET 48**, **NET 5.0**, **NET 6.0**, **NETSTANDARD 2.0**, **NETSTANDARD 2.1**
+    - The **NodeStatistics** and **ControllerStatistics** args have been renamed to include **UpdatedArgs** in their names
+      example : **NodeStatisticsUpdatedArgs**
+    - The **ValueUpdated** event now uses a concreate class for the args parameter (**ValueUpdatedArgs**)
+    - The **ValueNotification** event now uses a concreate class for the args parameter (**ValueNotificationArgs**)
+
+  - New Features  
+    - Added **WaitForWakeUp** method
+    - Added **Start/Stop ListeningLogs** method and the associated event.
+    - Allow **target** and **firmwareFileFormat** to be specified on Node Firmware Updates
+    - Added **ValueAdded** and **ValueRemoved** events
+
 - v3.1.0
   
   - Versions
@@ -9,7 +32,7 @@
     - The child classes of **ZWaveOptions** are now instanciated with default values when calling their constructors.
     - The **DownloadPSI** method now pulls down version locked binaries, to remove the potential for incompatible Binary/library combinations
 
-  - New Fearures  
+  - New Features  
     - Added ARM prebuilt binary (Debian, RPi)
     - The **DownloadPSI** method - now has an optional override, allwowing the PSI to be focibly downloaded, i.e to ensure you have the correct version.
 

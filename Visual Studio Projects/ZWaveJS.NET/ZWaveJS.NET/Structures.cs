@@ -308,4 +308,29 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public object newValue { get; internal set; }
     }
+
+    public class ValueAddedArgs : ValueID
+    {
+        internal ValueAddedArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object newValue { get; internal set; }
+    }
+
+    public class ValueRemovedArgs : ValueID
+    {
+        internal ValueRemovedArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object newValue { get; internal set; }
+    }
+
+    public class ValueNotificationArgs : ValueID
+    {
+        internal ValueNotificationArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object value { get; internal set; }
+      
+    }
 }

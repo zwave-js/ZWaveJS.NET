@@ -43,18 +43,32 @@ namespace ZWaveJS.NET
             FirmwareUpdateProgress?.Invoke(this, SentFragments, TotalFragments);
         }
 
-        public delegate void ValueNotificationEvent(ZWaveNode Node, JObject Args);
+        public delegate void ValueNotificationEvent(ZWaveNode Node, ValueNotificationArgs Args);
         public event ValueNotificationEvent ValueNotification;
-        internal void Trigger_ValueNotification(JObject Args)
+        internal void Trigger_ValueNotification(ValueNotificationArgs Args)
         {
             ValueNotification?.Invoke(this, Args);
         }
 
-        public delegate void ValueUpdatedEvent(ZWaveNode Node, JObject Args);
+        public delegate void ValueUpdatedEvent(ZWaveNode Node, ValueUpdatedArgs Args);
         public event ValueUpdatedEvent ValueUpdated;
-        internal void Trigger_ValueUpdated(JObject Args)
+        internal void Trigger_ValueUpdated(ValueUpdatedArgs Args)
         {
             ValueUpdated?.Invoke(this, Args);
+        }
+
+        public delegate void ValueAddedEvent(ZWaveNode Node, ValueAddedArgs Args);
+        public event ValueAddedEvent ValueAdded;
+        internal void Trigger_ValueAdded(ValueAddedArgs Args)
+        {
+            ValueAdded?.Invoke(this, Args);
+        }
+
+        public delegate void ValueRemovedEvent(ZWaveNode Node, ValueRemovedArgs Args);
+        public event ValueRemovedEvent ValueRemoved;
+        internal void Trigger_ValueRemoved(ValueRemovedArgs Args)
+        {
+            ValueRemoved?.Invoke(this, Args);
         }
 
         public delegate void NotificationEvent(ZWaveNode Node, int ccId, JObject Args);
