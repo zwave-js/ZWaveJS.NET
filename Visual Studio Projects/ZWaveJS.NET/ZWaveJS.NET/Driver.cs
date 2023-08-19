@@ -6,14 +6,13 @@ using System.Net.WebSockets;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-
-
+using Websocket.Client;
 
 namespace ZWaveJS.NET
 {
     public class Driver
     {
-        internal static WatsonWebsocket.WatsonWsClient Client;
+        internal static Websocket.Client.WebsocketClient ClientWebSocket;
         internal static Dictionary<Guid, Action<JObject>> Callbacks;
         internal static CustomBooleanJsonConverter BoolConverter;
         internal static bool Inited = false;
@@ -22,7 +21,7 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private static int SchemaVersionID = 17;
+        private static int SchemaVersionID = 30;
         private string SerialPort;
 
         private Uri WSAddress;
@@ -76,7 +75,7 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("statistics updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                NodeStatistics NS = JsonConvert.DeserializeObject<NodeStatistics>(JO.SelectToken("event.statistics").ToString());
+                NodeStatisticsUpdatedArgs NS = JsonConvert.DeserializeObject<NodeStatisticsUpdatedArgs>(JO.SelectToken("event.statistics").ToString());
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 N.Trigger_StatisticsUpdated(NS);
             });
@@ -219,7 +218,7 @@ namespace ZWaveJS.NET
 
             ControllerEventMap.Add("statistics updated", (JO) =>
             {
-                ControllerStatistics CS = JsonConvert.DeserializeObject<ControllerStatistics>(JO.SelectToken("event.statistics").ToString());
+                ControllerStatisticsUpdatedArgs CS = JsonConvert.DeserializeObject<ControllerStatisticsUpdatedArgs>(JO.SelectToken("event.statistics").ToString());
                 this.Controller.Trigger_StatisticsUpdated(CS);
             });
 
@@ -281,7 +280,8 @@ namespace ZWaveJS.NET
                 Request.Add("inclusionGrant", SIG);
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                Client.SendAsync(RequestPL);
+                ClientWebSocket.SendInstant(RequestPL);
+                
             });
 
             ControllerEventMap.Add("validate dsk and enter pin",  (JO) =>
@@ -294,7 +294,7 @@ namespace ZWaveJS.NET
                 Request.Add("pin", DSK);
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                Client.SendAsync(RequestPL);
+                ClientWebSocket.SendInstant(RequestPL);
             });
 
             ControllerEventMap.Add("heal network progress", (JO) =>
@@ -315,19 +315,8 @@ namespace ZWaveJS.NET
         {
             DriverEventMap.Add("logging", (JO) =>
             {
-                LoggingEventArgs args = new LoggingEventArgs();
-                args.formattedMessage = JO.SelectToken("event.formattedMessage")?.Value<string>();
-                args.direction = JO.SelectToken("event.direction")?.Value<string>();
-                args.primaryTags = JO.SelectToken("event.primaryTags")?.Value<string>();
-                args.secondaryTags = JO.SelectToken("event.secondaryTags")?.Value<string>();
-                args.secondaryTagPadding = JO.SelectToken("event.secondaryTagPadding")?.Value<int>();
-                args.multiline = JO.SelectToken("event.multiline")?.Value<bool>();
-                args.timestamp = JO.SelectToken("event.timestamp")?.Value<string>();
-                args.label = JO.SelectToken("event.label")?.Value<string>();
-                args.message = JO.SelectToken("event.message")?.Value<string>();
-                args.level = JO.SelectToken("event.level")?.Value<string>();
-
-                Trigger_LoggingEvent(args);
+                LoggingEventArgs Args = Newtonsoft.Json.JsonConvert.DeserializeObject<LoggingEventArgs>(JO.SelectToken("event").ToString());
+                Trigger_LoggingEvent(Args);
             });
         }
 
@@ -356,8 +345,7 @@ namespace ZWaveJS.NET
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             BoolConverter = new CustomBooleanJsonConverter();
-
-
+            
             this.WSAddress = Server;
             this.Host = false;
 
@@ -377,26 +365,42 @@ namespace ZWaveJS.NET
 
             this.SerialPort = SerialPort;
             this.Options = Options;
-            this.WSAddress = new Uri("ws://127.0.0.1:" + ServerCommunicationPort);
+            this.WSAddress = new Uri("ws://localhost:" + ServerCommunicationPort);
             this.Host = true;
 
             InternalPrep();
 
         }
 
-     
-
-        // Proces Message
-        private void WebsocketClient_MessageReceived(object sender, WatsonWebsocket.MessageReceivedEventArgs e)
+        private void InternalPrep()
         {
-            if (e.MessageType == WebSocketMessageType.Text)
+            if (this.Host)
             {
-                string Content = System.Text.Encoding.UTF8.GetString(e.Data);
-                if (System.Diagnostics.Debugger.IsAttached)
-                {
-                    System.Diagnostics.Debug.WriteLine(Content);
-                }
+                Server.Start(SerialPort, Options, ServerCommunicationPort);
+            }
 
+            ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress);
+            ClientWebSocket.MessageReceived.Subscribe((Message) => {
+                WebsocketClient_MessageReceived(ClientWebSocket, Message);
+            });
+
+            ClientWebSocket.ReconnectTimeout = TimeSpan.FromSeconds(5);
+            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(5);
+
+        }
+        
+        // Proces Message
+        private void WebsocketClient_MessageReceived(object sender, ResponseMessage Message)
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debug.WriteLine(Message);
+            }
+            
+            if (Message.MessageType == WebSocketMessageType.Text)
+            {
+                string Content = Message.Text;
+                
                 JObject JO = JObject.Parse(Content);
 
                 string Type = JO.Value<string>("type");
@@ -434,7 +438,7 @@ namespace ZWaveJS.NET
 
                     string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
 
-                    Client.SendAsync(RequestPL);
+                    ClientWebSocket.SendInstant(RequestPL);
 
                     return;
                 }
@@ -473,40 +477,29 @@ namespace ZWaveJS.NET
             }
         }
 
+        // Start Driver
+        public void Start()
+        {
+            ClientWebSocket.Start();
+        }
+
         public void Destroy()
         {
-            if (Client != null)
+            if (ClientWebSocket != null)
             {
-                Client.MessageReceived -= WebsocketClient_MessageReceived;
-                Client.ServerDisconnected -= Client_ServerDisconnected;
-                if (Client.Connected)
+                if (ClientWebSocket.IsRunning)
                 {
-                    Client.Stop();
+                    ClientWebSocket.Stop(WebSocketCloseStatus.NormalClosure, "Destroy");
                 }
-
-                Client.Dispose();
-                Client = null;
+              
+                ClientWebSocket.Dispose();
+                ClientWebSocket = null;
             }
 
             Server.Terminate();
-
-
         }
 
-        private void InternalPrep()
-        {
-            if (this.Host)
-            {
-                Server.Start(SerialPort, Options, ServerCommunicationPort);
-            }
-
-            Client = new WatsonWebsocket.WatsonWsClient(this.WSAddress);
-            Client.KeepAliveInterval = 15;
-            Client.MessageReceived += WebsocketClient_MessageReceived;
-            Client.ServerDisconnected += Client_ServerDisconnected;
-            Client.EnableStatistics = false;
-
-        }
+       
 
         private void Client_ServerDisconnected(object sender, EventArgs e)
         {
@@ -535,11 +528,7 @@ namespace ZWaveJS.NET
 
         }
 
-        // Start Driver
-        public async void Start()
-        {
-            await Client.StartWithTimeoutAsync(60);
-        }
+     
 
         async internal void Restart()
         {
@@ -555,12 +544,7 @@ namespace ZWaveJS.NET
             Destroy();
             StartupErrorEvent?.Invoke("Fatal ZWave Server Error.");
         }
-
-      
-
-
-
-
+        
         private void SetAPIVersionCB(JObject JO)
         {
             if (JO.Value<bool>("success"))
@@ -574,7 +558,7 @@ namespace ZWaveJS.NET
 
                 string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
 
-                Client.SendAsync(RequestPL);
+                ClientWebSocket.SendInstant(RequestPL);
             }
             else
             {
@@ -629,7 +613,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StartListeningLogs);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Client.SendAsync(RequestPL);
+            ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -652,7 +636,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StopListeningLogs);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Client.SendAsync(RequestPL);
+            ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }

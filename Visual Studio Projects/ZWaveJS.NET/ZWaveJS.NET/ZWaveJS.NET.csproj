@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net48;net5.0;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
-    <Version>3.1.0</Version>
+    <TargetFrameworks>net48;net5.0;net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <Version>4.0.0</Version>
     <Authors>Marcus Davies</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>ZWave JS</Company>
@@ -13,10 +13,12 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>Logo.png</PackageIcon>
     <PackageIconUrl />
+    <UserSecretsId>d23bfce5-76f4-45a1-820d-7afd4ac2a291</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Websocket.Client" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>

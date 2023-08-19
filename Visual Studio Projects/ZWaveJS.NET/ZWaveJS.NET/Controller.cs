@@ -32,12 +32,12 @@ namespace ZWaveJS.NET
             RestoreNVMProgressSub?.Invoke(BytesWritten, Total);
         }
 
-        public delegate void StatisticsUpdatedEvent(ControllerStatistics Statistics);
+        public delegate void StatisticsUpdatedEvent(ControllerStatisticsUpdatedArgs Args);
         public event StatisticsUpdatedEvent StatisticsUpdated;
-        internal void Trigger_StatisticsUpdated(ControllerStatistics Statistics)
+        internal void Trigger_StatisticsUpdated(ControllerStatisticsUpdatedArgs Args)
         {
-            this.statistics = Statistics;
-            StatisticsUpdated?.Invoke(Statistics);
+            this.statistics = Args;
+            StatisticsUpdated?.Invoke(Args);
         }
 
         public delegate void HealNetworkProgressEvent(Dictionary<string,string> Progress);
@@ -146,7 +146,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -172,7 +172,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -198,7 +198,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -227,7 +227,7 @@ namespace ZWaveJS.NET
             Request.Add("endpoint", Endpoint);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -256,7 +256,7 @@ namespace ZWaveJS.NET
             Request.Add("endpoint", Endpoint);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -285,7 +285,7 @@ namespace ZWaveJS.NET
             Request.Add("nvmData", Convert.ToBase64String(NVMData));
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -314,7 +314,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.BackUpNVM);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -394,7 +394,7 @@ namespace ZWaveJS.NET
             Request.Add("options", _Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -417,7 +417,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", NodeID);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -440,7 +440,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", NodeID);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -467,7 +467,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.BeginHealingNetwork);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -495,7 +495,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StopHealingNetwork);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -590,7 +590,7 @@ namespace ZWaveJS.NET
             Request.Add("options", _Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -611,7 +611,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StopInclusion);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -644,7 +644,7 @@ namespace ZWaveJS.NET
             Request.Add("dskOrNodeId", dskOrNodeId);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -682,7 +682,7 @@ namespace ZWaveJS.NET
             Request.Add("entry", QRCode);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -706,7 +706,7 @@ namespace ZWaveJS.NET
             Request.Add("unprovision", unprovision);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -729,7 +729,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StopExclusion);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Client.SendAsync(RequestPL);
+            Driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }

@@ -275,15 +275,37 @@ namespace ZWaveJS.NET
 
     public class LoggingEventArgs
     {
-        public string formattedMessage { get; set; }
-        public string direction { get; set; }
-        public string primaryTags { get; set; }
-        public string secondaryTags { get; set; }
-        public int? secondaryTagPadding { get; set; }
-        public bool? multiline { get; set; }
-        public string timestamp { get; set; }
-        public string label { get; set; }
-        public string message { get; set; }
-        public string level { get; set; }
+        internal LoggingEventArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string formattedMessage { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string direction { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string primaryTags { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string secondaryTags { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? secondaryTagPadding { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool? multiline { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string timestamp { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string label { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string message { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string level { get; internal set; }
+    }
+
+    public class ValueUpdatedArgs : ValueID
+    {
+        internal ValueUpdatedArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object prevValue { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public object newValue { get; internal set; }
     }
 }

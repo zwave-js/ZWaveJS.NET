@@ -72,6 +72,7 @@ namespace ZWaveJS.NET
             public const string MCInvokeCCAPI = "multicast_group.invoke_cc_api";
             public const string StartListeningLogs = "driver.start_listening_logs";
             public const string StopListeningLogs = "driver.stop_listening_logs";
+            public const string WaitForWakeUp = "node.wait_for_wakeup";
         }
 
         public enum SecurityClass
