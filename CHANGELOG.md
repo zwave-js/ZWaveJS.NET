@@ -14,7 +14,7 @@
     - The **ValueNotification** event now uses a dedicated class for the args parameter (**ValueNotificationArgs**)
     - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
     - The **NetworkHealDone** and **NetworkHealProgress** events now use dedicated classes for the args parameter
-    - The **BeginExclusion** method now requires an Exclusion Enum 
+    - The **BeginExclusion** method now requires an Exclusion Options instance
 
   - Internal changes
     - Switched to an alternative websocket client package

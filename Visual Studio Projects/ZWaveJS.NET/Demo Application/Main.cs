@@ -180,9 +180,10 @@ namespace Demo_Application
                 return;
             }
 
-            Enums.ExclusionStrategy Option = Result == DialogResult.Yes ? Enums.ExclusionStrategy.Unprovision : Enums.ExclusionStrategy.ExcludeOnly;
-
-            _Driver.Controller.BeginExclusion(Option).ContinueWith((R) =>
+            ExclusionOptions EO = new ExclusionOptions();
+            EO.strategy = (Result == DialogResult.Yes ? Enums.ExclusionStrategy.Unprovision : Enums.ExclusionStrategy.ExcludeOnly);
+            
+            _Driver.Controller.BeginExclusion(EO).ContinueWith((R) =>
             {
                 if (R.Result.Success)
                 {

@@ -279,6 +279,11 @@ namespace ZWaveJS.NET
     public delegate InclusionGrant GrantSecurityClasses(InclusionGrant requested);
     public delegate void Abort();
 
+    public class ExclusionOptions
+    {
+        public Enums.ExclusionStrategy strategy { get; set; }
+    }
+
     public class InclusionOptions
     {
         public Enums.InclusionStrategy strategy { get; set; }

@@ -689,26 +689,26 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> BeginExclusion(Enums.ExclusionStrategy Strategy = Enums.ExclusionStrategy.Unprovision)
+        public Task<CMDResult> BeginExclusion(ExclusionOptions Options)
         {
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.BeginExclusion);
-            Request.Add("options", Strategy);
+            Request.Add("options", Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
