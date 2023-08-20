@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            button16 = new Button();
+            button15 = new Button();
+            button14 = new Button();
+            button13 = new Button();
             CB_LockCode = new CheckBox();
             CB_DisableOptimistic = new CheckBox();
             CB_SoftResetUSB = new CheckBox();
@@ -70,10 +74,6 @@
             LST_ControllerStats = new ListView();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
-            button13 = new Button();
-            button14 = new Button();
-            button15 = new Button();
-            button16 = new Button();
             groupBox1.SuspendLayout();
             GP_Nodes.SuspendLayout();
             GP_Network.SuspendLayout();
@@ -108,6 +108,46 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Driver Settings";
+            // 
+            // button16
+            // 
+            button16.Location = new Point(266, 143);
+            button16.Name = "button16";
+            button16.Size = new Size(53, 23);
+            button16.TabIndex = 16;
+            button16.Text = "Gen";
+            button16.UseVisualStyleBackColor = true;
+            button16.Click += button16_Click;
+            // 
+            // button15
+            // 
+            button15.Location = new Point(266, 117);
+            button15.Name = "button15";
+            button15.Size = new Size(53, 23);
+            button15.TabIndex = 15;
+            button15.Text = "Gen";
+            button15.UseVisualStyleBackColor = true;
+            button15.Click += button15_Click;
+            // 
+            // button14
+            // 
+            button14.Location = new Point(266, 85);
+            button14.Name = "button14";
+            button14.Size = new Size(53, 23);
+            button14.TabIndex = 14;
+            button14.Text = "Gen";
+            button14.UseVisualStyleBackColor = true;
+            button14.Click += button14_Click;
+            // 
+            // button13
+            // 
+            button13.Location = new Point(266, 56);
+            button13.Name = "button13";
+            button13.Size = new Size(53, 23);
+            button13.TabIndex = 11;
+            button13.Text = "Gen";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += button13_Click;
             // 
             // CB_LockCode
             // 
@@ -245,8 +285,8 @@
             // 
             // columnHeader1
             // 
-            columnHeader1.Text = "Node ID";
-            columnHeader1.Width = 70;
+            columnHeader1.Text = "ID";
+            columnHeader1.Width = 40;
             // 
             // columnHeader2
             // 
@@ -256,12 +296,12 @@
             // columnHeader3
             // 
             columnHeader3.Text = "Manufacturer";
-            columnHeader3.Width = 70;
+            columnHeader3.Width = 100;
             // 
             // columnHeader4
             // 
             columnHeader4.Text = "Label";
-            columnHeader4.Width = 70;
+            columnHeader4.Width = 100;
             // 
             // GP_Nodes
             // 
@@ -336,6 +376,7 @@
             GP_Network.TabIndex = 3;
             GP_Network.TabStop = false;
             GP_Network.Text = "Network Commands";
+            GP_Network.Enter += GP_Network_Enter;
             // 
             // button7
             // 
@@ -471,42 +512,6 @@
             // 
             columnHeader6.Text = "Value";
             columnHeader6.Width = 200;
-            // 
-            // button13
-            // 
-            button13.Location = new Point(266, 56);
-            button13.Name = "button13";
-            button13.Size = new Size(53, 23);
-            button13.TabIndex = 11;
-            button13.Text = "Gen";
-            button13.UseVisualStyleBackColor = true;
-            // 
-            // button14
-            // 
-            button14.Location = new Point(266, 85);
-            button14.Name = "button14";
-            button14.Size = new Size(53, 23);
-            button14.TabIndex = 14;
-            button14.Text = "Gen";
-            button14.UseVisualStyleBackColor = true;
-            // 
-            // button15
-            // 
-            button15.Location = new Point(266, 117);
-            button15.Name = "button15";
-            button15.Size = new Size(53, 23);
-            button15.TabIndex = 15;
-            button15.Text = "Gen";
-            button15.UseVisualStyleBackColor = true;
-            // 
-            // button16
-            // 
-            button16.Location = new Point(266, 143);
-            button16.Name = "button16";
-            button16.Size = new Size(53, 23);
-            button16.TabIndex = 16;
-            button16.Text = "Gen";
-            button16.UseVisualStyleBackColor = true;
             // 
             // Main
             // 

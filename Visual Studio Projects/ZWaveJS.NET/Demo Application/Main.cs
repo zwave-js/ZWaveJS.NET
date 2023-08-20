@@ -42,7 +42,7 @@ namespace Demo_Application
                 _NW.Close();
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
-                LVI.SubItems.Add(Node.status.ToString());
+                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pendinging Interview..." : Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
                 LVI.SubItems.Add(Node.deviceConfig?.label);
                 LVI.Tag = Node.id;
@@ -63,7 +63,7 @@ namespace Demo_Application
                 LST_Nodes.Items.Remove(RemoveLVI);
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
-                LVI.SubItems.Add(Node.status.ToString());
+                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pendinging Interview..." : Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
                 LVI.SubItems.Add(Node.deviceConfig?.label);
                 LVI.Tag = Node.id;
@@ -105,7 +105,7 @@ namespace Demo_Application
                 {
                     ListViewItem LVI = new ListViewItem(string.Format("#{0}", N.id));
 
-                    LVI.SubItems.Add(N.status.ToString());
+                    LVI.SubItems.Add(N.interviewStage != "Complete" ? "Pendinging Interview..." : N.status.ToString());
                     LVI.SubItems.Add(N.deviceConfig?.manufacturer);
                     LVI.SubItems.Add(N.deviceConfig?.label);
                     LVI.Tag = N.id;
@@ -180,6 +180,14 @@ namespace Demo_Application
 
                     }));
                 }
+                else
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show(R.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+              
             });
 
 
@@ -214,6 +222,7 @@ namespace Demo_Application
 
                 IO.userCallbacks.validateDSKAndEnterPIN = new ValidateDSKAndEnterPIN(ValidateDSK);
                 IO.userCallbacks.grantSecurityClasses = new GrantSecurityClasses(Grant);
+                IO.userCallbacks.abort = new Abort(Abort);
 
                 _Driver.Controller.BeginInclusion(IO).ContinueWith((R) =>
                 {
@@ -231,9 +240,21 @@ namespace Demo_Application
                             }
                         }));
                     }
+                    else
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show(R.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
 
                 });
             }
+        }
+
+        private void Abort()
+        {
+          
         }
 
         private string ValidateDSK(string PartialDSK)
@@ -243,7 +264,65 @@ namespace Demo_Application
 
         private InclusionGrant Grant(InclusionGrant Requested)
         {
-            return Requested;
+            ManualResetEvent MRE = new ManualResetEvent(false);
+
+            InclusionGrant IG = new InclusionGrant();
+            IG.clientSideAuth = Requested.clientSideAuth;
+
+            this.Invoke(new Action(() =>
+            {
+                GrantClasses GC = new GrantClasses();
+                GC.Grant(Requested.securityClasses);
+                IG.securityClasses = GC.Granted;
+
+                MRE.Set();
+            }));
+
+
+            MRE.WaitOne();
+            return IG;
+
+
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Random R = new Random();
+            byte[] Bytes = new byte[16];
+            R.NextBytes(Bytes);
+
+            TXT_KEY_S0.Text = BitConverter.ToString(Bytes).Replace("-", "").ToLower();
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            Random R = new Random();
+            byte[] Bytes = new byte[16];
+            R.NextBytes(Bytes);
+
+            TXT_KEY_AC.Text = BitConverter.ToString(Bytes).Replace("-", "").ToLower();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            Random R = new Random();
+            byte[] Bytes = new byte[16];
+            R.NextBytes(Bytes);
+
+            TXT_KEY_Auth.Text = BitConverter.ToString(Bytes).Replace("-", "").ToLower();
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            Random R = new Random();
+            byte[] Bytes = new byte[16];
+            R.NextBytes(Bytes);
+
+            TXT_KEY_UAuth.Text = BitConverter.ToString(Bytes).Replace("-", "").ToLower();
+        }
+
+        private void GP_Network_Enter(object sender, EventArgs e)
+        {
 
         }
     }

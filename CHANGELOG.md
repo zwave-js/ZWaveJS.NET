@@ -7,8 +7,8 @@
   - Breaking Changes
     - Removed support for **NET45**
       The supported frameworks are as follows: **NET 48**, **NET 5.0**, **NET 6.0**, **NETSTANDARD 2.0**, **NETSTANDARD 2.1**
-    - The **NodeStatistics** and **ControllerStatistics** args have been renamed to include **UpdatedArgs** in their names
-      example : **NodeStatisticsUpdatedArgs**
+    - The **NodeStatistics** arg on the ZWaveNode class event **StatisticsUpdated**  has been renamed to **NodeStatisticsUpdatedArgs**
+    - The **ControllerStatistics** arg on the Controller class event **StatisticsUpdated**  has been renamed to **ControllerStatisticsUpdatedArgs**
     - The **InclusionResult** argument has been renamed to **InclusionResultArgs**
     - The **ValueUpdated** event now uses a dedicated class for the args parameter (**ValueUpdatedArgs**)
     - The **ValueNotification** event now uses a dedicated class for the args parameter (**ValueNotificationArgs**)
@@ -25,7 +25,7 @@
     - Added **Start/Stop ListeningLogs** method and the associated event.
     - Allow **target** and **firmwareFileFormat** to be specified on Node Firmware Updates
     - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
-    - Added **endpointLable** to teh Endpoint class
+    - Added **endpointLabel** to the Endpoint class
     - Allow specifying Refresh Info options, when re-interviewing a node.
 
 - v3.1.0

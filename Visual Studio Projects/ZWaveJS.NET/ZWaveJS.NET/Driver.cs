@@ -395,8 +395,14 @@ namespace ZWaveJS.NET
                 Server.Start(SerialPort, Options, ServerCommunicationPort);
             }
 
-            ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress);
-            ClientWebSocket.MessageReceived.Subscribe((Message) => {
+            var Factory = new Func<ClientWebSocket>(() => new ClientWebSocket
+            {
+                Options = { KeepAliveInterval = TimeSpan.FromSeconds(5) }
+            });
+
+            ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress, Factory);
+            ClientWebSocket.MessageReceived.Subscribe((Message) =>
+            {
                 WebsocketClient_MessageReceived(ClientWebSocket, Message);
             });
 
@@ -515,7 +521,16 @@ namespace ZWaveJS.NET
             Server.Terminate();
         }
 
-       
+        async internal void Restart()
+        {
+            Destroy();
+
+            await Task.Delay(5000);
+            InternalPrep();
+            Start();
+        }
+
+
 
         private void Client_ServerDisconnected(object sender, EventArgs e)
         {
@@ -543,18 +558,7 @@ namespace ZWaveJS.NET
             Restart();
 
         }
-
-     
-
-        async internal void Restart()
-        {
-            Destroy();
-
-            await Task.Delay(5000);
-            InternalPrep();
-            Start();
-        }
-
+        
         private void Server_FatalError()
         {
             Destroy();

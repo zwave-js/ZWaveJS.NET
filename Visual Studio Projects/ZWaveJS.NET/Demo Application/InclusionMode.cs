@@ -37,11 +37,7 @@ namespace Demo_Application
 
             if (RD_S2.Checked)
                 InclusionStrategy = ZWaveJS.NET.Enums.InclusionStrategy.Security_S2;
-
             
-               
-
-
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
