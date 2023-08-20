@@ -41,7 +41,8 @@ namespace ZWaveJS.NET
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
             PSI.EnvironmentVariables.Add("SERIAL_PORT", SerialPort);
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
-            
+            PSI.EnvironmentVariables.Add("NODE_ENV", "production");
+
             PSI.FileName = "server.psi";
             PSI.UseShellExecute = false;
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
