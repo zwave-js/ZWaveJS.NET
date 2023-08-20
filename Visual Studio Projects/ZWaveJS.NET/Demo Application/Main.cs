@@ -42,7 +42,7 @@ namespace Demo_Application
                 _NW.Close();
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
-                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pending Interview..." : Node.status.ToString());
+                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Interview" : Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
                 LVI.SubItems.Add(Node.deviceConfig?.label);
                 LVI.Tag = Node.id;
@@ -66,7 +66,7 @@ namespace Demo_Application
                 LST_Nodes.Items.Remove(RemoveLVI);
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
-                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pending Interview..." : Node.status.ToString());
+                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Interview" : Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
                 LVI.SubItems.Add(Node.deviceConfig?.label);
                 LVI.Tag = Node.id;
@@ -119,7 +119,7 @@ namespace Demo_Application
                 {
                     ListViewItem LVI = new ListViewItem(string.Format("#{0}", N.id));
 
-                    LVI.SubItems.Add(N.interviewStage != "Complete" ? "Pending Interview..." : N.status.ToString());
+                    LVI.SubItems.Add(N.interviewStage != "Complete" ? "Interview" : N.status.ToString());
                     LVI.SubItems.Add(N.deviceConfig?.manufacturer);
                     LVI.SubItems.Add(N.deviceConfig?.label);
                     LVI.Tag = N.id;
@@ -182,7 +182,7 @@ namespace Demo_Application
 
             ExclusionOptions EO = new ExclusionOptions();
             EO.strategy = (Result == DialogResult.Yes ? Enums.ExclusionStrategy.Unprovision : Enums.ExclusionStrategy.ExcludeOnly);
-            
+
             _Driver.Controller.BeginExclusion(EO).ContinueWith((R) =>
             {
                 if (R.Result.Success)
@@ -356,12 +356,12 @@ namespace Demo_Application
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Are you sure you wish to repair the network? This could take some time, especially if you have battery operated devices", "Are You Sure?",MessageBoxButtons.YesNo,MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure you wish to repair the network? This could take some time, especially if you have battery operated devices", "Are You Sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
 
                 RepairNetwork RN = new RepairNetwork();
                 RN.Start(_Driver);
-               
+
             }
         }
     }

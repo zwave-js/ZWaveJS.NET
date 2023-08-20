@@ -74,6 +74,8 @@
             LST_ControllerStats = new ListView();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
+            button17 = new Button();
+            button18 = new Button();
             GP_Settings.SuspendLayout();
             GP_Nodes.SuspendLayout();
             GP_Network.SuspendLayout();
@@ -279,7 +281,7 @@
             LST_Nodes.Location = new Point(6, 22);
             LST_Nodes.MultiSelect = false;
             LST_Nodes.Name = "LST_Nodes";
-            LST_Nodes.Size = new Size(346, 209);
+            LST_Nodes.Size = new Size(246, 238);
             LST_Nodes.TabIndex = 1;
             LST_Nodes.UseCompatibleStateImageBehavior = false;
             LST_Nodes.View = View.Details;
@@ -287,7 +289,7 @@
             // columnHeader1
             // 
             columnHeader1.Text = "ID";
-            columnHeader1.Width = 40;
+            columnHeader1.Width = 30;
             // 
             // columnHeader2
             // 
@@ -296,22 +298,24 @@
             // 
             // columnHeader3
             // 
-            columnHeader3.Text = "Manufacturer";
-            columnHeader3.Width = 100;
+            columnHeader3.Text = "Vender";
+            columnHeader3.Width = 70;
             // 
             // columnHeader4
             // 
             columnHeader4.Text = "Label";
-            columnHeader4.Width = 100;
+            columnHeader4.Width = 70;
             // 
             // GP_Nodes
             // 
+            GP_Nodes.Controls.Add(button18);
+            GP_Nodes.Controls.Add(button17);
             GP_Nodes.Controls.Add(button12);
             GP_Nodes.Controls.Add(button4);
-            GP_Nodes.Controls.Add(button3);
             GP_Nodes.Controls.Add(button2);
-            GP_Nodes.Controls.Add(button1);
             GP_Nodes.Controls.Add(LST_Nodes);
+            GP_Nodes.Controls.Add(button1);
+            GP_Nodes.Controls.Add(button3);
             GP_Nodes.Enabled = false;
             GP_Nodes.Location = new Point(12, 276);
             GP_Nodes.Name = "GP_Nodes";
@@ -322,27 +326,27 @@
             // 
             // button12
             // 
-            button12.Location = new Point(169, 237);
+            button12.Location = new Point(266, 56);
             button12.Name = "button12";
-            button12.Size = new Size(57, 23);
+            button12.Size = new Size(74, 23);
             button12.TabIndex = 6;
-            button12.Text = "Asso";
+            button12.Text = "Assocation";
             button12.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
-            button4.Location = new Point(232, 237);
+            button4.Location = new Point(266, 114);
             button4.Name = "button4";
-            button4.Size = new Size(57, 23);
+            button4.Size = new Size(74, 23);
             button4.TabIndex = 5;
             button4.Text = "Health";
             button4.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            button3.Location = new Point(295, 237);
+            button3.Location = new Point(266, 85);
             button3.Name = "button3";
-            button3.Size = new Size(57, 23);
+            button3.Size = new Size(74, 23);
             button3.TabIndex = 4;
             button3.Text = "Events";
             button3.UseVisualStyleBackColor = true;
@@ -350,18 +354,18 @@
             // 
             // button2
             // 
-            button2.Location = new Point(106, 237);
+            button2.Location = new Point(266, 27);
             button2.Name = "button2";
-            button2.Size = new Size(57, 23);
+            button2.Size = new Size(74, 23);
             button2.TabIndex = 3;
             button2.Text = "Values";
             button2.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
-            button1.Location = new Point(6, 237);
+            button1.Location = new Point(266, 201);
             button1.Name = "button1";
-            button1.Size = new Size(78, 23);
+            button1.Size = new Size(74, 23);
             button1.TabIndex = 2;
             button1.Text = "Update FW";
             button1.UseVisualStyleBackColor = true;
@@ -516,6 +520,24 @@
             columnHeader6.Text = "Value";
             columnHeader6.Width = 200;
             // 
+            // button17
+            // 
+            button17.Location = new Point(266, 143);
+            button17.Name = "button17";
+            button17.Size = new Size(74, 23);
+            button17.TabIndex = 7;
+            button17.Text = "Replace";
+            button17.UseVisualStyleBackColor = true;
+            // 
+            // button18
+            // 
+            button18.Location = new Point(266, 172);
+            button18.Name = "button18";
+            button18.Size = new Size(74, 23);
+            button18.TabIndex = 8;
+            button18.Text = "Remove";
+            button18.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -594,5 +616,7 @@
         private Button button15;
         private Button button14;
         private Button button13;
+        private Button button18;
+        private Button button17;
     }
 }
