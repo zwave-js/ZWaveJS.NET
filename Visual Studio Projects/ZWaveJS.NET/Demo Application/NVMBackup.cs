@@ -22,11 +22,23 @@ namespace Demo_Application
         {
             Driver.Controller.BackupNVMRaw(new Controller.BackupNVMProgress(Progress)).ContinueWith((R) =>
             {
-                System.IO.File.WriteAllBytes(FileName, (byte[])R.Result.ResultPayload);
-                this.Invoke(new Action(() =>
+                if (R.Result.Success)
                 {
-                    this.Close();
-                }));
+                    System.IO.File.WriteAllBytes(FileName, (byte[])R.Result.ResultPayload);
+                    this.Invoke(new Action(() =>
+                    {
+                        this.Close();
+                    }));
+                }
+                else
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("There was an Error backing up the NVM :\r\n"+ R.Result.Message + "", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }));
+                }
+              
 
             });
             this.ShowDialog();

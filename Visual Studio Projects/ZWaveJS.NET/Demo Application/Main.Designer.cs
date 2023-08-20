@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            CB_LockCode = new CheckBox();
             CB_DisableOptimistic = new CheckBox();
             CB_SoftResetUSB = new CheckBox();
             BTN_Connect = new Button();
@@ -47,16 +48,17 @@
             columnHeader2 = new ColumnHeader();
             columnHeader3 = new ColumnHeader();
             columnHeader4 = new ColumnHeader();
-            groupBox2 = new GroupBox();
+            GP_Nodes = new GroupBox();
+            button12 = new Button();
             button4 = new Button();
             button3 = new Button();
             button2 = new Button();
             button1 = new Button();
-            groupBox3 = new GroupBox();
+            GP_Network = new GroupBox();
             button7 = new Button();
             button6 = new Button();
             button5 = new Button();
-            groupBox4 = new GroupBox();
+            GP_Controller = new GroupBox();
             button11 = new Button();
             button9 = new Button();
             button8 = new Button();
@@ -68,18 +70,24 @@
             LST_ControllerStats = new ListView();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
-            button12 = new Button();
-            CB_LockCode = new CheckBox();
+            button13 = new Button();
+            button14 = new Button();
+            button15 = new Button();
+            button16 = new Button();
             groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
-            groupBox3.SuspendLayout();
-            groupBox4.SuspendLayout();
+            GP_Nodes.SuspendLayout();
+            GP_Network.SuspendLayout();
+            GP_Controller.SuspendLayout();
             statusStrip1.SuspendLayout();
             groupBox5.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(button16);
+            groupBox1.Controls.Add(button15);
+            groupBox1.Controls.Add(button14);
+            groupBox1.Controls.Add(button13);
             groupBox1.Controls.Add(CB_LockCode);
             groupBox1.Controls.Add(CB_DisableOptimistic);
             groupBox1.Controls.Add(CB_SoftResetUSB);
@@ -100,6 +108,16 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Driver Settings";
+            // 
+            // CB_LockCode
+            // 
+            CB_LockCode.AutoSize = true;
+            CB_LockCode.Location = new Point(139, 184);
+            CB_LockCode.Name = "CB_LockCode";
+            CB_LockCode.Size = new Size(138, 19);
+            CB_LockCode.TabIndex = 13;
+            CB_LockCode.Text = "Interview Lock Codes";
+            CB_LockCode.UseVisualStyleBackColor = true;
             // 
             // CB_DisableOptimistic
             // 
@@ -154,7 +172,7 @@
             // 
             TXT_KEY_UAuth.Location = new Point(139, 143);
             TXT_KEY_UAuth.Name = "TXT_KEY_UAuth";
-            TXT_KEY_UAuth.Size = new Size(180, 23);
+            TXT_KEY_UAuth.Size = new Size(121, 23);
             TXT_KEY_UAuth.TabIndex = 7;
             // 
             // label4
@@ -170,7 +188,7 @@
             // 
             TXT_KEY_Auth.Location = new Point(139, 114);
             TXT_KEY_Auth.Name = "TXT_KEY_Auth";
-            TXT_KEY_Auth.Size = new Size(180, 23);
+            TXT_KEY_Auth.Size = new Size(121, 23);
             TXT_KEY_Auth.TabIndex = 5;
             // 
             // label3
@@ -186,7 +204,7 @@
             // 
             TXT_KEY_AC.Location = new Point(139, 85);
             TXT_KEY_AC.Name = "TXT_KEY_AC";
-            TXT_KEY_AC.Size = new Size(180, 23);
+            TXT_KEY_AC.Size = new Size(121, 23);
             TXT_KEY_AC.TabIndex = 3;
             // 
             // label2
@@ -202,7 +220,7 @@
             // 
             TXT_KEY_S0.Location = new Point(139, 56);
             TXT_KEY_S0.Name = "TXT_KEY_S0";
-            TXT_KEY_S0.Size = new Size(180, 23);
+            TXT_KEY_S0.Size = new Size(121, 23);
             TXT_KEY_S0.TabIndex = 1;
             // 
             // label1
@@ -245,20 +263,30 @@
             columnHeader4.Text = "Label";
             columnHeader4.Width = 70;
             // 
-            // groupBox2
+            // GP_Nodes
             // 
-            groupBox2.Controls.Add(button12);
-            groupBox2.Controls.Add(button4);
-            groupBox2.Controls.Add(button3);
-            groupBox2.Controls.Add(button2);
-            groupBox2.Controls.Add(button1);
-            groupBox2.Controls.Add(LST_Nodes);
-            groupBox2.Location = new Point(12, 276);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(358, 266);
-            groupBox2.TabIndex = 2;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Nodes";
+            GP_Nodes.Controls.Add(button12);
+            GP_Nodes.Controls.Add(button4);
+            GP_Nodes.Controls.Add(button3);
+            GP_Nodes.Controls.Add(button2);
+            GP_Nodes.Controls.Add(button1);
+            GP_Nodes.Controls.Add(LST_Nodes);
+            GP_Nodes.Enabled = false;
+            GP_Nodes.Location = new Point(12, 276);
+            GP_Nodes.Name = "GP_Nodes";
+            GP_Nodes.Size = new Size(358, 266);
+            GP_Nodes.TabIndex = 2;
+            GP_Nodes.TabStop = false;
+            GP_Nodes.Text = "Nodes";
+            // 
+            // button12
+            // 
+            button12.Location = new Point(169, 237);
+            button12.Name = "button12";
+            button12.Size = new Size(57, 23);
+            button12.TabIndex = 6;
+            button12.Text = "Asso";
+            button12.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
@@ -266,7 +294,7 @@
             button4.Name = "button4";
             button4.Size = new Size(57, 23);
             button4.TabIndex = 5;
-            button4.Text = "Ping";
+            button4.Text = "Health";
             button4.UseVisualStyleBackColor = true;
             // 
             // button3
@@ -296,17 +324,18 @@
             button1.Text = "Update FW";
             button1.UseVisualStyleBackColor = true;
             // 
-            // groupBox3
+            // GP_Network
             // 
-            groupBox3.Controls.Add(button7);
-            groupBox3.Controls.Add(button6);
-            groupBox3.Controls.Add(button5);
-            groupBox3.Location = new Point(384, 276);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(428, 77);
-            groupBox3.TabIndex = 3;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Network Commands";
+            GP_Network.Controls.Add(button7);
+            GP_Network.Controls.Add(button6);
+            GP_Network.Controls.Add(button5);
+            GP_Network.Enabled = false;
+            GP_Network.Location = new Point(384, 276);
+            GP_Network.Name = "GP_Network";
+            GP_Network.Size = new Size(428, 77);
+            GP_Network.TabIndex = 3;
+            GP_Network.TabStop = false;
+            GP_Network.Text = "Network Commands";
             // 
             // button7
             // 
@@ -326,6 +355,7 @@
             button6.TabIndex = 12;
             button6.Text = "Add Node";
             button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // button5
             // 
@@ -336,18 +366,19 @@
             button5.Text = "Repair Network";
             button5.UseVisualStyleBackColor = true;
             // 
-            // groupBox4
+            // GP_Controller
             // 
-            groupBox4.Controls.Add(button11);
-            groupBox4.Controls.Add(button9);
-            groupBox4.Controls.Add(button8);
-            groupBox4.Controls.Add(button10);
-            groupBox4.Location = new Point(384, 359);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(428, 77);
-            groupBox4.TabIndex = 4;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Controller Commands";
+            GP_Controller.Controls.Add(button11);
+            GP_Controller.Controls.Add(button9);
+            GP_Controller.Controls.Add(button8);
+            GP_Controller.Controls.Add(button10);
+            GP_Controller.Enabled = false;
+            GP_Controller.Location = new Point(384, 359);
+            GP_Controller.Name = "GP_Controller";
+            GP_Controller.Size = new Size(428, 77);
+            GP_Controller.TabIndex = 4;
+            GP_Controller.TabStop = false;
+            GP_Controller.Text = "Controller Commands";
             // 
             // button11
             // 
@@ -441,24 +472,41 @@
             columnHeader6.Text = "Value";
             columnHeader6.Width = 200;
             // 
-            // button12
+            // button13
             // 
-            button12.Location = new Point(169, 237);
-            button12.Name = "button12";
-            button12.Size = new Size(57, 23);
-            button12.TabIndex = 6;
-            button12.Text = "Asso";
-            button12.UseVisualStyleBackColor = true;
+            button13.Location = new Point(266, 56);
+            button13.Name = "button13";
+            button13.Size = new Size(53, 23);
+            button13.TabIndex = 11;
+            button13.Text = "Gen";
+            button13.UseVisualStyleBackColor = true;
             // 
-            // CB_LockCode
+            // button14
             // 
-            CB_LockCode.AutoSize = true;
-            CB_LockCode.Location = new Point(139, 184);
-            CB_LockCode.Name = "CB_LockCode";
-            CB_LockCode.Size = new Size(138, 19);
-            CB_LockCode.TabIndex = 13;
-            CB_LockCode.Text = "Interview Lock Codes";
-            CB_LockCode.UseVisualStyleBackColor = true;
+            button14.Location = new Point(266, 85);
+            button14.Name = "button14";
+            button14.Size = new Size(53, 23);
+            button14.TabIndex = 14;
+            button14.Text = "Gen";
+            button14.UseVisualStyleBackColor = true;
+            // 
+            // button15
+            // 
+            button15.Location = new Point(266, 117);
+            button15.Name = "button15";
+            button15.Size = new Size(53, 23);
+            button15.TabIndex = 15;
+            button15.Text = "Gen";
+            button15.UseVisualStyleBackColor = true;
+            // 
+            // button16
+            // 
+            button16.Location = new Point(266, 143);
+            button16.Name = "button16";
+            button16.Size = new Size(53, 23);
+            button16.TabIndex = 16;
+            button16.Text = "Gen";
+            button16.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -467,9 +515,9 @@
             ClientSize = new Size(818, 585);
             Controls.Add(groupBox5);
             Controls.Add(statusStrip1);
-            Controls.Add(groupBox4);
-            Controls.Add(groupBox3);
-            Controls.Add(groupBox2);
+            Controls.Add(GP_Controller);
+            Controls.Add(GP_Network);
+            Controls.Add(GP_Nodes);
             Controls.Add(groupBox1);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -480,9 +528,9 @@
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox3.ResumeLayout(false);
-            groupBox4.ResumeLayout(false);
+            GP_Nodes.ResumeLayout(false);
+            GP_Network.ResumeLayout(false);
+            GP_Controller.ResumeLayout(false);
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
             groupBox5.ResumeLayout(false);
@@ -508,17 +556,17 @@
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
         private ColumnHeader columnHeader4;
-        private GroupBox groupBox2;
+        private GroupBox GP_Nodes;
         private Button button2;
         private Button button1;
         private Button button3;
         private Button BTN_Connect;
         private Button button4;
-        private GroupBox groupBox3;
+        private GroupBox GP_Network;
         private Button button7;
         private Button button6;
         private Button button5;
-        private GroupBox groupBox4;
+        private GroupBox GP_Controller;
         private Button button8;
         private Button button10;
         private CheckBox CB_DisableOptimistic;
@@ -534,5 +582,9 @@
         private ToolStripProgressBar PB_Connect;
         private CheckBox CB_LockCode;
         private Button button12;
+        private Button button16;
+        private Button button15;
+        private Button button14;
+        private Button button13;
     }
 }

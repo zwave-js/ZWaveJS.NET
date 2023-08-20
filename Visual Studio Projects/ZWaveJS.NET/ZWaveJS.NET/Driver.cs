@@ -401,7 +401,7 @@ namespace ZWaveJS.NET
             });
 
             ClientWebSocket.ReconnectTimeout = null;
-            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(10);
+            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(2);
 
         }
         

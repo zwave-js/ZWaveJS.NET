@@ -1,9 +1,11 @@
+using System.Security.Cryptography;
 using ZWaveJS.NET;
 namespace Demo_Application
 {
     public partial class Main : Form
     {
         Driver _Driver;
+        NIFWait _NW;
         public Main()
         {
             InitializeComponent();
@@ -37,6 +39,8 @@ namespace Demo_Application
 
             this.Invoke(new Action(() =>
             {
+                _NW.Close();
+
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
                 LVI.SubItems.Add(Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
@@ -71,8 +75,10 @@ namespace Demo_Application
 
         private void Controller_NodeRemoved(ZWaveNode Node, Enums.RemoveNodeReason Reason)
         {
+
             this.Invoke(new Action(() =>
             {
+                _NW.Close();
                 ListViewItem LVI = LST_Nodes.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals(Node.id));
                 LST_Nodes.Items.Remove(LVI);
             }));
@@ -89,6 +95,10 @@ namespace Demo_Application
                 PB_Connect.Visible = false;
                 BTN_Connect.Text = "Connected!";
                 LBL_Versions.Text = string.Format("Server Version : {0} Driver Version : {1}", _Driver.ZWaveJSServerVersion, _Driver.ZWaveJSDriverVersion);
+                GP_Controller.Enabled = true;
+                GP_Network.Enabled = true;
+                GP_Nodes.Enabled = true;
+
 
                 ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
                 foreach (ZWaveNode N in Nodes)
@@ -151,35 +161,30 @@ namespace Demo_Application
         {
             DialogResult Result = MessageBox.Show("Would you like to also remove the Smart Start Provisioning entry if one is found?", "Unprovision", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
-            switch (Result)
+
+            bool RemoveProvision = Result == DialogResult.Yes;
+
+            _Driver.Controller.BeginExclusion(RemoveProvision).ContinueWith((R) =>
             {
-                case DialogResult.Yes:
-                    _Driver.Controller.BeginExclusion(true).ContinueWith((R) =>
+                if (R.Result.Success)
+                {
+                    this.Invoke(new Action(() =>
                     {
-                        if (R.Result.Success)
-                        {
-                            this.Invoke(new Action(() =>
-                            {
+                        _NW = new NIFWait();
+                        _NW.Start(false);
 
-                            }));
+                        if (_NW.DialogResult == DialogResult.Cancel)
+                        {
+                            _Driver.Controller.StopExclusion();
                         }
 
-                    });
-                    break;
+                    }));
+                }
+            });
 
-                case DialogResult.No:
-                    _Driver.Controller.BeginExclusion(false).ContinueWith((R) =>
-                    {
-                        if (R.Result.Success)
-                        {
-                            this.Invoke(new Action(() =>
-                            {
 
-                            }));
-                        }
-                    });
-                    break;
-            }
+
+
 
         }
 
@@ -193,6 +198,53 @@ namespace Demo_Application
                 NVMBackup NVMB = new NVMBackup();
                 NVMB.Start(_Driver, saveFileDialog.FileName);
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            InclusionMode IM = new InclusionMode();
+            IM.ShowDialog();
+
+            if (IM.DialogResult == DialogResult.OK)
+            {
+                InclusionOptions IO = new InclusionOptions();
+                IO.strategy = IM.InclusionStrategy;
+
+                IO.userCallbacks = new InclusionUserCallbacks();
+
+                IO.userCallbacks.validateDSKAndEnterPIN = new ValidateDSKAndEnterPIN(ValidateDSK);
+                IO.userCallbacks.grantSecurityClasses = new GrantSecurityClasses(Grant);
+
+                _Driver.Controller.BeginInclusion(IO).ContinueWith((R) =>
+                {
+
+                    if (R.Result.Success)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            _NW = new NIFWait();
+                            _NW.Start(true);
+
+                            if (_NW.DialogResult == DialogResult.Cancel)
+                            {
+                                _Driver.Controller.StopInclusion();
+                            }
+                        }));
+                    }
+
+                });
+            }
+        }
+
+        private string ValidateDSK(string PartialDSK)
+        {
+            return PartialDSK;
+        }
+
+        private InclusionGrant Grant(InclusionGrant Requested)
+        {
+            return Requested;
+
         }
     }
 }
