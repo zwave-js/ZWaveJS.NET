@@ -14,6 +14,20 @@ namespace ZWaveJS.NET
             Mac
         }
 
+        public enum SecurityBootstrapFailure
+        {
+            UserCanceled,
+            NoKeysConfigured,
+            S2NoUserCallbacks,
+            Timeout,
+            ParameterMismatch,
+            NodeCanceled,
+            S2IncorrectPIN,
+            S2WrongSecurityLevel,
+            S0Downgrade,
+            Unknown
+        }
+
 
 
         internal class ErrorCodes
@@ -75,6 +89,7 @@ namespace ZWaveJS.NET
             public const string StartListeningLogs = "driver.start_listening_logs";
             public const string StopListeningLogs = "driver.stop_listening_logs";
             public const string WaitForWakeUp = "node.wait_for_wakeup";
+            public const string Interview = "node.interview";
         }
 
         public enum SecurityClass

@@ -13,7 +13,7 @@ namespace ZWaveJS.NET
             this.storage = new CFGStorage();
             this.securityKeys = new CFGSecurityKeys();
             this.timeouts = new CFGTimeouts();
-            this.enableSoftReset = false;
+            this.enableSoftReset = true;
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;
         }
@@ -73,9 +73,11 @@ namespace ZWaveJS.NET
         public CFGInterview()
         {
             this.queryAllUserCodes = false;
+            this.disableOnNodeAdded = false;
         }
 
         public bool queryAllUserCodes { get; set; }
+        public bool disableOnNodeAdded { get; set; }
     }
 
     public class CFGTimeouts

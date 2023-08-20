@@ -37,8 +37,6 @@ namespace ZWaveJS.NET
             ProcessStartInfo PSI = new ProcessStartInfo();
             PSI.RedirectStandardError = true;
             PSI.RedirectStandardInput = true;
-            if (System.Diagnostics.Debugger.IsAttached)
-                PSI.RedirectStandardOutput = true;
             
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
             PSI.EnvironmentVariables.Add("SERIAL_PORT", SerialPort);
@@ -51,16 +49,12 @@ namespace ZWaveJS.NET
             ServerProcess = new Process();
             ServerProcess.EnableRaisingEvents = true;
             ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;
-
-            if (System.Diagnostics.Debugger.IsAttached)
-                ServerProcess.OutputDataReceived += ServerProcess_OutputDataReceived;
-
+            
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
             ServerProcess.BeginErrorReadLine();
 
-            if (System.Diagnostics.Debugger.IsAttached)
-                ServerProcess.BeginOutputReadLine();
+          
         }
 
         private static void ServerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)

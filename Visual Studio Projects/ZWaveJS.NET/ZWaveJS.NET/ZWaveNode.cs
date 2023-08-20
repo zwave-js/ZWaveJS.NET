@@ -130,7 +130,7 @@ namespace ZWaveJS.NET
         {
             NodeInterviewFailed?.Invoke(this, Args);
         }
-
+        
         public Task<CMDResult> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
         {
             LifelineHealthCheckProgressSub = OnProgress;
@@ -138,7 +138,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -158,7 +158,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -168,7 +168,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
@@ -181,7 +181,7 @@ namespace ZWaveJS.NET
           
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -191,7 +191,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
@@ -214,17 +214,17 @@ namespace ZWaveJS.NET
                 Request.Add("firmwareFileFormat", FirmwareFileFormat);
            
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
-        public Task<CMDResult> RefreshInfo()
+        public Task<CMDResult> RefreshInfo(RefreshInfoOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
@@ -235,8 +235,11 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.RefreshInfo);
             Request.Add("nodeId", this.id);
 
+            if(Options != null)
+                Request.Add("options", Options);
+
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -246,7 +249,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -265,7 +268,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", this.id);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -275,7 +278,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
@@ -294,7 +297,7 @@ namespace ZWaveJS.NET
             }
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -304,7 +307,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -322,7 +325,7 @@ namespace ZWaveJS.NET
             Request.Add("valueId", ValueID);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -332,7 +335,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -353,7 +356,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -363,7 +366,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -383,7 +386,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -393,7 +396,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -411,7 +414,7 @@ namespace ZWaveJS.NET
             Request.Add("commandClass", CommandClass);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -421,7 +424,7 @@ namespace ZWaveJS.NET
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -441,7 +444,7 @@ namespace ZWaveJS.NET
             Request.Add("args", Params);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -463,7 +466,7 @@ namespace ZWaveJS.NET
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -479,7 +482,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", this.id);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -490,7 +493,7 @@ namespace ZWaveJS.NET
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -509,7 +512,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", this.id);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -520,7 +523,7 @@ namespace ZWaveJS.NET
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
@@ -538,7 +541,7 @@ namespace ZWaveJS.NET
             Request.Add("securityClass", Class);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -550,7 +553,7 @@ namespace ZWaveJS.NET
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-            Driver.Callbacks.Add(ID, (JO) =>
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
@@ -563,7 +566,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", this.id);
 
             string RequestPL = JsonConvert.SerializeObject(Request);
-            Driver.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -645,7 +648,7 @@ namespace ZWaveJS.NET
             set
             {
                 _KeepAwake = value;
-                if (Driver.Inited)
+                if (Driver.Instance.Inited)
                 {
                     Guid ID = Guid.NewGuid();
 
@@ -656,7 +659,7 @@ namespace ZWaveJS.NET
                     Request.Add("keepAwake", _KeepAwake);
 
                     string RequestPL = JsonConvert.SerializeObject(Request);
-                    Driver.ClientWebSocket.SendInstant(RequestPL);
+                    Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
                 }
             }
         }
@@ -672,7 +675,7 @@ namespace ZWaveJS.NET
             set
             {
                 _Name = value;
-                if (Driver.Inited)
+                if (Driver.Instance.Inited)
                 {
                     Guid ID = Guid.NewGuid();
 
@@ -683,7 +686,7 @@ namespace ZWaveJS.NET
                     Request.Add("name", _Name);
 
                     string RequestPL = JsonConvert.SerializeObject(Request);
-                    Driver.ClientWebSocket.SendInstant(RequestPL);
+                    Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
                 }
               
             }
@@ -700,7 +703,7 @@ namespace ZWaveJS.NET
             set
             {
                 _Location = value;
-                if (Driver.Inited)
+                if (Driver.Instance.Inited)
                 {
                     
                     Guid ID = Guid.NewGuid();
@@ -712,7 +715,7 @@ namespace ZWaveJS.NET
                     Request.Add("location", _Location);
 
                     string RequestPL = JsonConvert.SerializeObject(Request);
-                    Driver.ClientWebSocket.SendInstant(RequestPL);
+                    Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
                 }
             }
         }

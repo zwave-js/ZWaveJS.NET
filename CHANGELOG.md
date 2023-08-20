@@ -6,21 +6,28 @@
 
   - Internal changes
     - Switched to an alternative websocket client package
+    - Massive structural / performance improvements
+    - Redeveloped the Demo Application / Debug App
+    - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
 
   - Breaking Changes
     - Removed support for **NET45**
       The supported frameworks are as follows: **NET 48**, **NET 5.0**, **NET 6.0**, **NETSTANDARD 2.0**, **NETSTANDARD 2.1**
     - The **NodeStatistics** and **ControllerStatistics** args have been renamed to include **UpdatedArgs** in their names
       example : **NodeStatisticsUpdatedArgs**
-    - The **ValueUpdated** event now uses a concreate class for the args parameter (**ValueUpdatedArgs**)
-    - The **ValueNotification** event now uses a concreate class for the args parameter (**ValueNotificationArgs**)
+    - The **InclusionResult** argument has been renamed to **InclusionResultArgs**
+    - The **ValueUpdated** event now uses a dedicated class for the args parameter (**ValueUpdatedArgs**)
+    - The **ValueNotification** event now uses a dedicated class for the args parameter (**ValueNotificationArgs**)
     - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
+
 
   - New Features  
     - Added **WaitForWakeUp** method
     - Added **Start/Stop ListeningLogs** method and the associated event.
     - Allow **target** and **firmwareFileFormat** to be specified on Node Firmware Updates
     - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
+    - Added **endpointLable** to teh Endpoint class
+    - Allow specifying Refresh Info options, when re-interviewing a node.
 
 - v3.1.0
   

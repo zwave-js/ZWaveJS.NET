@@ -248,11 +248,12 @@ namespace ZWaveJS.NET
         public int rating { get; internal set; }
     }
 
-    public class InclusionResult
+    public class InclusionResultArgs
     {
-        internal InclusionResult() { }
+        internal InclusionResultArgs() { }
         [Newtonsoft.Json.JsonProperty]
         public bool lowSecurity { get; internal set; }
+        public Enums.SecurityBootstrapFailure lowSecurityReason { get; internal set; }
     }
 
     public delegate string ValidateDSKAndEnterPIN(string dsk);
@@ -332,5 +333,11 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public object value { get; internal set; }
       
+    }
+
+    public class RefreshInfoOptions
+    {
+        public bool resetSecurityClasses { get; set; }
+        public bool waitForWakeup { get; set; }
     }
 }

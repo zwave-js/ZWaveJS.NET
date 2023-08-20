@@ -12,10 +12,12 @@ namespace ZWaveJS.NET
 {
     public class Driver
     {
-        internal static Websocket.Client.WebsocketClient ClientWebSocket;
-        internal static Dictionary<Guid, Action<JObject>> Callbacks;
-        internal static CustomBooleanJsonConverter BoolConverter;
-        internal static bool Inited = false;
+        internal static volatile Driver Instance;
+
+        internal Websocket.Client.WebsocketClient ClientWebSocket;
+        internal Dictionary<Guid, Action<JObject>> Callbacks;
+        internal CustomBooleanJsonConverter BoolConverter;
+        internal bool Inited = false;
         internal ZWaveOptions Options;
 
         private Dictionary<string, Action<JObject>> NodeEventMap;
@@ -271,7 +273,7 @@ namespace ZWaveJS.NET
             ControllerEventMap.Add("node added", (JO) =>
             {
                 int NID = JO.SelectToken("event.node.nodeId").Value<int>();
-                InclusionResult IR = JsonConvert.DeserializeObject<InclusionResult>(JO.SelectToken("event.result").ToString());
+                InclusionResultArgs IR = JsonConvert.DeserializeObject<InclusionResultArgs>(JO.SelectToken("event.result").ToString());
 
                 ZWaveNode NN = new ZWaveNode();
                 NN.id = NID;
@@ -348,6 +350,8 @@ namespace ZWaveJS.NET
         // Client Mode
         public Driver(Uri Server, int SchemaVersion = 0)
         {
+            Instance = this;
+
             if (SchemaVersion > 0)
             {
                 SchemaVersionID = SchemaVersion;
@@ -367,6 +371,7 @@ namespace ZWaveJS.NET
         // Host Mode
         public Driver(string SerialPort, ZWaveOptions Options)
         {
+            Instance = this;
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
@@ -395,8 +400,8 @@ namespace ZWaveJS.NET
                 WebsocketClient_MessageReceived(ClientWebSocket, Message);
             });
 
-            ClientWebSocket.ReconnectTimeout = TimeSpan.FromSeconds(5);
-            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(5);
+            ClientWebSocket.ReconnectTimeout = null;
+            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(10);
 
         }
         
@@ -592,7 +597,6 @@ namespace ZWaveJS.NET
                 if (JO.Value<bool>("success"))
                 {
                     Controller C = JsonConvert.DeserializeObject<Controller>(JO.SelectToken("result.state.controller").ToString());
-                    C._Driver = this;
                     ZWaveNode[] Nodes = JsonConvert.DeserializeObject<ZWaveNode[]>(JO.SelectToken("result.state.nodes").ToString(), BoolConverter);
                     Nodes = Nodes.Where((N) => !N.isControllerNode).ToArray();
 
