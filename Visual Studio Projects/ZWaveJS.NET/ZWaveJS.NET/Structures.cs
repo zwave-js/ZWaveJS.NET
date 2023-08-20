@@ -60,6 +60,25 @@ namespace ZWaveJS.NET
         public int? endpoint { get;  set; }
     }
 
+    public class NetworkHealStats
+    {
+        internal NetworkHealStats() { }
+        public int[] HealedNodes { get; internal set; }
+        public int[] SkippedNodes { get; internal set; }
+        public int[] FailedNodes { get; internal set; }
+    }
+
+    public class NetworkHealDoneArgs : NetworkHealStats
+    {
+        internal NetworkHealDoneArgs() { }
+    }
+
+    public class NetworkHealProgressArgs : NetworkHealStats
+    {
+        internal NetworkHealProgressArgs() { }
+        public int[] PendingNodes { get; internal set; }
+    }
+
     public class AssociationGroup
     {
 

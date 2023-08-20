@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Websocket.Client;
+using System.Diagnostics;
 
 namespace ZWaveJS.NET
 {
@@ -313,13 +314,35 @@ namespace ZWaveJS.NET
             ControllerEventMap.Add("heal network progress", (JO) =>
             {
                 Dictionary<string, string> Progress = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.progress").ToString());
-                this.Controller.Trigger_HealNetworkProgress(Progress);
+
+                var Pending = Progress.Where((D) => D.Value.Equals("pending"));
+                var Done = Progress.Where((D) => D.Value.Equals("done"));
+                var Skipped = Progress.Where((D) => D.Value.Equals("skipped"));
+                var Failed = Progress.Where((D) => D.Value.Equals("failed"));
+
+                NetworkHealProgressArgs Args = new NetworkHealProgressArgs();
+                Args.HealedNodes = Done.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                Args.FailedNodes = Failed.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                Args.SkippedNodes = Skipped.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                Args.PendingNodes = Pending.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                
+                this.Controller.Trigger_HealNetworkProgress(Args);
             });
 
             ControllerEventMap.Add("heal network done", (JO) =>
             {
                 Dictionary<string, string> Result = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.result").ToString());
-                this.Controller.Trigger_HealNetworkDone(Result);
+
+                var Done = Result.Where((D) => D.Value.Equals("done"));
+                var Skipped = Result.Where((D) => D.Value.Equals("skipped"));
+                var Failed = Result.Where((D) => D.Value.Equals("failed"));
+
+                NetworkHealDoneArgs Args = new NetworkHealDoneArgs();
+                Args.HealedNodes = Done.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                Args.FailedNodes = Failed.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                Args.SkippedNodes = Skipped.Select(x => Convert.ToInt32(x.Key)).ToArray();
+                
+                this.Controller.Trigger_HealNetworkDone(Args);
 
             });
         }

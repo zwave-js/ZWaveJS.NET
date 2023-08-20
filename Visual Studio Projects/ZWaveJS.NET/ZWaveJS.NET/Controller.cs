@@ -42,19 +42,19 @@ namespace ZWaveJS.NET
             StatisticsUpdated?.Invoke(Args);
         }
 
-        public delegate void HealNetworkProgressEvent(Dictionary<string,string> Progress);
+        public delegate void HealNetworkProgressEvent(NetworkHealProgressArgs Args);
         public event HealNetworkProgressEvent HealNetworkProgress;
-        internal void Trigger_HealNetworkProgress(Dictionary<string, string> Progress)
+        internal void Trigger_HealNetworkProgress(NetworkHealProgressArgs Args)
         {
-             HealNetworkProgress?.Invoke(Progress);
+             HealNetworkProgress?.Invoke(Args);
         }
 
-        public delegate void HealNetworkDoneEvent(Dictionary<string, string> Result);
+        public delegate void HealNetworkDoneEvent(NetworkHealDoneArgs Args);
         public event HealNetworkDoneEvent HealNetworkDone;
-        internal void Trigger_HealNetworkDone(Dictionary<string, string> Result)
+        internal void Trigger_HealNetworkDone(NetworkHealDoneArgs Args)
         {
             this.isHealNetworkActive = false;
-            HealNetworkDone?.Invoke(Result);
+            HealNetworkDone?.Invoke(Args);
         }
 
         private Abort AbortSub;
