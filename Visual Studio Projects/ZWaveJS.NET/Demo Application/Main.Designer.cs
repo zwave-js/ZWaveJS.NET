@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
+            GP_Settings = new GroupBox();
             button16 = new Button();
             button15 = new Button();
             button14 = new Button();
@@ -74,7 +74,7 @@
             LST_ControllerStats = new ListView();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
-            groupBox1.SuspendLayout();
+            GP_Settings.SuspendLayout();
             GP_Nodes.SuspendLayout();
             GP_Network.SuspendLayout();
             GP_Controller.SuspendLayout();
@@ -82,32 +82,32 @@
             groupBox5.SuspendLayout();
             SuspendLayout();
             // 
-            // groupBox1
+            // GP_Settings
             // 
-            groupBox1.Controls.Add(button16);
-            groupBox1.Controls.Add(button15);
-            groupBox1.Controls.Add(button14);
-            groupBox1.Controls.Add(button13);
-            groupBox1.Controls.Add(CB_LockCode);
-            groupBox1.Controls.Add(CB_DisableOptimistic);
-            groupBox1.Controls.Add(CB_SoftResetUSB);
-            groupBox1.Controls.Add(BTN_Connect);
-            groupBox1.Controls.Add(COM_SerialPort);
-            groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(TXT_KEY_UAuth);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(TXT_KEY_Auth);
-            groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(TXT_KEY_AC);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(TXT_KEY_S0);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(12, 12);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(358, 258);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Driver Settings";
+            GP_Settings.Controls.Add(button16);
+            GP_Settings.Controls.Add(button15);
+            GP_Settings.Controls.Add(button14);
+            GP_Settings.Controls.Add(button13);
+            GP_Settings.Controls.Add(CB_LockCode);
+            GP_Settings.Controls.Add(CB_DisableOptimistic);
+            GP_Settings.Controls.Add(CB_SoftResetUSB);
+            GP_Settings.Controls.Add(BTN_Connect);
+            GP_Settings.Controls.Add(COM_SerialPort);
+            GP_Settings.Controls.Add(label5);
+            GP_Settings.Controls.Add(TXT_KEY_UAuth);
+            GP_Settings.Controls.Add(label4);
+            GP_Settings.Controls.Add(TXT_KEY_Auth);
+            GP_Settings.Controls.Add(label3);
+            GP_Settings.Controls.Add(TXT_KEY_AC);
+            GP_Settings.Controls.Add(label2);
+            GP_Settings.Controls.Add(TXT_KEY_S0);
+            GP_Settings.Controls.Add(label1);
+            GP_Settings.Location = new Point(12, 12);
+            GP_Settings.Name = "GP_Settings";
+            GP_Settings.Size = new Size(358, 258);
+            GP_Settings.TabIndex = 0;
+            GP_Settings.TabStop = false;
+            GP_Settings.Text = "Driver Settings";
             // 
             // button16
             // 
@@ -277,6 +277,7 @@
             LST_Nodes.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4 });
             LST_Nodes.FullRowSelect = true;
             LST_Nodes.Location = new Point(6, 22);
+            LST_Nodes.MultiSelect = false;
             LST_Nodes.Name = "LST_Nodes";
             LST_Nodes.Size = new Size(346, 209);
             LST_Nodes.TabIndex = 1;
@@ -345,6 +346,7 @@
             button3.TabIndex = 4;
             button3.Text = "Events";
             button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // button2
             // 
@@ -406,6 +408,7 @@
             button5.TabIndex = 11;
             button5.Text = "Repair Network";
             button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // GP_Controller
             // 
@@ -523,7 +526,7 @@
             Controls.Add(GP_Controller);
             Controls.Add(GP_Network);
             Controls.Add(GP_Nodes);
-            Controls.Add(groupBox1);
+            Controls.Add(GP_Settings);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -531,8 +534,8 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ZWaveJS.NET :: Demo Application";
             Load += Form1_Load;
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            GP_Settings.ResumeLayout(false);
+            GP_Settings.PerformLayout();
             GP_Nodes.ResumeLayout(false);
             GP_Network.ResumeLayout(false);
             GP_Controller.ResumeLayout(false);
@@ -545,7 +548,7 @@
 
         #endregion
 
-        private GroupBox groupBox1;
+        private GroupBox GP_Settings;
         private TextBox TXT_KEY_UAuth;
         private Label label4;
         private TextBox TXT_KEY_Auth;

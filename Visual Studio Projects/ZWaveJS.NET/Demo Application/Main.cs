@@ -42,7 +42,7 @@ namespace Demo_Application
                 _NW.Close();
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
-                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pendinging Interview..." : Node.status.ToString());
+                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pending Interview..." : Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
                 LVI.SubItems.Add(Node.deviceConfig?.label);
                 LVI.Tag = Node.id;
@@ -57,13 +57,16 @@ namespace Demo_Application
         {
             Node.NodeReady -= Node_NodeReady;
 
+            Node.NodeAsleep += Node_NodeAsleep;
+            Node.NodeAwake += Node_NodeAwake;
+
             this.Invoke(new Action(() =>
             {
                 ListViewItem RemoveLVI = LST_Nodes.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals(Node.id));
                 LST_Nodes.Items.Remove(RemoveLVI);
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
-                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pendinging Interview..." : Node.status.ToString());
+                LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Pending Interview..." : Node.status.ToString());
                 LVI.SubItems.Add(Node.deviceConfig?.manufacturer);
                 LVI.SubItems.Add(Node.deviceConfig?.label);
                 LVI.Tag = Node.id;
@@ -71,6 +74,16 @@ namespace Demo_Application
                 LST_Nodes.Items.Add(LVI);
 
             }));
+        }
+
+        private void Node_NodeAwake(ZWaveNode Node)
+        {
+
+        }
+
+        private void Node_NodeAsleep(ZWaveNode Node)
+        {
+
         }
 
         private void Controller_NodeRemoved(ZWaveNode Node, Enums.RemoveNodeReason Reason)
@@ -98,6 +111,7 @@ namespace Demo_Application
                 GP_Controller.Enabled = true;
                 GP_Network.Enabled = true;
                 GP_Nodes.Enabled = true;
+                GP_Settings.Enabled = false;
 
 
                 ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
@@ -105,7 +119,7 @@ namespace Demo_Application
                 {
                     ListViewItem LVI = new ListViewItem(string.Format("#{0}", N.id));
 
-                    LVI.SubItems.Add(N.interviewStage != "Complete" ? "Pendinging Interview..." : N.status.ToString());
+                    LVI.SubItems.Add(N.interviewStage != "Complete" ? "Pending Interview..." : N.status.ToString());
                     LVI.SubItems.Add(N.deviceConfig?.manufacturer);
                     LVI.SubItems.Add(N.deviceConfig?.label);
                     LVI.Tag = N.id;
@@ -187,7 +201,7 @@ namespace Demo_Application
                         MessageBox.Show(R.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
                 }
-              
+
             });
 
 
@@ -254,7 +268,7 @@ namespace Demo_Application
 
         private void Abort()
         {
-          
+
         }
 
         private string ValidateDSK(string PartialDSK)
@@ -324,6 +338,26 @@ namespace Demo_Application
         private void GP_Network_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                DeviceEvents DE = new DeviceEvents();
+                DE.Start(_Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag));
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("Are you sure you wish to repair the network? This could take some time, especially if you have battery operated devices", "Are You Sure?",MessageBoxButtons.YesNo,MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+
+                RepairNetwork RN = new RepairNetwork();
+                RN.Start(_Driver);
+               
+            }
         }
     }
 }
