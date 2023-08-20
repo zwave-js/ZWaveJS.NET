@@ -58,9 +58,9 @@
             LBL_Title.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
             LBL_Title.Location = new Point(45, 41);
             LBL_Title.Name = "LBL_Title";
-            LBL_Title.Size = new Size(128, 19);
+            LBL_Title.Size = new Size(159, 19);
             LBL_Title.TabIndex = 3;
-            LBL_Title.Text = "Reparing Network...";
+            LBL_Title.Text = "Reparing Network (0%)...";
             // 
             // RepairNetwork
             // 
