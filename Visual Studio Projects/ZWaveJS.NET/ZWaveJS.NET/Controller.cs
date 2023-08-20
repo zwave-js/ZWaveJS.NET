@@ -123,28 +123,6 @@ namespace ZWaveJS.NET
             return VN;
         }
 
-        public Task<CMDResult> InterviewNode(ZWaveNode Node)
-        {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-
-            });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.Interview);
-            Request.Add("nodeId", Node.id);
-            
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
-
-            return Result.Task;
-        }
-
         public Task<CMDResult> GetProvisioningEntries()
         {
             Guid ID = Guid.NewGuid();
@@ -711,7 +689,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> BeginExclusion(bool unprovision = false)
+        public Task<CMDResult> BeginExclusion(Enums.ExclusionStrategy Strategy = Enums.ExclusionStrategy.Unprovision)
         {
             Guid ID = Guid.NewGuid();
 
@@ -727,7 +705,7 @@ namespace ZWaveJS.NET
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.BeginExclusion);
-            Request.Add("unprovision", unprovision);
+            Request.Add("options", Strategy);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);

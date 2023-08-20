@@ -132,6 +132,13 @@ namespace ZWaveJS.NET
             SmartStartFailed,
         }
 
+       public enum ExclusionStrategy
+        {
+            ExcludeOnly,
+            DisableProvisioningEntry,
+            Unprovision
+        }
+
         public enum InclusionStrategy
         {
             Default = 0,

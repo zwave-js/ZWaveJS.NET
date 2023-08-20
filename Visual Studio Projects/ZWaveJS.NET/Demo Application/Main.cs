@@ -175,10 +175,14 @@ namespace Demo_Application
         {
             DialogResult Result = MessageBox.Show("Would you like to also remove the Smart Start Provisioning entry if one is found?", "Unprovision", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
+            if (Result == DialogResult.Cancel)
+            {
+                return;
+            }
 
-            bool RemoveProvision = Result == DialogResult.Yes;
+            Enums.ExclusionStrategy Option = Result == DialogResult.Yes ? Enums.ExclusionStrategy.Unprovision : Enums.ExclusionStrategy.ExcludeOnly;
 
-            _Driver.Controller.BeginExclusion(RemoveProvision).ContinueWith((R) =>
+            _Driver.Controller.BeginExclusion(Option).ContinueWith((R) =>
             {
                 if (R.Result.Success)
                 {

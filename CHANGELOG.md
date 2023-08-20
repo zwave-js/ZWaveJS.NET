@@ -13,7 +13,8 @@
     - The **ValueUpdated** event now uses a dedicated class for the args parameter (**ValueUpdatedArgs**)
     - The **ValueNotification** event now uses a dedicated class for the args parameter (**ValueNotificationArgs**)
     - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
-    - The Network Heal Done and Progress events now use dedicated classes for the args parameter
+    - The **NetworkHealDone** and ""NetworkHealProgress"" events now use dedicated classes for the args parameter
+    - The **BeginExclusion** method now requires an Exclusion Enum 
 
   - Internal changes
     - Switched to an alternative websocket client package
@@ -27,6 +28,7 @@
     - Allow **target** and **firmwareFileFormat** to be specified on Node Firmware Updates
     - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
     - Added **endpointLabel** to the Endpoint class
+    - Added **Interview** method, to the ZWaveNode class - this should only be used if  "disableOnNodeAdded" is set to true
     - Allow specifying Refresh Info options, when re-interviewing a node.
 
 - v3.1.0
