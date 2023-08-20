@@ -4,12 +4,6 @@
     - ZWave JS Driver Version: 11.12.0
     - ZWave JS Server Version: 1.30.0 (Schema Version 30)
 
-  - Internal changes
-    - Switched to an alternative websocket client package
-    - Massive structural / performance improvements
-    - Redeveloped the Demo Application / Debug App
-    - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
-
   - Breaking Changes
     - Removed support for **NET45**
       The supported frameworks are as follows: **NET 48**, **NET 5.0**, **NET 6.0**, **NETSTANDARD 2.0**, **NETSTANDARD 2.1**
@@ -20,6 +14,11 @@
     - The **ValueNotification** event now uses a dedicated class for the args parameter (**ValueNotificationArgs**)
     - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
 
+  - Internal changes
+    - Switched to an alternative websocket client package
+    - Massive structural / performance improvements
+    - Redeveloped the Demo Application / Debug App
+    - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
 
   - New Features  
     - Added **WaitForWakeUp** method
