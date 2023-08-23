@@ -9,15 +9,15 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/zwave-js/zwavejs.net)
 
 
-ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the zwave-js Driver in .NET, allowing its runtime to be used directly in .NET applications.  
+ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the zwave-js Driver in .NET, allowing its full runtime to be used directly in .NET applications.  
 
 ## Supported Targets
- - NET 4.5 
  - NET 4.8 
  - NET 5.0 
+ - NET 6.0 
+ - NET 7.0 
  - NET Standard 2.0  
  - NET Standard 2.1  
- - NET Core 3.1
 
 The library strictly follows the structure of the zwave-js API. 
 
@@ -32,38 +32,7 @@ Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, stri
 
 ## Features
 
- - [x] Controller
-   - [x] Controller Info
-   - [x] NVM Restore/Backup
-   - [x] Network Statistics
-   - [x] Node Inclusion (Unsecured, S0 & S2 Security)
-   - [x] Smart Start
-   - [x] Smart Start Provisioning entry management
-   - [x] Node Exclusion
-   - [x] Network Healing
-   - [x] Remove Failed Node
-   - [x] Replace Failed Node
-   - [x] Multicast support
-   - [x] Node added/removed events
-   - [x] Inclusion/Exclusion started/stopped events
-   - [x] Network Heal progress/completed events
-   - [x] Network statistics updated events
-
- - [x] Node
-   - [x] Node Info
-   - [x] Network Health Checks
-   - [x] Network Statistics
-   - [x] Updating, Polling & Fetching Values
-   - [x] CCAPI Invoke (and its endpoints)
-   - [x] Obtain Value IDs
-   - [x] Obtain Value Metadata
-   - [x] Interview Node
-   - [x] Association Management
-   - [x] Firmware Updates
-   - [x] Node Ready, Asleep, Awake & Dead events
-   - [x] Value Updated, Notification & Value Notification events 
-   - [x] Interview Started, Completed & Failed events
-   - [x] Node Network Statistics updated events
+The library contains all the core features of the ZWave JS API whilst the code base, is structured in such a way, exposing new methods offered by the server can be achived in minutes.   
 
 ## Getting Started.
 
@@ -94,8 +63,8 @@ and it contains everything necessary for .NET to work with zwave-js.
 To build an image for your platform:
  - Clone the repo
  - cd to **./PSI**
- - run `yarn install --immutable`
- - and finally `yarn run build`
+ - run `npm install`
+ - and finally `npm run build`
  - rename **dist/server** to **server.psi**, and distrubute with your application/dll.
 
 Every release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
@@ -115,7 +84,7 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 static ZWaveJS.NET.Driver _Driver;
 static void Main(string[] args)
 {
-    // Set encryption keys, enable logging, adjust network timeouts so on and so forth.
+    // Set S0, S2 encryption keys, enable logging, adjust network timeouts so on and so forth.
      ZWaveJS.NET.ZWaveOptions Options = new  ZWaveJS.NET.ZWaveOptions();
 
     // Create Driver Instance
@@ -140,46 +109,48 @@ private static void _Driver_DriverReady()
     SVO.transitionDuration = "2s";
     SVO.volume = 30;
 
-    // All methods returns a task, as to not block the UI
+    // All methods return a task, as to not block the UI
     _Driver.Controller.Nodes.Get(4).SetValue(VID, 200, SVO).ContinueWith((res) => {
         if (res.Result.Success) {
             Console.WriteLine("Value Updated");
         }
     });
 
-    // Listen for Value Updates on a node
+    // Subscribe to value updates on a node
     _Driver.Controller.Nodes.Get(3).ValueUpdated += Program_ValueUpdated;
-    _Driver.Controller.Nodes.Get(3).Notification += Program_Notification;
 
     // Or All of them
     ZWaveJS.NET.ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
     foreach(ZWaveJS.NET.ZWaveNode Node in Nodes)
     {
         Node.ValueUpdated += Program_ValueUpdated;
-        Node.Notification += Program_Notification;
     }
-    
-    // Other Node methods
+
+     // Other Node methods
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
-        // Do something with Value ID's (res.Result)
+        if(res.Result.Success){
+            // Do something with Value ID's (res.Result.ResultPayload)
+        } else {
+            // See res.Result.Message and res.Result.ErrorCode
+        }
     });
+
+    // Subscribe to new nodes being added to the network
+    _Driver.Controller.NodeAdded += Controller_NodeAdded;
+
+   
 }
 
-private static void Program_ValueUpdated(ZWaveNode Node, JObject Args)
+private static void Program_ValueUpdated(ZWaveNode Node, ValueUpdatedArgs Args)
 {
    // Do something with Args
 }
 
-private static void Program_Notification(ZWaveNode Node, int ccId, JObject Args)
+private void Controller_NodeAdded(ZWaveNode Node, InclusionResultArgs Args)
 {
-   // Do something with Args
+    // Add the new node to the UI
 }
 ```
-
-## Network Toolkit Demo Application.
-The Network Toolkit Application (NET 4.5) serves as a reference, in how the library can be used, but at the same time, can be used as a tool to manage your network. You can download the toolkit demo from the Release pages here, on Github - The source code is also available.
-
-![Image](./Toolkit.PNG) 
 
 ## License 
 
