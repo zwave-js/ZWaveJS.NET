@@ -294,18 +294,7 @@ namespace ZWaveJS.NET
         public int productId { get; internal set; }
     }
 
-    public class ValueID
-    {
-        public int commandClass { get; set; }
-        public int endpoint { get; set; }
-        public object property { get; set; }
-        public object propertyKey { get; set; }
-        public string commandClassName { get; set; }
-        public string propertyName { get; set; }
-        public string propertyKeyName { get; set; }
-    }
-
-    public class SetValueAPIOptions
+   public class SetValueAPIOptions
     {
         public string transitionDuration { get; set; }
         public int volume { get; set; }
@@ -416,6 +405,17 @@ namespace ZWaveJS.NET
         public string level { get; internal set; }
     }
 
+    public class ValueID
+    {
+        public int commandClass { get; set; }
+        public int endpoint { get; set; }
+        public object property { get; set; }
+        public object propertyKey { get; set; }
+        public string commandClassName { get; set; }
+        public string propertyName { get; set; }
+        public string propertyKeyName { get; set; }
+    }
+
     public class ValueUpdatedArgs : ValueID
     {
         internal ValueUpdatedArgs() { }
@@ -448,7 +448,6 @@ namespace ZWaveJS.NET
 
         [Newtonsoft.Json.JsonProperty]
         public object value { get; internal set; }
-      
     }
 
     public class RefreshInfoOptions
