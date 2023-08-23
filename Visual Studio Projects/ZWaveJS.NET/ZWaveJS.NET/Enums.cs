@@ -138,6 +138,7 @@
             public const string Ping = "node.ping";
             public const string GetAvailableFirmwareUpdates = "controller.get_available_firmware_updates";
             public const string FirmwareUpdateOTA = "controller.firmware_update_ota";
+            public const string HardReset = "driver.hard_reset"
         }
 
         public enum SecurityClass

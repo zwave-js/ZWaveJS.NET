@@ -32,7 +32,7 @@ Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, stri
 
 ## Features
 
-The library contains all the core features of the ZWave JS API whilst the code base, is structured in such a way, exposing new methods offered by the server can be achived in minutes.   
+The library contains most of the ZWave JS API whilst the code base is structured in such a way, exposing new methods offered by the server can be achieved in minutes.   
 
 ## Getting Started.
 
