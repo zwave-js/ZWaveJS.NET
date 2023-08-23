@@ -196,7 +196,7 @@ namespace ZWaveJS.NET
 
                 if (Res.Success)
                 {
-                    PowerLevel Level = JO.SelectToken("result").Value<PowerLevel>();
+                    PowerLevel Level = JsonConvert.DeserializeObject<PowerLevel>(JO.SelectToken("result").ToString());
                     Res.SetPayload(Level);
                 }
                 Result.SetResult(Res);

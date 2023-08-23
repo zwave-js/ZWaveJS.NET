@@ -28,9 +28,9 @@ namespace ZWaveJS.NET
         internal PowerLevel() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public int powerlevel { get; internal set; }
+        public decimal powerlevel { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int measured0dBm { get; internal set; }
+        public decimal measured0dBm { get; internal set; }
     }
 
     public class FirmwareUpdateProgress

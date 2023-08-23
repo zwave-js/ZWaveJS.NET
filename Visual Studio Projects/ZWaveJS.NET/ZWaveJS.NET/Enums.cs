@@ -135,6 +135,7 @@
             public const string GetRFRegion = "controller.get_rf_region";
             public const string SetPowerlevel = "controller.set_powerlevel";
             public const string GetPowerlevel = "controller.get_powerlevel";
+            public const string Ping = "node.ping";
         }
 
         public enum SecurityClass
