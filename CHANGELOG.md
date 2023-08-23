@@ -31,8 +31,6 @@
     - Added **SetRFRegion**, **GetRFRegion**  methods to the Controller class
     - Added **SetPowerlevel**, **GetPowerlevel**  methods to the Controller class
 
-
-
   - Internal changes
     - Switched to an alternative websocket client package
     - Massive structural / performance improvements
