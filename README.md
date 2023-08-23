@@ -65,7 +65,7 @@ To build an image for your platform:
  - cd to **./PSI**
  - run `npm install`
  - and finally `npm run build`
- - rename **dist/server** to **server.psi**, and distrubute with your application/dll.
+ - rename **dist/server** to **server.psi**, and distrubute with the library.
 
 Every release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
 

@@ -23,6 +23,37 @@ namespace ZWaveJS.NET
         }
     }
 
+    public class FirmwareUpdateFileInfo
+    {
+        internal FirmwareUpdateFileInfo() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int target { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string url { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string integrity { get; internal set; }
+    }
+
+
+    public class FirmwareUpdateInfo
+    {
+        internal FirmwareUpdateInfo() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string version { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string changelog { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string channel { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public FirmwareUpdateFileInfo[] files { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool downgrade { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string normalizedVersion { get; internal set; }
+    }
+
     public class PowerLevel
     {
         internal PowerLevel() { }

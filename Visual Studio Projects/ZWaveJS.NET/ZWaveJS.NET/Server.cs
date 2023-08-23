@@ -26,7 +26,7 @@ namespace ZWaveJS.NET
         {
             if (!File.Exists("server.psi"))
             {
-                throw new FileNotFoundException("No Platform Snapshot Image found (server.psi)");
+                throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");
             }
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
@@ -56,12 +56,7 @@ namespace ZWaveJS.NET
 
           
         }
-
-        private static void ServerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            Console.WriteLine(e.Data);
-        }
-
+        
         private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             int Code;

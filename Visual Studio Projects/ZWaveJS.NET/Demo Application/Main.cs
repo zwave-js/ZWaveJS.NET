@@ -99,8 +99,7 @@ namespace Demo_Application
 
         private void _Driver_DriverReady()
         {
-
-
+            
             _Driver.Controller.NodeRemoved += Controller_NodeRemoved;
             _Driver.Controller.NodeAdded += Controller_NodeAdded;
             _Driver.Controller.StatisticsUpdated += Controller_StatisticsUpdated;

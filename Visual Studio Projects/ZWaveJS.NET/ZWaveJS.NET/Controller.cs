@@ -131,6 +131,70 @@ namespace ZWaveJS.NET
             FirmwareUpdateProgress?.Invoke(Args);
         }
 
+        public Task<CMDResult> UpdateFirmwareOTA(int NodeID, FirmwareUpdateFileInfo Update)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    NodeFirmwareUpdateResultArgs FUR = JsonConvert.DeserializeObject<NodeFirmwareUpdateResultArgs>(JO.SelectToken("result.result").ToString());
+                    Res.SetPayload(FUR);
+                }
+
+
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.FirmwareUpdateOTA);
+            Request.Add("nodeId", NodeID);
+            Request.Add("updates", Update);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<CMDResult> GetAvailableFirmwareUpdates(int NodeID, string APIKey, bool IncludePrereleases = false)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+
+                if (Res.Success)
+                {
+                    FirmwareUpdateInfo FUI = JsonConvert.DeserializeObject<FirmwareUpdateInfo>(JO.SelectToken("result.updates").ToString());
+                    Res.SetPayload(FUI);
+                }
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetAvailableFirmwareUpdates);
+            Request.Add("nodeId", NodeID);
+            Request.Add("apiKey", APIKey);
+            Request.Add("includePrereleases", IncludePrereleases);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<CMDResult> GetRFRegion()
         {
             Guid ID = Guid.NewGuid();
