@@ -33,8 +33,6 @@
     - Added **GetAvailableFirmwareUpdates** methods to the Controller class
     - Added **FirmwareUpdateOTA** method to the Controller class, to update a node with the fetched Updates via **GetAvailableFirmwareUpdates**
 
-
-
   - Internal changes
     - Switched to an alternative websocket client package
     - Massive structural / performance improvements
