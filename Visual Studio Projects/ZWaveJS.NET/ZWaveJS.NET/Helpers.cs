@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Net;
@@ -40,9 +38,7 @@ namespace ZWaveJS.NET
                     return Enums.Platform.Windows;
             }
         }
-
-      
-
+        
         public static Task<bool> DownloadPSI(bool Force = false)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

@@ -1,13 +1,11 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.IO;
 using System.Net.WebSockets;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Websocket.Client;
-using System.Diagnostics;
 
 namespace ZWaveJS.NET
 {
@@ -86,16 +84,9 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("firmware update finished", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                int Status = JO.SelectToken("event.status").Value<int>();
-                int Wait = 0;
-
-                if (JO.SelectToken("event.waitTime") != null)
-                {
-                    Wait = JO.SelectToken("event.waitTime").Value<int>();
-                }
-
+                NodeFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").Value<NodeFirmwareUpdateResultArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_FirmwareUpdateFinished(Status, Wait);
+                N.Trigger_FirmwareUpdateFinished(Result);
 
             });
 
@@ -103,10 +94,9 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("firmware update progress", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                int Sent = JO.SelectToken("event.sentFragments").Value<int>();
-                int Total = JO.SelectToken("event.totalFragments").Value<int>();
+                NodeFirmwareUpdateProgressArgs Progress  = JO.SelectToken("event.progress").Value<NodeFirmwareUpdateProgressArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_FirmwareUpdateProgress(Sent, Total);
+                N.Trigger_FirmwareUpdateProgress(Progress);
             });
 
             NodeEventMap.Add("value updated", (JO) =>
@@ -206,6 +196,20 @@ namespace ZWaveJS.NET
 
         private void MapControllerEvents()
         {
+            ControllerEventMap.Add("firmware update finished", (JO) =>
+            {
+                ControllerFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").Value<ControllerFirmwareUpdateResultArgs>();
+                this.Controller.Trigger_FirmwareUpdateFinished(Result);
+
+            });
+
+
+            ControllerEventMap.Add("firmware update progress", (JO) =>
+            {
+                ControllerFirmwareUpdateProgressArgs Progress = JO.SelectToken("event.progress").Value<ControllerFirmwareUpdateProgressArgs>();
+                this.Controller.Trigger_FirmwareUpdateProgress(Progress);
+            });
+
             ControllerEventMap.Add("nvm backup progress", (JO) =>
             {
                 int Read = JO.SelectToken("event.bytesRead").Value<int>();
@@ -367,12 +371,11 @@ namespace ZWaveJS.NET
             DriverEventMap = new Dictionary<string, Action<JObject>>();
             MapDriverEvents();
         }
-
-      
-
+        
         // Client Mode
         public Driver(Uri Server, int SchemaVersion = 0)
         {
+            
             Instance = this;
 
             if (SchemaVersion > 0)
@@ -394,6 +397,7 @@ namespace ZWaveJS.NET
         // Host Mode
         public Driver(string SerialPort, ZWaveOptions Options)
         {
+            
             Instance = this;
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();

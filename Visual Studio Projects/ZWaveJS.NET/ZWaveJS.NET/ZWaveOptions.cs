@@ -1,6 +1,5 @@
-﻿using System;
-using System.IO;
-using Newtonsoft.Json;
+﻿using System.IO;
+
 namespace ZWaveJS.NET
 {
 

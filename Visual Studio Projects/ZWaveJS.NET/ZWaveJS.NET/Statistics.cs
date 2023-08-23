@@ -1,5 +1,4 @@
-﻿using System;
-namespace ZWaveJS.NET
+﻿namespace ZWaveJS.NET
 {
     public class NodeStatisticsUpdatedArgs : NodeStatistics
     {

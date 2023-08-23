@@ -10,26 +10,32 @@
     - The **NodeStatistics** arg on the ZWaveNode class event **StatisticsUpdated**  has been renamed to **NodeStatisticsUpdatedArgs**
     - The **ControllerStatistics** arg on the Controller class event **StatisticsUpdated**  has been renamed to **ControllerStatisticsUpdatedArgs**
     - The **InclusionResult** argument has been renamed to **InclusionResultArgs**
-    - The **ValueUpdated** event now uses a dedicated class for the args parameter (**ValueUpdatedArgs**)
-    - The **ValueNotification** event now uses a dedicated class for the args parameter (**ValueNotificationArgs**)
+    - The **ValueUpdated** event now uses a dedicated class for the args parameter
+    - The **ValueNotification** event now uses a dedicated class for the args parameter
     - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
     - The **NetworkHealDone** and **NetworkHealProgress** events now use dedicated classes for the args parameter
     - The **BeginExclusion** method now requires an Exclusion Options instance
+    - The Node **BeginFirmwareUpdate** method has been renamed to **UpdateFrimware**, and requires a class instance.
+    - The Node **FirmwareUpdateProgress** event now passes an args parameter
+    - The Node **FirmwareUpdateFinished** event now passes an args parameter
+
+  - New Features  
+    - Added **WaitForWakeUp** method to the node
+    - Added **StartListeningLogs**, **StopListeningLogs** methods and the associated events to the Driver.
+    - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
+    - Added **endpointLabel** to the Endpoint class
+    - Added **Interview** method, to the ZWaveNode class - this should only be used if  "disableOnNodeAdded" is set to true
+    - Allow specifying Refresh Info options, when re-interviewing a node.
+    - Added **FirmwareUpdateOTW** method (and supporting events) to update the controller Firmware
+    - Added **SetRFRegion**, **GetRFRegion**  methods to the controller
+    - Added **SetPowerlevel**, **GetPowerlevel**  methods to the controller
+
 
   - Internal changes
     - Switched to an alternative websocket client package
     - Massive structural / performance improvements
     - Redeveloped the Demo Application / Debug App
     - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
-
-  - New Features  
-    - Added **WaitForWakeUp** method
-    - Added **Start/Stop ListeningLogs** method and the associated event.
-    - Allow **target** and **firmwareFileFormat** to be specified on Node Firmware Updates
-    - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
-    - Added **endpointLabel** to the Endpoint class
-    - Added **Interview** method, to the ZWaveNode class - this should only be used if  "disableOnNodeAdded" is set to true
-    - Allow specifying Refresh Info options, when re-interviewing a node.
 
 - v3.1.0
   

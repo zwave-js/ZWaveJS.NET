@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
-using System.IO;
+
 namespace ZWaveJS.NET
 {
     public class ZWaveNode
@@ -29,18 +29,18 @@ namespace ZWaveJS.NET
             StatisticsUpdated?.Invoke(this, Args);
         }
 
-        public delegate void FirmwareUpdateFinishedEvent(ZWaveNode Node, int Status, int WaitTime);
+        public delegate void FirmwareUpdateFinishedEvent(ZWaveNode Node, NodeFirmwareUpdateResultArgs Args);
         public event FirmwareUpdateFinishedEvent FirmwareUpdateFinished;
-        internal void Trigger_FirmwareUpdateFinished(int Status, int Time)
+        internal void Trigger_FirmwareUpdateFinished(NodeFirmwareUpdateResultArgs Args)
         {
-            FirmwareUpdateFinished?.Invoke(this, Status, Time);
+            FirmwareUpdateFinished?.Invoke(this, Args);
         }
 
-        public delegate void FirmwareUpdateProgressEvent(ZWaveNode Node, int SentFragments, int TotalFragments);
+        public delegate void FirmwareUpdateProgressEvent(ZWaveNode Node, NodeFirmwareUpdateProgressArgs Args);
         public event FirmwareUpdateProgressEvent FirmwareUpdateProgress;
-        internal void Trigger_FirmwareUpdateProgress(int SentFragments, int TotalFragments)
+        internal void Trigger_FirmwareUpdateProgress(NodeFirmwareUpdateProgressArgs Args)
         {
-            FirmwareUpdateProgress?.Invoke(this, SentFragments, TotalFragments);
+            FirmwareUpdateProgress?.Invoke(this, Args);
         }
 
         public delegate void ValueNotificationEvent(ZWaveNode Node, ValueNotificationArgs Args);
@@ -209,7 +209,8 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> BeginFirmwareUpdate(string FileName, int Target = -1, string FirmwareFileFormat = null)
+        // FIXME
+        public Task<CMDResult> UpdateFirmware(FirmwareUpdate[] Updates)
         {
             Guid ID = Guid.NewGuid();
 
@@ -219,23 +220,13 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
             });
-
-            FileInfo FI = new FileInfo(FileName);
-            byte[] FileData = File.ReadAllBytes(FileName);
-
+            
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.BeginFirmwareUpdate);
+            Request.Add("command", Enums.Commands.UpdateFirmware);
             Request.Add("nodeId", this.id);
-            Request.Add("firmwareFile", FileData);
-            Request.Add("firmwareFilename", FI.Name);
-
-            if(Target > -1)
-                Request.Add("target", Target);
+            Request.Add("updates", Updates);
             
-            if (!string.IsNullOrEmpty(FirmwareFileFormat))
-                Request.Add("firmwareFileFormat", FirmwareFileFormat);
-           
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
@@ -594,14 +585,10 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-
-
         [Newtonsoft.Json.JsonProperty]
         internal Endpoint[] endpoints { get; set; }
-
         [Newtonsoft.Json.JsonProperty]
         public bool isControllerNode { get; internal set; }
-
         [Newtonsoft.Json.JsonProperty]
         public Enums.NodeStatus status { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -661,7 +648,6 @@ namespace ZWaveJS.NET
         public int id { get; internal set; }
 
         private bool _KeepAwake;
-        [Newtonsoft.Json.JsonProperty]
         public bool keepAwake
         {
             get
@@ -688,7 +674,6 @@ namespace ZWaveJS.NET
         }
 
         private string _Name;
-        [Newtonsoft.Json.JsonProperty]
         public string name
         {
             get
@@ -716,7 +701,6 @@ namespace ZWaveJS.NET
         }
 
         private string _Location;
-        [Newtonsoft.Json.JsonProperty]
         public string location
         {
             get

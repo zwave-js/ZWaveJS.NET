@@ -1,11 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZWaveJS.NET
+﻿namespace ZWaveJS.NET
 {
     public class Enums
     {
+
+        public enum RFRegion
+        {
+            Europe = 0x00,
+            USA = 0x01,
+            Australia_NewZealand = 0x02,
+            Hong_Kong = 0x03,
+            India = 0x05,
+            Israel = 0x06,
+            Russia = 0x07,
+            China = 0x08,
+            USA_Long_Range = 0x09,
+            Japan = 0x20,
+            Korea = 0x21,
+            Unknown = 0xfe,
+            EU = 0xff,
+        }
+
+        public enum NodeFirmwareUpdateStatus
+        {
+            Error_Timeout = -1,
+            Error_Checksum = 0,
+            Error_TransmissionFailed = 1,
+            Error_InvalidManufacturerID = 2,
+            Error_InvalidFirmwareID = 3,
+            Error_InvalidFirmwareTarget = 4,
+            Error_InvalidHeaderInformation = 5,
+            Error_InvalidHeaderFormat = 6,
+            Error_InsufficientMemory = 7,
+            Error_InvalidHardwareVersion = 8,
+            OK_WaitingForActivation = 0xfd,
+            OK_NoRestart = 0xfe,
+            OK_RestartPending = 0xff,
+        }
+
+        public enum ControllerFirmwareUpdateStatus
+        {
+            Error_Timeout = 0,
+            Error_RetryLimitReached,
+            Error_Aborted,
+            Error_NotSupported,
+            OK = 0xff
+        }
+
         internal enum Platform
         {
             Windows,
@@ -41,7 +81,7 @@ namespace ZWaveJS.NET
 
         internal class Commands
         {
-         
+
             public const string RemoveAssociations = "controller.remove_associations";
             public const string AddAssociations = "controller.add_associations";
             public const string GetAssociationGroups = "controller.get_association_groups";
@@ -73,7 +113,7 @@ namespace ZWaveJS.NET
             public const string KeepNodeAwake = "node.set_keep_awake";
             public const string RemoveFailedNode = "controller.remove_failed_node";
             public const string ReplaceFailedNode = "controller.replace_failed_node";
-            public const string BeginFirmwareUpdate = "node.begin_firmware_update";
+            public const string UpdateFirmware = "node.update_firmware";
             public const string AbortFirmwareUpdate = "node.abort_firmware_update";
             public const string HasSecurityClass = "node.has_security_class";
             public const string GetHighestSecurityClass = "node.get_highest_security_class";
@@ -90,6 +130,11 @@ namespace ZWaveJS.NET
             public const string StopListeningLogs = "driver.stop_listening_logs";
             public const string WaitForWakeUp = "node.wait_for_wakeup";
             public const string Interview = "node.interview";
+            public const string FirmwareUpdateOTW = "controller.firmware_update_otw";
+            public const string SetRFRegion = "controller.set_rf_region";
+            public const string GetRFRegion = "controller.get_rf_region";
+            public const string SetPowerlevel = "controller.set_powerlevel";
+            public const string GetPowerlevel = "controller.get_powerlevel";
         }
 
         public enum SecurityClass

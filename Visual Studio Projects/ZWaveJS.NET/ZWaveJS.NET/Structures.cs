@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+
 namespace ZWaveJS.NET
 {
     class CustomBooleanJsonConverter : JsonConverter<bool>
@@ -22,47 +23,106 @@ namespace ZWaveJS.NET
         }
     }
 
+    public class PowerLevel
+    {
+        internal PowerLevel() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int powerlevel { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int measured0dBm { get; internal set; }
+    }
+
+    public class FirmwareUpdateProgress
+    {
+        internal FirmwareUpdateProgress() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int sentFragments { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int totalFragments { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int progress { get; internal set; }
+    }
+
+    public class ControllerFirmwareUpdateResultArgs
+    {
+        internal ControllerFirmwareUpdateResultArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public bool success { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.ControllerFirmwareUpdateStatus status { get; internal  set; }
+    }
+
+
+    public class NodeFirmwareUpdateResultArgs
+    {
+        internal NodeFirmwareUpdateResultArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.NodeFirmwareUpdateStatus status { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool success { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? waitTime { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool reInterview { get; internal set; }
+    }
+
+    public class ControllerFirmwareUpdateProgressArgs : FirmwareUpdateProgress
+    {
+        internal ControllerFirmwareUpdateProgressArgs() { }
+    }
+
+    public class NodeFirmwareUpdateProgressArgs : FirmwareUpdateProgress
+    {
+        internal NodeFirmwareUpdateProgressArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int currentFile { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public  int totalFiles { get; internal set; }
+    }
+
     public class SmartStartProvisioningEntry
     {
         internal SmartStartProvisioningEntry() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public string dsk { get; private set; }
+        public string dsk { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int[] securityClasses { get; private set; }
-        public int version { get; private set; }
+        public int[] securityClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int[] requestedSecurityClasses { get; private set; }
+        public int version { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int genericDeviceClass { get; private set; }
+        public int[] requestedSecurityClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int specificDeviceClass { get; private set; }
+        public int genericDeviceClass { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int installerIconType { get; private set; }
+        public int specificDeviceClass { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int manufacturerId { get; private set; }
+        public int installerIconType { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int productType { get; private set; }
+        public int manufacturerId { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int productId { get; private set; }
+        public int productType { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public decimal applicationVersion { get; private set; }
-
-
+        public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public decimal applicationVersion { get; internal set; }
     }
 
     public class AssociationAddress
     {
-        [Newtonsoft.Json.JsonProperty]
-        public int nodeId { get;  set; }
-
-        [Newtonsoft.Json.JsonProperty]
+        public int nodeId { get; set; }
         public int? endpoint { get;  set; }
     }
 
     public class NetworkHealStats
     {
         internal NetworkHealStats() { }
+
         public int[] HealedNodes { get; internal set; }
         public int[] SkippedNodes { get; internal set; }
         public int[] FailedNodes { get; internal set; }
@@ -76,6 +136,7 @@ namespace ZWaveJS.NET
     public class NetworkHealProgressArgs : NetworkHealStats
     {
         internal NetworkHealProgressArgs() { }
+
         public int[] PendingNodes { get; internal set; }
     }
 
@@ -86,10 +147,8 @@ namespace ZWaveJS.NET
 
         [Newtonsoft.Json.JsonProperty]
         public int maxNodes { get; internal set; }
-
         [Newtonsoft.Json.JsonProperty]
         public bool isLifeline { get; internal set; }
-
         [Newtonsoft.Json.JsonProperty]
         public string label { get; internal set; }
     }
@@ -270,8 +329,10 @@ namespace ZWaveJS.NET
     public class InclusionResultArgs
     {
         internal InclusionResultArgs() { }
+
         [Newtonsoft.Json.JsonProperty]
         public bool lowSecurity { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public Enums.SecurityBootstrapFailure lowSecurityReason { get; internal set; }
     }
 
@@ -347,7 +408,7 @@ namespace ZWaveJS.NET
         internal ValueRemovedArgs() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public object newValue { get; internal set; }
+        public object prevValue { get; internal set; }
     }
 
     public class ValueNotificationArgs : ValueID
@@ -363,5 +424,13 @@ namespace ZWaveJS.NET
     {
         public bool resetSecurityClasses { get; set; }
         public bool waitForWakeup { get; set; }
+    }
+
+    public class FirmwareUpdate
+    {
+        [Newtonsoft.Json.JsonProperty(PropertyName = "file")]
+        public byte[] data { get; set; }
+        public string fileFormat { get; set; }
+        public int? firmwareTarget { get; set; }
     }
 }
