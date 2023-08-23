@@ -111,7 +111,8 @@ private static void _Driver_DriverReady()
 
     // All methods return a task, as to not block the UI
     _Driver.Controller.Nodes.Get(4).SetValue(VID, 200, SVO).ContinueWith((res) => {
-        if (res.Result.Success) {
+        if (res.Result.Success)
+	{
             Console.WriteLine("Value Updated");
         }
     });
@@ -128,9 +129,12 @@ private static void _Driver_DriverReady()
 
      // Other Node methods
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
-        if(res.Result.Success){
+        if(res.Result.Success)
+	{
             // Do something with Value ID's (res.Result.ResultPayload)
-        } else {
+        }
+	else
+	{
             // See res.Result.Message and res.Result.ErrorCode
         }
     });
