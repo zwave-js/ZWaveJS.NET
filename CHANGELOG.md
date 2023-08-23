@@ -20,15 +20,17 @@
     - The Node **FirmwareUpdateFinished** event now passes an args parameter
 
   - New Features  
-    - Added **WaitForWakeUp** method to the node
-    - Added **StartListeningLogs**, **StopListeningLogs** methods and the associated events to the Driver.
-    - Added **ValueAdded** and **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
+    - Added **WaitForWakeUp** method to the ZWaveNode class.
+    - Added **Ping**, method to the ZwaveNode class.
+    - Added **StartListeningLogs**, **StopListeningLogs** methods and the associated events to the Driver class.
+    - Added **ValueAdded**, **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
     - Added **endpointLabel** to the Endpoint class
     - Added **Interview** method, to the ZWaveNode class - this should only be used if  "disableOnNodeAdded" is set to true
     - Allow specifying Refresh Info options, when re-interviewing a node.
-    - Added **FirmwareUpdateOTW** method (and supporting events) to update the controller Firmware
-    - Added **SetRFRegion**, **GetRFRegion**  methods to the controller
-    - Added **SetPowerlevel**, **GetPowerlevel**  methods to the controller
+    - Added **FirmwareUpdateOTW** method (and supporting events) to update the Controller Firmware
+    - Added **SetRFRegion**, **GetRFRegion**  methods to the Controller class
+    - Added **SetPowerlevel**, **GetPowerlevel**  methods to the Controller class
+
 
 
   - Internal changes
