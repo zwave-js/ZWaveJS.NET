@@ -22,7 +22,7 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private static int SchemaVersionID = 30;
+        private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 30, 0);
         private string SerialPort;
 
         private Uri WSAddress;
@@ -380,7 +380,7 @@ namespace ZWaveJS.NET
 
             if (SchemaVersion > 0)
             {
-                SchemaVersionID = SchemaVersion;
+                SchemaVersionID = new Semver.SemVersion(1, SchemaVersion, 0);
             }
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
@@ -477,13 +477,23 @@ namespace ZWaveJS.NET
                     _ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
                     _ZWaveJSServerVersion = JO.Value<string>("serverVersion");
 
+                    if(Semver.SemVersion.Parse(_ZWaveJSServerVersion, Semver.SemVersionStyles.Strict).Major != SchemaVersionID.Major)
+                    {
+                        throw new NotSupportedException("The Platform Support Image version (server.psi) and the requested schema version are not compatible");
+                    }
+                    
+                    if(Semver.SemVersion.Parse(_ZWaveJSServerVersion,Semver.SemVersionStyles.Strict).ComparePrecedenceTo(SchemaVersionID) < 0)
+                    {
+                        throw new NotSupportedException("The Platform Support Image version (server.psi) is lower than the requested schema version");
+                    }
+                    
                     Guid CBID = Guid.NewGuid();
                     Callbacks.Add(CBID, SetAPIVersionCB);
 
                     Dictionary<string, object> Request = new Dictionary<string, object>();
                     Request.Add("messageId", CBID.ToString());
                     Request.Add("command", Enums.Commands.SetAPIVersion);
-                    Request.Add("schemaVersion", SchemaVersionID);
+                    Request.Add("schemaVersion", SchemaVersionID.Minor);
 
                     string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
 

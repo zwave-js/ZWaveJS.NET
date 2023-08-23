@@ -38,6 +38,8 @@
     - Massive structural / performance improvements
     - Redeveloped the Demo Application / Debug App
     - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
+    - Internal logic to ensure the server satifies the specified expected schema requested by the library
+
 
 - v3.1.0
   
