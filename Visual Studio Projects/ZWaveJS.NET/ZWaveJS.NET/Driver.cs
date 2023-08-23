@@ -428,6 +428,21 @@ namespace ZWaveJS.NET
             });
 
             ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress, Factory);
+            ClientWebSocket.DisconnectionHappened.Subscribe((Event) =>
+            {
+
+                List<DisconnectionType> IgnoreTypes = new List<DisconnectionType>();
+                IgnoreTypes.Add(DisconnectionType.ByUser);
+                IgnoreTypes.Add(DisconnectionType.NoMessageReceived);
+                IgnoreTypes.Add(DisconnectionType.ByServer); // ??
+
+                if (!IgnoreTypes.Contains(Event.Type))
+                {
+                    Client_ServerDisconnected(ClientWebSocket, null);
+                }
+
+            });
+
             ClientWebSocket.MessageReceived.Subscribe((Message) =>
             {
                 WebsocketClient_MessageReceived(ClientWebSocket, Message);
