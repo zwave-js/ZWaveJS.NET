@@ -33,7 +33,7 @@
     - Added **GetAvailableFirmwareUpdates** methods to the Controller class
     - Added **FirmwareUpdateOTA** method to the Controller class, to update a node with the fetched Updates via **GetAvailableFirmwareUpdates**
     - Added **HardReset** method to the Driver class
-            Warning!!! This will Reset your controller, and will result in a clean network with no included nodes.
+      Warning!!! This will Reset your controller, and will result in a clean network with no included nodes.
 
   - Internal changes
     - Switched to an alternative websocket client package
