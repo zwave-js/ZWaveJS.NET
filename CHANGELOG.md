@@ -5,7 +5,7 @@
     - ZWave JS Server Version: 1.30.0 (Schema Version 30)
 
   - Breaking Changes
-    - Removed support for **NET45**
+    - Removed support for **NET45**  
       The supported frameworks are as follows: **NET 48**, **NET 5.0**, **NET 6.0**, **NET 7.0**, **NETSTANDARD 2.0**, **NETSTANDARD 2.1**
     - The **NodeStatistics** arg on the ZWaveNode class event **StatisticsUpdated**  has been renamed to **NodeStatisticsUpdatedArgs**
     - The **ControllerStatistics** arg on the Controller class event **StatisticsUpdated**  has been renamed to **ControllerStatisticsUpdatedArgs**
