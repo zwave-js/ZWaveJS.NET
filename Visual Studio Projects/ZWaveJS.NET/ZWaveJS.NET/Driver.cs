@@ -461,7 +461,7 @@ namespace ZWaveJS.NET
                 {
                     if (UnexpectedHostExit.Invoke())
                     {
-                        // Restart
+                        Restart();
                     }
                 }
 
@@ -506,6 +506,7 @@ namespace ZWaveJS.NET
             Destroy();
 
             await Task.Delay(5000);
+            Inited = false;
             InternalPrep();
             Start();
         }
