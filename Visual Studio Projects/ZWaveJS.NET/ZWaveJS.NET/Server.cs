@@ -13,6 +13,9 @@ namespace ZWaveJS.NET
         public delegate void FatalErrorEvent();
         public static event FatalErrorEvent FatalError;
 
+        internal delegate void ProcessdExitedEvent();
+        internal static event ProcessdExitedEvent Exited;
+
         internal static void Terminate()
         {
             if (ServerProcess != null && !ServerProcess.HasExited)
@@ -49,6 +52,7 @@ namespace ZWaveJS.NET
             ServerProcess = new Process();
             ServerProcess.EnableRaisingEvents = true;
             ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;
+            ServerProcess.Exited += ServerProcess_Exited;
             
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
@@ -56,7 +60,13 @@ namespace ZWaveJS.NET
 
           
         }
-        
+
+        private static void ServerProcess_Exited(object sender, EventArgs e)
+        {
+            Exited?.Invoke();
+            ServerProcess.Dispose();
+        }
+
         private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             int Code;
