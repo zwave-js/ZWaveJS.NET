@@ -567,7 +567,7 @@ namespace ZWaveJS.NET
                         RequestedExit = true;
                         DestroySocket();
                         DestroyServer();
-                        StartupErrorEvent?.Invoke("Client and Server schema mismatch");
+                        StartUpError?.Invoke("Client and Server schema mismatch");
                         break;
 
                 }
