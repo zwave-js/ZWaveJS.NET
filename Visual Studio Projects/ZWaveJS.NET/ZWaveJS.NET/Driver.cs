@@ -452,11 +452,16 @@ namespace ZWaveJS.NET
         // Server Process Exit
         private void Server_Exited()
         {
+
             if (!RequestedExit)
             {
+                Inited = false;
+                Controller.Nodes = null;
+                Controller = null;
+
                 DestroySocket();
                 SettleCallbacksError();
-
+                
                 if(UnexpectedHostExit != null)
                 {
                     if (UnexpectedHostExit.Invoke())
@@ -497,8 +502,14 @@ namespace ZWaveJS.NET
         public void Destroy()
         {
             RequestedExit = true;
+            Inited = false;
+            Controller.Nodes = null;
+            Controller = null;
             DestroySocket();
             DestroyServer();
+            
+            
+            
         }
 
         async internal void Restart()
@@ -506,7 +517,6 @@ namespace ZWaveJS.NET
             Destroy();
 
             await Task.Delay(5000);
-            Inited = false;
             InternalPrep();
             Start();
         }
@@ -539,6 +549,9 @@ namespace ZWaveJS.NET
         private void Server_FatalError()
         {
             RequestedExit = true;
+            Inited = false;
+            Controller.Nodes = null;
+            Controller = null;
             DestroySocket();
             DestroyServer();
             StartUpError?.Invoke("Fatal ZWave Server Error.");

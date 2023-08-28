@@ -10,8 +10,8 @@ namespace ZWaveJS.NET
 
         private static Process ServerProcess;
 
-        public delegate void FatalErrorEvent();
-        public static event FatalErrorEvent FatalError;
+        internal delegate void FatalErrorEvent();
+        internal static event FatalErrorEvent FatalError;
 
         internal delegate void ProcessdExitedEvent();
         internal static event ProcessdExitedEvent Exited;

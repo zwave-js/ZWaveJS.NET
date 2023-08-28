@@ -53,11 +53,13 @@
             columnHeader3 = new ColumnHeader();
             columnHeader4 = new ColumnHeader();
             GP_Nodes = new GroupBox();
+            button18 = new Button();
+            button17 = new Button();
             button12 = new Button();
             button4 = new Button();
-            button3 = new Button();
             button2 = new Button();
             button1 = new Button();
+            button3 = new Button();
             GP_Network = new GroupBox();
             button7 = new Button();
             button6 = new Button();
@@ -74,14 +76,23 @@
             LST_ControllerStats = new ListView();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
-            button17 = new Button();
-            button18 = new Button();
+            comboBox1 = new ComboBox();
+            label6 = new Label();
+            button19 = new Button();
+            label7 = new Label();
+            numericUpDown1 = new NumericUpDown();
+            button20 = new Button();
+            numericUpDown2 = new NumericUpDown();
+            label8 = new Label();
+            label9 = new Label();
             GP_Settings.SuspendLayout();
             GP_Nodes.SuspendLayout();
             GP_Network.SuspendLayout();
             GP_Controller.SuspendLayout();
             statusStrip1.SuspendLayout();
             groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             SuspendLayout();
             // 
             // GP_Settings
@@ -324,6 +335,24 @@
             GP_Nodes.TabStop = false;
             GP_Nodes.Text = "Nodes";
             // 
+            // button18
+            // 
+            button18.Location = new Point(266, 172);
+            button18.Name = "button18";
+            button18.Size = new Size(74, 23);
+            button18.TabIndex = 8;
+            button18.Text = "Remove";
+            button18.UseVisualStyleBackColor = true;
+            // 
+            // button17
+            // 
+            button17.Location = new Point(266, 143);
+            button17.Name = "button17";
+            button17.Size = new Size(74, 23);
+            button17.TabIndex = 7;
+            button17.Text = "Replace";
+            button17.UseVisualStyleBackColor = true;
+            // 
             // button12
             // 
             button12.Location = new Point(266, 56);
@@ -342,16 +371,6 @@
             button4.Text = "Health";
             button4.UseVisualStyleBackColor = true;
             // 
-            // button3
-            // 
-            button3.Location = new Point(266, 85);
-            button3.Name = "button3";
-            button3.Size = new Size(74, 23);
-            button3.TabIndex = 4;
-            button3.Text = "Events";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
-            // 
             // button2
             // 
             button2.Location = new Point(266, 27);
@@ -369,6 +388,16 @@
             button1.TabIndex = 2;
             button1.Text = "Update FW";
             button1.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(266, 85);
+            button3.Name = "button3";
+            button3.Size = new Size(74, 23);
+            button3.TabIndex = 4;
+            button3.Text = "Events";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // GP_Network
             // 
@@ -416,6 +445,15 @@
             // 
             // GP_Controller
             // 
+            GP_Controller.Controls.Add(label9);
+            GP_Controller.Controls.Add(label8);
+            GP_Controller.Controls.Add(numericUpDown2);
+            GP_Controller.Controls.Add(button20);
+            GP_Controller.Controls.Add(numericUpDown1);
+            GP_Controller.Controls.Add(label7);
+            GP_Controller.Controls.Add(button19);
+            GP_Controller.Controls.Add(label6);
+            GP_Controller.Controls.Add(comboBox1);
             GP_Controller.Controls.Add(button11);
             GP_Controller.Controls.Add(button9);
             GP_Controller.Controls.Add(button8);
@@ -423,7 +461,7 @@
             GP_Controller.Enabled = false;
             GP_Controller.Location = new Point(384, 359);
             GP_Controller.Name = "GP_Controller";
-            GP_Controller.Size = new Size(428, 77);
+            GP_Controller.Size = new Size(428, 177);
             GP_Controller.TabIndex = 4;
             GP_Controller.TabStop = false;
             GP_Controller.Text = "Controller Commands";
@@ -520,23 +558,81 @@
             columnHeader6.Text = "Value";
             columnHeader6.Width = 200;
             // 
-            // button17
+            // comboBox1
             // 
-            button17.Location = new Point(266, 143);
-            button17.Name = "button17";
-            button17.Size = new Size(74, 23);
-            button17.TabIndex = 7;
-            button17.Text = "Replace";
-            button17.UseVisualStyleBackColor = true;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(125, 80);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(178, 23);
+            comboBox1.TabIndex = 16;
             // 
-            // button18
+            // label6
             // 
-            button18.Location = new Point(266, 172);
-            button18.Name = "button18";
-            button18.Size = new Size(74, 23);
-            button18.TabIndex = 8;
-            button18.Text = "Remove";
-            button18.UseVisualStyleBackColor = true;
+            label6.AutoSize = true;
+            label6.Location = new Point(30, 83);
+            label6.Name = "label6";
+            label6.Size = new Size(44, 15);
+            label6.TabIndex = 17;
+            label6.Text = "Region";
+            // 
+            // button19
+            // 
+            button19.Location = new Point(315, 79);
+            button19.Name = "button19";
+            button19.Size = new Size(84, 23);
+            button19.TabIndex = 18;
+            button19.Text = "Update";
+            button19.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(30, 136);
+            label7.Name = "label7";
+            label7.Size = new Size(40, 15);
+            label7.TabIndex = 19;
+            label7.Text = "Power";
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(183, 116);
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 20;
+            // 
+            // button20
+            // 
+            button20.Location = new Point(315, 132);
+            button20.Name = "button20";
+            button20.Size = new Size(84, 23);
+            button20.TabIndex = 21;
+            button20.Text = "Update";
+            button20.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown2
+            // 
+            numericUpDown2.Location = new Point(183, 145);
+            numericUpDown2.Name = "numericUpDown2";
+            numericUpDown2.Size = new Size(120, 23);
+            numericUpDown2.TabIndex = 22;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(125, 118);
+            label8.Name = "label8";
+            label8.Size = new Size(34, 15);
+            label8.TabIndex = 23;
+            label8.Text = "Level";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(125, 147);
+            label9.Name = "label9";
+            label9.Size = new Size(52, 15);
+            label9.TabIndex = 24;
+            label9.Text = "@ 0dbm";
             // 
             // Main
             // 
@@ -561,9 +657,12 @@
             GP_Nodes.ResumeLayout(false);
             GP_Network.ResumeLayout(false);
             GP_Controller.ResumeLayout(false);
+            GP_Controller.PerformLayout();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
             groupBox5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -618,5 +717,14 @@
         private Button button13;
         private Button button18;
         private Button button17;
+        private Label label6;
+        private ComboBox comboBox1;
+        private NumericUpDown numericUpDown2;
+        private Button button20;
+        private NumericUpDown numericUpDown1;
+        private Label label7;
+        private Button button19;
+        private Label label9;
+        private Label label8;
     }
 }
