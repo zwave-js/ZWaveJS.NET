@@ -2,7 +2,7 @@
 
   - Versions
     - ZWave JS Driver Version: 11.13.0
-    - ZWave JS Server Version: 1.31.0 (Schema Version 30)
+    - ZWave JS Server Version: 1.31.0 (Schema Version 31)
 
   - Breaking Changes
     - Removed support for **NET45**  
