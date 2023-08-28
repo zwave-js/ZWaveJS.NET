@@ -22,7 +22,7 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 30, 0);
+        private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 31, 0);
         private string SerialPort;
         private bool RequestedExit = false;
 
