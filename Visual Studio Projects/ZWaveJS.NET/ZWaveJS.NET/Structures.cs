@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ZWaveJS.NET
 {
@@ -214,7 +213,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public Dictionary<string, string> states { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public Dictionary<string,object> ccSpecific { get; internal set; }
+        public Dictionary<string, object> ccSpecific { get; internal set; }
     }
 
     public class DeviceClass
