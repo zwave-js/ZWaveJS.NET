@@ -205,11 +205,15 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public string description { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int @default { get; internal set; }
+        public int? @default { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int min { get; internal set; }
+        public int? min { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int max { get; internal set; }
+        public int? max { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? steps { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string unit { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public Dictionary<string, string> states { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
