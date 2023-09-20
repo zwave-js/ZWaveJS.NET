@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.WebSockets;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Linq;
 using Websocket.Client;
 
@@ -25,6 +26,7 @@ namespace ZWaveJS.NET
         private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 31, 0);
         private string SerialPort;
         private bool RequestedExit = false;
+        private CancellationTokenSource ConnectTaskTokenSource;
 
         private Uri WSAddress;
         private bool Host = true;
@@ -48,6 +50,7 @@ namespace ZWaveJS.NET
         }
 
         public static int ServerCommunicationPort = 50001;
+        public static int ServerConnectTimeout = 30000;
         public Controller Controller { get; internal set; }
 
         public delegate void DriverReadyEvent();
@@ -477,6 +480,13 @@ namespace ZWaveJS.NET
         // Start Driver
         public void Start()
         {
+            ConnectTaskTokenSource = new CancellationTokenSource();
+            CancellationToken Token = ConnectTaskTokenSource.Token;
+            Task.Run(() => {
+                Thread.Sleep(ServerConnectTimeout);
+                StartUpError?.Invoke("Could not connect to the server within the specified timeout of "+ServerConnectTimeout);
+
+            }, Token);
             ClientWebSocket.Start();
         }
 
@@ -682,6 +692,8 @@ namespace ZWaveJS.NET
         // Proces Message
         private void WebsocketClient_MessageReceived(object sender, ResponseMessage Message)
         {
+            
+
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 System.Diagnostics.Debug.WriteLine(Message);
@@ -715,17 +727,21 @@ namespace ZWaveJS.NET
 
                 if (Type == "version")
                 {
+                    ConnectTaskTokenSource.Cancel();
                     _ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
                     _ZWaveJSServerVersion = JO.Value<string>("serverVersion");
 
                     if (Semver.SemVersion.Parse(_ZWaveJSServerVersion, Semver.SemVersionStyles.Strict).Major != SchemaVersionID.Major)
                     {
-                        throw new NotSupportedException("The Platform Support Image version (server.psi) and the requested schema version are not compatible");
+                        StartUpError?.Invoke("The Platform Support Image version (server.psi) and the requested schema version are not compatible");
+                        return;
                     }
 
                     if (Semver.SemVersion.Parse(_ZWaveJSServerVersion, Semver.SemVersionStyles.Strict).ComparePrecedenceTo(SchemaVersionID) < 0)
                     {
-                        throw new NotSupportedException("The Platform Support Image version (server.psi) is lower than the requested schema version");
+                        StartUpError?.Invoke("The Platform Support Image version (server.psi) is lower than the requested schema version");
+                        return;
+             
                     }
 
                     Guid CBID = Guid.NewGuid();
