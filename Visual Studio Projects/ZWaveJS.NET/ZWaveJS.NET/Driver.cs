@@ -484,6 +484,7 @@ namespace ZWaveJS.NET
             CancellationToken Token = ConnectTaskTokenSource.Token;
             Task.Run(() => {
                 Thread.Sleep(ServerConnectTimeout);
+                Token.ThrowIfCancellationRequested();
                 StartUpError?.Invoke("Could not connect to the server within the specified timeout of "+ServerConnectTimeout);
 
             }, Token);
