@@ -26,7 +26,7 @@ namespace ZWaveJS.NET
         private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 31, 0);
         private string SerialPort;
         private bool RequestedExit = false;
-        private CancellationTokenSource ConnectTaskTokenSource;
+
 
         private Uri WSAddress;
         private bool Host = true;
@@ -50,7 +50,9 @@ namespace ZWaveJS.NET
         }
 
         public static int ServerCommunicationPort = 50001;
-        public static int ServerConnectTimeout = 30000;
+        public static int ServerErrorThrottleTime = 10000;
+        private DateTime LastError;
+
         public Controller Controller { get; internal set; }
 
         public delegate void DriverReadyEvent();
@@ -58,6 +60,10 @@ namespace ZWaveJS.NET
 
         public delegate void StartupErrorEvent(string Message);
         public event StartupErrorEvent StartUpError;
+
+        public delegate void ConnectionLostEvent(string Message);
+        public event ConnectionLostEvent ConnectionLost;
+
 
         public delegate bool UnexpectedHostExitEvent();
         public event UnexpectedHostExitEvent UnexpectedHostExit;
@@ -447,6 +453,28 @@ namespace ZWaveJS.NET
                 WebsocketClient_MessageReceived(ClientWebSocket, Message);
             });
 
+            ClientWebSocket.DisconnectionHappened.Subscribe((DisconnectionInfo) =>
+            {
+                if (!RequestedExit)
+                {
+                    if (LastError == DateTime.MinValue || (DateTime.Now - LastError).TotalMilliseconds > ServerErrorThrottleTime)
+                    {
+                        LastError = DateTime.Now;
+
+                        if (!Inited)
+                        {
+                            StartUpError?.Invoke($"Could not connect to the server, Connection will continue to try: {DisconnectionInfo?.Exception?.Message}");
+                        }
+                        else
+                        {
+                            ConnectionLost?.Invoke($"Connection to the server was lost. Connection will attempt to be restored: {DisconnectionInfo?.Exception?.Message}");
+                        }
+                    }
+                }
+               
+
+            });
+
             ClientWebSocket.ReconnectTimeout = null;
             ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(2);
 
@@ -480,16 +508,7 @@ namespace ZWaveJS.NET
         // Start Driver
         public void Start()
         {
-            ConnectTaskTokenSource = new CancellationTokenSource();
-            CancellationToken Token = ConnectTaskTokenSource.Token;
-            Task.Run(() => {
-                Thread.Sleep(ServerConnectTimeout);
-                if(!ConnectTaskTokenSource.IsCancellationRequested)
-                {
-                    StartUpError?.Invoke("Could not connect to the server within the specified timeout of " + ServerConnectTimeout);
-                }
-                
-            }, Token);
+            RequestedExit = false;
             ClientWebSocket.Start();
         }
 
@@ -730,7 +749,6 @@ namespace ZWaveJS.NET
 
                 if (Type == "version")
                 {
-                    ConnectTaskTokenSource.Cancel();
                     _ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
                     _ZWaveJSServerVersion = JO.Value<string>("serverVersion");
 
