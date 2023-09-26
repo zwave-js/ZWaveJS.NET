@@ -372,6 +372,30 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        public Task<CMDResult> RefreshValues()
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.RefreshValues);
+            Request.Add("nodeId", this.id);
+
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+
         public Task<CMDResult> GetDefinedValueIDs()
         {
             Guid ID = Guid.NewGuid();
@@ -386,9 +410,6 @@ namespace ZWaveJS.NET
                 }
 
                 Result.SetResult(Res);
-
-
-
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
