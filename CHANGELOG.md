@@ -20,6 +20,7 @@
     - The Node **FirmwareUpdateFinished** event now passes an args parameter
 
   - New Features  
+    - Added **RefreshValues** method to the ZWaveNode class.
     - Added **WaitForWakeUp** method to the ZWaveNode class.
     - Added **Ping**, method to the ZwaveNode class.
     - Added **StartListeningLogs**, **StopListeningLogs** methods and the associated events to the Driver class.
@@ -39,7 +40,7 @@
   - Internal changes
     - Switched to an alternative websocket client package
     - Massive structural / performance improvements
-    - Better (hopefully) recovery routines
+    - Better (hopefully) recovery/connection error handling
     - Redeveloped the Demo Application / Debug App
     - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
     - Internal logic to ensure the server satifies the specified expected schema requested by the library
