@@ -372,6 +372,31 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        public Task<CMDResult> SetRawConfigParameterValue(int parameter, int value, int valueSize)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SetRawConfigParameterValue);
+            Request.Add("nodeId", this.id);
+            Request.Add("parameter", parameter);
+            Request.Add("value", value);
+            Request.Add("valueSize", valueSize);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
         public Task<CMDResult> RefreshValues()
         {
             Guid ID = Guid.NewGuid();

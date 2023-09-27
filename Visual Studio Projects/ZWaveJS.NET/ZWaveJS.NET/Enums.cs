@@ -94,6 +94,7 @@
             public const string SetValue = "node.set_value";
             public const string GetValue = "node.get_value";
             public const string PollValue = "node.poll_value";
+            public const string SetRawConfigParameterValue = "node.set_raw_config_parameter_value";
             public const string RefreshValues = "node.refresh_values";
             public const string GetDefinedValueIDs = "node.get_defined_value_ids";
             public const string GetValueMetadata = "node.get_value_metadata";
