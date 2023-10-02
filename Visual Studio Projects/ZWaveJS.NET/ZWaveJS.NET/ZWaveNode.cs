@@ -13,7 +13,7 @@ namespace ZWaveJS.NET
         {
 
         }
-
+        
         public delegate void LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating);
         private LifelineHealthCheckProgress LifelineHealthCheckProgressSub;
         internal void Trigger_LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating)
@@ -372,7 +372,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> SetRawConfigParameterValue(int parameter, int value, int valueSize)
+        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int parameter, int value, int valueSize)
         {
             Guid ID = Guid.NewGuid();
 

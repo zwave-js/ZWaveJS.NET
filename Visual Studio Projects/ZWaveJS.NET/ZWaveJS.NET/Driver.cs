@@ -32,7 +32,7 @@ namespace ZWaveJS.NET
         private bool Host = true;
         
         private string _ZWaveJSDriverVersion;
-        public string ZWaveJSDriverVersion
+        public string ZWJSS_DriverVersion
         {
             get
             {
@@ -41,7 +41,7 @@ namespace ZWaveJS.NET
         }
 
         private string _ZWaveJSServerVersion;
-        public string ZWaveJSServerVersion
+        public string ZWJSS_ServerVersion
         {
             get
             {
@@ -69,10 +69,10 @@ namespace ZWaveJS.NET
         public event UnexpectedHostExitEvent UnexpectedHostExit;
         
         public delegate void LoggingEventDelegate(LoggingEventArgs args);
-        public event LoggingEventDelegate LoggingEvent;
+        public event LoggingEventDelegate ZWJSS_LoggingEvent;
         internal void Trigger_LoggingEvent(LoggingEventArgs args)
         {
-            LoggingEvent?.Invoke(args);
+            ZWJSS_LoggingEvent?.Invoke(args);
         }
 
         private void MapNodeEvents()
@@ -641,7 +641,7 @@ namespace ZWaveJS.NET
             }
         }
 
-        public Task<CMDResult> StartListeningLogs()
+        public Task<CMDResult> ZWJSS_StartListeningLogs()
         {
             Guid ID = Guid.NewGuid();
 
@@ -664,7 +664,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> StopListeningLogs()
+        public Task<CMDResult> ZWJSS_StopListeningLogs()
         {
             Guid ID = Guid.NewGuid();
 
