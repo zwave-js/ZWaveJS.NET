@@ -535,8 +535,12 @@ namespace ZWaveJS.NET
         {
             RequestedExit = true;
             Inited = false;
-            Controller.Nodes = null;
-            Controller = null;
+            if(Controller != null)
+            {
+                Controller.Nodes = null; // Is this necessary?
+                Controller = null;
+            }
+            
             DestroySocket();
             DestroyServer();
             
