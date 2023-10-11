@@ -3,6 +3,7 @@
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
+    "@sentry/node": "7.12.1",
     "@zwave-js/server": "1.31.0",
     "zwave-js": "11.13.0"
   },

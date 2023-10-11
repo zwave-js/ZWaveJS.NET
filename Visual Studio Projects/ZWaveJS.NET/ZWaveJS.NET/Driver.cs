@@ -480,6 +480,7 @@ namespace ZWaveJS.NET
 
         }
 
+        // OBSOLETE
         // Server Process Exit
         private void Server_Exited()
         {
