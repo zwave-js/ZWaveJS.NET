@@ -37,6 +37,10 @@
     - Added **HardReset** method to the Driver class  
             **Warning!!!** This will Reset your controller, and will result in a clean network with no included nodes.
     - Added the **ccSpecific** property to the **ValueMetadata** class
+    - Added the ability to add new server methods to the library during runtime.  
+      This is helpful if you want to use a method that is not yet implemented, or to support an older version of an exetrnal server
+
+
 
   - Internal changes
     - Switched to an alternative websocket client package
