@@ -2,8 +2,12 @@
   "version": "4.0.0",
   "name": "server",
   "bin": "./server.js",
+  "overrides": {
+    "zwave-js": {
+      "@sentry/node": "7.12.1"
+    }
+  },
   "dependencies": {
-    "@sentry/node": "7.12.1",
     "@zwave-js/server": "1.31.0",
     "zwave-js": "11.13.0"
   },
