@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
-using Microsoft.VisualBasic.FileIO;
-using System.Xml.Linq;
 
 namespace ZWaveJS.NET
 {
