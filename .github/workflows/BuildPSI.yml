@@ -8,27 +8,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16]
-        os: [windows-latest, macos-latest, ubuntu-latest, self-hosted]
+        node-version: [18]
+        os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           #  Define the binary names to use for uploads
-          - os: ubuntu-latest
-            file: server
-            asset_name: server-ubuntu.psi
-            asset_body: "Ubuntu Server Binary"
-          - os: self-hosted
-            file: server
-            asset_name: server-debian-arm.psi
-            asset_body: "Debian ARM Server Binary"
-          - os: windows-latest
+           - os: windows-latest
             file: server.exe
-            asset_name: server-win.psi
+            asset_name: server-x64-win.psi
             asset_body: "Windows Server Binary"
           - os: macos-latest
             file: server
-            asset_name: server-macos.psi
+            asset_name: server-x64-macos.psi
             asset_body: "macOS Server Binary"
-
+          - os: ubuntu-latest
+            file: server
+            asset_name: server-x64-ubuntu.psi
+            asset_body: "Ubuntu Server Binary"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
