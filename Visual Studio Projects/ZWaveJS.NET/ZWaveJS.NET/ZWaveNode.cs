@@ -543,11 +543,6 @@ namespace ZWaveJS.NET
             return EP;
         }
 
-        public Endpoint[] GetAllEndpoints()
-        {
-            return endpoints;
-        }
-
         public Task<CMDResult> GetEndpointCount()
         {
             Guid ID = Guid.NewGuid();
@@ -660,7 +655,7 @@ namespace ZWaveJS.NET
         }
 
         [Newtonsoft.Json.JsonProperty]
-        internal Endpoint[] endpoints { get; set; }
+        public Endpoint[] endpoints { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public bool isControllerNode { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
