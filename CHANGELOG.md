@@ -18,6 +18,9 @@
     - The Node **BeginFirmwareUpdate** method has been renamed to **UpdateFrimware**, and requires a class instance.
     - The Node **FirmwareUpdateProgress** event now passes an args parameter
     - The Node **FirmwareUpdateFinished** event now passes an args parameter
+    - Setting the Node **name**, **location** and **keepAwake** values is now only possible with methods for each.
+      This is to address some unintentional communication between the Driver runtime and the lib.  
+    - The method **GetAllEndpoints** has been removed, and is replaced with an **endpoints** property
 
   - New Features  
     - Added **SetRawConfigParameterValue** method to the ZWaveNode class.
