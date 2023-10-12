@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using Microsoft.VisualBasic.FileIO;
+using System.Xml.Linq;
 
 namespace ZWaveJS.NET
 {
@@ -715,85 +717,102 @@ namespace ZWaveJS.NET
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
         public int id { get; internal set; }
-
-        private bool _KeepAwake;
-        public bool keepAwake
+        
+        [Newtonsoft.Json.JsonProperty]
+        public bool keepAwake { get; internal set; }
+        public Task<CMDResult>  SetKeepAwake(bool Option)
         {
-            get
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
-                return _KeepAwake;
-            }
-            set
-            {
-                _KeepAwake = value;
-                if (Driver.Instance.Inited)
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
                 {
-                    Guid ID = Guid.NewGuid();
-
-                    Dictionary<string, object> Request = new Dictionary<string, object>();
-                    Request.Add("messageId", ID);
-                    Request.Add("command", Enums.Commands.KeepNodeAwake);
-                    Request.Add("nodeId", this.id);
-                    Request.Add("keepAwake", _KeepAwake);
-
-                    string RequestPL = JsonConvert.SerializeObject(Request);
-                    Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+                    this.keepAwake = Option;
                 }
-            }
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.KeepNodeAwake);
+            Request.Add("nodeId", this.id);
+            Request.Add("keepAwake", Option);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
         }
 
-        private string _Name;
-        public string name
+
+        [Newtonsoft.Json.JsonProperty]
+        public string name { get; internal set; }
+        public Task<CMDResult> SetName(string Name, bool UpdateCC = true)
         {
-            get
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
-                return _Name;
-            }
-            set
-            {
-                _Name = value;
-                if (Driver.Instance.Inited)
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
                 {
-                    Guid ID = Guid.NewGuid();
-
-                    Dictionary<string, object> Request = new Dictionary<string, object>();
-                    Request.Add("messageId", ID);
-                    Request.Add("command", Enums.Commands.SetName);
-                    Request.Add("nodeId", this.id);
-                    Request.Add("name", _Name);
-
-                    string RequestPL = JsonConvert.SerializeObject(Request);
-                    Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+                    this.name = Name;
                 }
-              
-            }
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SetName);
+            Request.Add("nodeId", this.id);
+            Request.Add("name", Name);
+            Request.Add("updateCC", UpdateCC);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
         }
 
-        private string _Location;
-        public string location
+        [Newtonsoft.Json.JsonProperty]
+        public string location { get; internal set; }
+        public Task<CMDResult> SetLocation(string Location, bool UpdateCC = true)
         {
-            get
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
-                return _Location;
-            }
-            set
-            {
-                _Location = value;
-                if (Driver.Instance.Inited)
+                CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
                 {
-                    
-                    Guid ID = Guid.NewGuid();
-
-                    Dictionary<string, object> Request = new Dictionary<string, object>();
-                    Request.Add("messageId", ID);
-                    Request.Add("command", Enums.Commands.SetLocation);
-                    Request.Add("nodeId", this.id);
-                    Request.Add("location", _Location);
-
-                    string RequestPL = JsonConvert.SerializeObject(Request);
-                    Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+                    this.location = Location;
                 }
-            }
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SetLocation);
+            Request.Add("nodeId", this.id);
+            Request.Add("location", Location);
+            Request.Add("updateCC", UpdateCC);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
         }
+
     }
 }
