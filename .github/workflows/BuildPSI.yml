@@ -12,7 +12,7 @@ jobs:
         os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           #  Define the binary names to use for uploads
-           - os: windows-latest
+          - os: windows-latest
             file: server.exe
             asset_name: server-x64-win.psi
             asset_body: "Windows Server Binary"
