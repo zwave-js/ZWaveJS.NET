@@ -8,10 +8,10 @@ namespace ZWaveJS.NET
 {
     public class Helpers
     {
-        private const string MacOSBinary = "server-macos.psi";
-        private const string WinBinary = "server-win.psi";
-        private const string UnixBinary = "server-ubuntu.psi";
-        private const string UnixBinaryARM = "server-debian-arm.psi";
+        private const string MacOSBinary = "server-x64-macos.psi";
+        private const string WinBinary = "server-x64-win.psi";
+        private const string UnixBinary = "server-x64-ubuntu.psi";
+        private const string UnixBinaryARM = "server-arm64-ubuntu.psi";
 
         internal static Enums.Platform RunningPlatform()
         {
