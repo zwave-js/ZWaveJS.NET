@@ -131,6 +131,7 @@ namespace ZWaveJS.NET
             NodeInterviewFailed?.Invoke(this, Args);
         }
 
+        // CHECKED
         public Task<CMDResult> Ping()
         {
             Guid ID = Guid.NewGuid();
@@ -141,7 +142,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.Value<bool>("responded"));
+                    Res.SetPayload(JO.SelectToken("result.responded").ToObject<bool>());
                 }
                 
                 Result.SetResult(Res);
@@ -159,6 +160,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> Interview()
         {
             Guid ID = Guid.NewGuid();
@@ -182,6 +184,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
         
+        // CHECKED
         public Task<CMDResult> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
         {
             LifelineHealthCheckProgressSub = OnProgress;
@@ -194,7 +197,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    LifelineHealthCheckSummary LLHCS = JsonConvert.DeserializeObject<LifelineHealthCheckSummary>(JO.SelectToken("result.summary").ToString());
+                    LifelineHealthCheckSummary LLHCS = JO.SelectToken("result.summary").ToObject<LifelineHealthCheckSummary>();
                     Res.SetPayload(LLHCS);
                 }
                 
@@ -214,6 +217,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> AbortFirmwareUpdate()
         {
             Guid ID = Guid.NewGuid();
@@ -237,7 +241,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // FIXME
+        // CHECKED
         public Task<CMDResult> UpdateFirmware(FirmwareUpdate[] Updates)
         {
             Guid ID = Guid.NewGuid();
@@ -261,6 +265,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> RefreshInfo(RefreshInfoOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
@@ -286,6 +291,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> GetValue(ValueID ValueID)
         {
             Guid ID = Guid.NewGuid();
@@ -296,7 +302,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.Value<JObject>("result"));
+                    Res.SetPayload(JO.SelectToken("result").ToObject<JObject>());
                 }
 
                 Result.SetResult(Res);
@@ -315,6 +321,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHEKCED
         public Task<CMDResult> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
@@ -323,6 +330,11 @@ namespace ZWaveJS.NET
             Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
+                if (Res.Success)
+                {
+                    SetValueResult SVR = JO.SelectToken("result").ToObject<SetValueResult>();
+                    Res.SetPayload(SVR);
+                }
                 Result.SetResult(Res);
             });
 
@@ -344,6 +356,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> PollValue(ValueID ValueID)
         {
             Guid ID = Guid.NewGuid();
@@ -354,7 +367,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.Value<JObject>("result"));
+                    Res.SetPayload(JO.SelectToken("result").ToObject<JObject>());
                 }
 
                 Result.SetResult(Res);
@@ -372,7 +385,8 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int parameter, int value, int valueSize)
+        // FIX ME
+        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int ValueSize)
         {
             Guid ID = Guid.NewGuid();
 
@@ -387,9 +401,9 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.SetRawConfigParameterValue);
             Request.Add("nodeId", this.id);
-            Request.Add("parameter", parameter);
-            Request.Add("value", value);
-            Request.Add("valueSize", valueSize);
+            Request.Add("parameter", Parameter);
+            Request.Add("value", Value);
+            Request.Add("valueSize", ValueSize);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
@@ -397,6 +411,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> RefreshValues()
         {
             Guid ID = Guid.NewGuid();
@@ -420,7 +435,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-
+        // CHEKCED
         public Task<CMDResult> GetDefinedValueIDs()
         {
             Guid ID = Guid.NewGuid();
@@ -431,7 +446,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JsonConvert.DeserializeObject<ValueID[]>(JO.SelectToken("result.valueIds").ToString()));
+                    Res.SetPayload(JO.SelectToken("result.valueIds").ToObject<ValueID[]>());
                 }
 
                 Result.SetResult(Res);
@@ -449,6 +464,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> GetValueMetadata(ValueID VID)
         {
             Guid ID = Guid.NewGuid();
@@ -459,7 +475,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JsonConvert.DeserializeObject<ValueMetadata>(JO.SelectToken("result").ToString()));
+                    Res.SetPayload(JO.SelectToken("result").ToObject<ValueMetadata>());
                 }
 
                 Result.SetResult(Res);
@@ -479,6 +495,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
@@ -489,7 +506,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.supported").Value<bool>());
+                    Res.SetPayload(JO.SelectToken("result.supported").ToObject<bool>());
                     
                 }
                 Result.SetResult(Res);
@@ -507,6 +524,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
@@ -517,7 +535,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                    Res.SetPayload(JO.SelectToken("result").ToObject<JObject>());
                 }
                 Result.SetResult(Res);
 
@@ -537,12 +555,14 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // LOCAL
         public Endpoint GetEndpoint(int Index)
         {
             Endpoint EP = this.endpoints.FirstOrDefault((E) => E.index.Equals(Index));
             return EP;
         }
 
+        // CHECKED
         public Task<CMDResult> GetEndpointCount()
         {
             Guid ID = Guid.NewGuid();
@@ -554,7 +574,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.count").Value<int>());
+                    Res.SetPayload(JO.SelectToken("result.count").ToObject<int>());
                 }
                 Result.SetResult(Res);
             });
@@ -570,6 +590,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> GetHighestSecurityClass()
         {
             Guid ID = Guid.NewGuid();
@@ -581,8 +602,8 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    int Value = JO.SelectToken("result.highestSecurityClass").Value<int>();
-                    Res.SetPayload((Enums.SecurityClass)Value);
+                    Enums.SecurityClass Value = JO.SelectToken("result.highestSecurityClass").ToObject<Enums.SecurityClass>();
+                    Res.SetPayload(Value);
                 }
                 Result.SetResult(Res);
 
@@ -600,6 +621,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> HasSecurityClass(Enums.SecurityClass Class)
         {
             Guid ID = Guid.NewGuid();
@@ -611,7 +633,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.hasSecurityClass").Value<bool>());
+                    Res.SetPayload(JO.SelectToken("result.hasSecurityClass").ToObject<bool>());
                 }
                 Result.SetResult(Res);
               
@@ -629,7 +651,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // FIX ME
+        // CHECKED
         public Task<CMDResult> WaitForWakeup()
         {
             Guid ID = Guid.NewGuid();
@@ -746,7 +768,6 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-
 
         [Newtonsoft.Json.JsonProperty]
         public string name { get; internal set; }

@@ -1,5 +1,22 @@
 namespace Demo_Application
 {
+    public class CBoxItem
+    {
+        public CBoxItem(string Text, object Value)
+        {
+            this.Text = Text;
+            this.Value = Value;
+        }
+
+        public override string ToString()
+        {
+            return this.Text;
+        }
+
+        public string Text { get; set; }
+        public object Value { get; set; }
+    }
+
     internal static class Program
     {
         /// <summary>

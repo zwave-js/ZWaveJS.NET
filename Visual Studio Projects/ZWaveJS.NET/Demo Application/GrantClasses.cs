@@ -27,16 +27,33 @@ namespace Demo_Application
         public void Grant(ZWaveJS.NET.Enums.SecurityClass[] Requested)
         {
             if (Requested.Contains((ZWaveJS.NET.Enums.SecurityClass)CB_S0.Tag))
-                CB_S0.Enabled = true; CB_S0.Enabled = true;
+            {
+                CB_S0.Enabled = true;
+                CB_S0.Checked = true;
+            }
+
 
             if (Requested.Contains((ZWaveJS.NET.Enums.SecurityClass)CB_S2_AccessControl.Tag))
-                CB_S2_AccessControl.Enabled = true; CB_S2_AccessControl.Enabled = true;
+            {
+                CB_S2_AccessControl.Enabled = true;
+                CB_S2_AccessControl.Checked = true;
+            }
+
 
             if (Requested.Contains((ZWaveJS.NET.Enums.SecurityClass)CB_S2_Auth.Tag))
-                CB_S2_Auth.Enabled = true; CB_S2_Auth.Enabled = true;
+            {
+                CB_S2_Auth.Enabled = true;
+                CB_S2_Auth.Checked = true;
+            }
+
 
             if (Requested.Contains((ZWaveJS.NET.Enums.SecurityClass)CB_S2_Unauth.Tag))
-                CB_S2_Unauth.Enabled = true; CB_S2_Unauth.Enabled = true;
+            {
+                CB_S2_Unauth.Enabled = true;
+                CB_S2_Unauth.Checked = true;
+            }
+
+
 
             this.ShowDialog();
         }

@@ -4,24 +4,20 @@ using Newtonsoft.Json;
 
 namespace ZWaveJS.NET
 {
-    class CustomBooleanJsonConverter : JsonConverter<bool>
+  
+    public class SetValueResult
     {
-        public override bool ReadJson(JsonReader reader, Type objectType, bool existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            if (reader.ValueType == typeof(string) && reader.Value.ToString().Equals("unknown"))
-            {
-                return false;
-            }
-            else
-            {
-                return Convert.ToBoolean(reader.Value);
-            }
-        }
-        public override void WriteJson(JsonWriter writer, bool value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value);
-        }
+        internal SetValueResult() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.SetValueStatus status { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string remainingDuration { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string message { get; internal set; }
     }
+
+
 
     public class FirmwareUpdateFileInfo
     {
@@ -35,11 +31,29 @@ namespace ZWaveJS.NET
         public string integrity { get; internal set; }
     }
 
+    public class FirmwareUpdateDeviceID
+    {
+        internal FirmwareUpdateDeviceID() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int manufacturerId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int firmwareVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.RFRegion? rfRegion { get; internal set; }
+    }
+
 
     public class FirmwareUpdateInfo
     {
         internal FirmwareUpdateInfo() { }
 
+        [Newtonsoft.Json.JsonProperty]
+        public FirmwareUpdateDeviceID device { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public string version { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -144,29 +158,35 @@ namespace ZWaveJS.NET
         public decimal applicationVersion { get; internal set; }
     }
 
+    public class RebuildRoutesOptions
+    {
+        public bool includeSleeping { get; set; }
+    }
+
+
     public class AssociationAddress
     {
         public int nodeId { get; set; }
         public int? endpoint { get;  set; }
     }
 
-    public class NetworkHealStats
+    public class RebuildRouteStats
     {
-        internal NetworkHealStats() { }
+        internal RebuildRouteStats() { }
 
         public int[] HealedNodes { get; internal set; }
         public int[] SkippedNodes { get; internal set; }
         public int[] FailedNodes { get; internal set; }
     }
 
-    public class NetworkHealDoneArgs : NetworkHealStats
+    public class RebuildRoutesDoneArgs : RebuildRouteStats
     {
-        internal NetworkHealDoneArgs() { }
+        internal RebuildRoutesDoneArgs() { }
     }
 
-    public class NetworkHealProgressArgs : NetworkHealStats
+    public class RebuildRoutesProgressArgs : RebuildRouteStats
     {
-        internal NetworkHealProgressArgs() { }
+        internal RebuildRoutesProgressArgs() { }
 
         public int[] PendingNodes { get; internal set; }
     }

@@ -27,6 +27,14 @@ namespace ZWaveJS.NET
 
         internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
+
+
+            Process[] Zombies = Process.GetProcessesByName("server.psi");
+            foreach(Process Zombie in Zombies)
+            {
+                Zombie.Kill();
+            }
+
             if (!File.Exists("server.psi"))
             {
                 throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");

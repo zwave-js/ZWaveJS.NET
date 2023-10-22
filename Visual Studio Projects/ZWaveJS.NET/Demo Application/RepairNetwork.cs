@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,18 +22,20 @@ namespace Demo_Application
         public void Start(ZWaveJS.NET.Driver Driver)
         {
             _Driver = Driver;
-            _Driver.Controller.HealNetworkProgress += Controller_HealNetworkProgress;
-            _Driver.Controller.HealNetworkDone += Controller_HealNetworkDone;
-            _Driver.Controller.BeginHealingNetwork();
+            _Driver.Controller.HealNetworkProgress += Controller_RebuildProgress;
+            _Driver.Controller.HealNetworkDone += Controller_RebuildDone;
+            ZWaveJS.NET.RebuildRoutesOptions Options = new ZWaveJS.NET.RebuildRoutesOptions();
+            Options.includeSleeping = true;
+            _Driver.Controller.BeginRebuildingRoutes(Options);
 
             this.ShowDialog();
 
         }
 
-        private void Controller_HealNetworkDone(ZWaveJS.NET.NetworkHealDoneArgs Args)
+        private void Controller_RebuildDone(ZWaveJS.NET.RebuildRoutesDoneArgs Args)
         {
-            _Driver.Controller.HealNetworkProgress -= Controller_HealNetworkProgress;
-            _Driver.Controller.HealNetworkDone -= Controller_HealNetworkDone;
+            _Driver.Controller.HealNetworkProgress -= Controller_RebuildProgress;
+            _Driver.Controller.HealNetworkDone -= Controller_RebuildDone;
 
             this.Invoke(new Action(() =>
             {
@@ -41,13 +44,22 @@ namespace Demo_Application
             }));
         }
 
-        private void Controller_HealNetworkProgress(ZWaveJS.NET.NetworkHealProgressArgs Args)
+        private void Controller_RebuildProgress(ZWaveJS.NET.RebuildRoutesProgressArgs Args)
         {
             int Total = Args.FailedNodes.Length + Args.HealedNodes.Length + Args.SkippedNodes.Length + Args.PendingNodes.Length;
             int Pending = Args.PendingNodes.Length;
             int Done = Total - Pending;
 
-            decimal Progress = (decimal)Done / (decimal)Total * 100;
+            decimal Progress;
+            try
+            {
+                Progress = (decimal)Done / (decimal)Total * 100;
+            }
+            catch(Exception Error)
+            {
+                Progress = 100;
+            }
+            
 
             this.Invoke(new Action(() => 
             {
@@ -58,10 +70,10 @@ namespace Demo_Application
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _Driver.Controller.StopHealingNetwork().ContinueWith((R) =>
+            _Driver.Controller.StopRebuildingRoutes().ContinueWith((R) =>
             {
-                _Driver.Controller.HealNetworkProgress -= Controller_HealNetworkProgress;
-                _Driver.Controller.HealNetworkDone -= Controller_HealNetworkDone;
+                _Driver.Controller.HealNetworkProgress -= Controller_RebuildProgress;
+                _Driver.Controller.HealNetworkDone -= Controller_RebuildDone;
 
                 this.Invoke(new Action(() =>
                 {

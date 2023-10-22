@@ -21,6 +21,9 @@
     - Setting the Node **name**, **location** and **keepAwake** values is now only possible with methods for each.
       This is to address some unintentional communication between the Driver runtime and the lib.  
     - The method **GetAllEndpoints** has been removed, and is replaced with an **endpoints** property
+    - The Controller property **isHealNetworkActive** has been renamed to **isRebuildingRoutes**
+    - The Controller methods of **HealNode**, **BeginHealingNetwork**, **StopHealingNetwork** have been renamed to:  
+      **RebuildNodeRoutes**, **RebuildNodeRoutes**, **StopRebuildingRoutes**
 
   - New Features  
     - Added **SetRawConfigParameterValue** method to the ZWaveNode class.
