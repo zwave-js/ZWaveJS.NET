@@ -1,16 +1,19 @@
 {
   "version": "4.0.0",
   "name": "server",
-  "bin": "./server.js",
+  "bin": "./server_esbuild.js",
   "dependencies": {
     "@zwave-js/server": "1.33.0",
     "zwave-js": "12.2.1"
   },
   "devDependencies": {
-    "pkg": "^5.8.1"
+    "pkg": "^5.8.1",
+    "esbuild": "^0.19.5"
   },
   "scripts": {
-    "build": "pkg . --compress GZip -t host"
+    "build": "npm run do_esbuild && npm run do_pkgbuild",
+    "do_esbuild": "node ./node_modules/esbuild/bin/esbuild server.js --bundle --outfile=server_esbuild.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config",
+    "do_pkgbuild": "node ./node_modules/pkg/lib-es5/bin.js . --compress GZip -t host -o ./dist/server --targets node18"
   },
   "pkg": {
     "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
