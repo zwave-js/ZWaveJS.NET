@@ -44,18 +44,18 @@ namespace ZWaveJS.NET
         }
 
         public delegate void RebuildRoutesProgressEvent(RebuildRoutesProgressArgs Args);
-        public event RebuildRoutesProgressEvent HealNetworkProgress;
+        public event RebuildRoutesProgressEvent RebuildRoutesProgress;
         internal void Trigger_RebuildRoutesProgress(RebuildRoutesProgressArgs Args)
         {
-             HealNetworkProgress?.Invoke(Args);
+             RebuildRoutesProgress?.Invoke(Args);
         }
 
         public delegate void RebuildRoutesDoneEvent(RebuildRoutesDoneArgs Args);
-        public event RebuildRoutesDoneEvent HealNetworkDone;
+        public event RebuildRoutesDoneEvent RebuldRoutesDone;
         internal void Trigger_RebuildRoutesDone(RebuildRoutesDoneArgs Args)
         {
             this.isRebuildingRoutes = false;
-            HealNetworkDone?.Invoke(Args);
+            RebuldRoutesDone?.Invoke(Args);
         }
 
         private Abort AbortSub;

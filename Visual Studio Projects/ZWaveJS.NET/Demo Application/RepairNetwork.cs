@@ -22,8 +22,8 @@ namespace Demo_Application
         public void Start(ZWaveJS.NET.Driver Driver)
         {
             _Driver = Driver;
-            _Driver.Controller.HealNetworkProgress += Controller_RebuildProgress;
-            _Driver.Controller.HealNetworkDone += Controller_RebuildDone;
+            _Driver.Controller.RebuildRoutesProgress += Controller_RebuildProgress;
+            _Driver.Controller.RebuldRoutesDone += Controller_RebuildDone;
             ZWaveJS.NET.RebuildRoutesOptions Options = new ZWaveJS.NET.RebuildRoutesOptions();
             Options.includeSleeping = true;
             _Driver.Controller.BeginRebuildingRoutes(Options);
@@ -34,8 +34,8 @@ namespace Demo_Application
 
         private void Controller_RebuildDone(ZWaveJS.NET.RebuildRoutesDoneArgs Args)
         {
-            _Driver.Controller.HealNetworkProgress -= Controller_RebuildProgress;
-            _Driver.Controller.HealNetworkDone -= Controller_RebuildDone;
+            _Driver.Controller.RebuildRoutesProgress -= Controller_RebuildProgress;
+            _Driver.Controller.RebuldRoutesDone -= Controller_RebuildDone;
 
             this.Invoke(new Action(() =>
             {
@@ -72,8 +72,8 @@ namespace Demo_Application
         {
             _Driver.Controller.StopRebuildingRoutes().ContinueWith((R) =>
             {
-                _Driver.Controller.HealNetworkProgress -= Controller_RebuildProgress;
-                _Driver.Controller.HealNetworkDone -= Controller_RebuildDone;
+                _Driver.Controller.RebuildRoutesProgress -= Controller_RebuildProgress;
+                _Driver.Controller.RebuldRoutesDone -= Controller_RebuildDone;
 
                 this.Invoke(new Action(() =>
                 {

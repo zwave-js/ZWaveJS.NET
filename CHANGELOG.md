@@ -24,6 +24,7 @@
     - The Controller property **isHealNetworkActive** has been renamed to **isRebuildingRoutes**
     - The Controller methods of **HealNode**, **BeginHealingNetwork**, **StopHealingNetwork** have been renamed to:  
       **RebuildNodeRoutes**, **RebuildNodeRoutes**, **StopRebuildingRoutes**
+      This inccludes the associated events
 
   - New Features  
     - Added **SetRawConfigParameterValue** method to the ZWaveNode class.
