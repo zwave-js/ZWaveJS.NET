@@ -33,10 +33,9 @@
             label1 = new Label();
             label3 = new Label();
             COM_AssociationGroup = new ComboBox();
-            LST_Values = new ListView();
-            columnHeader1 = new ColumnHeader();
-            columnHeader2 = new ColumnHeader();
+            LST_Associations = new ListView();
             columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
             button3 = new Button();
             button1 = new Button();
             SuspendLayout();
@@ -84,32 +83,28 @@
             COM_AssociationGroup.Name = "COM_AssociationGroup";
             COM_AssociationGroup.Size = new Size(142, 23);
             COM_AssociationGroup.TabIndex = 17;
+            COM_AssociationGroup.SelectedIndexChanged += COM_AssociationGroup_SelectedIndexChanged;
             // 
-            // LST_Values
+            // LST_Associations
             // 
-            LST_Values.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3 });
-            LST_Values.FullRowSelect = true;
-            LST_Values.Location = new Point(22, 119);
-            LST_Values.Name = "LST_Values";
-            LST_Values.Size = new Size(444, 256);
-            LST_Values.TabIndex = 19;
-            LST_Values.UseCompatibleStateImageBehavior = false;
-            LST_Values.View = View.Details;
-            // 
-            // columnHeader1
-            // 
-            columnHeader1.Text = "Property";
-            columnHeader1.Width = 150;
-            // 
-            // columnHeader2
-            // 
-            columnHeader2.Text = "Value";
-            columnHeader2.Width = 150;
+            LST_Associations.Columns.AddRange(new ColumnHeader[] { columnHeader3, columnHeader4 });
+            LST_Associations.FullRowSelect = true;
+            LST_Associations.Location = new Point(22, 119);
+            LST_Associations.Name = "LST_Associations";
+            LST_Associations.Size = new Size(444, 256);
+            LST_Associations.TabIndex = 19;
+            LST_Associations.UseCompatibleStateImageBehavior = false;
+            LST_Associations.View = View.Details;
             // 
             // columnHeader3
             // 
-            columnHeader3.Text = "Endpoint";
-            columnHeader3.Width = 100;
+            columnHeader3.Text = "Target Node";
+            columnHeader3.Width = 150;
+            // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "Target Endpoint";
+            columnHeader4.Width = 150;
             // 
             // button3
             // 
@@ -128,6 +123,7 @@
             button1.TabIndex = 21;
             button1.Text = "Remove";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Associations
             // 
@@ -136,7 +132,7 @@
             ClientSize = new Size(492, 425);
             Controls.Add(button1);
             Controls.Add(button3);
-            Controls.Add(LST_Values);
+            Controls.Add(LST_Associations);
             Controls.Add(label3);
             Controls.Add(COM_AssociationGroup);
             Controls.Add(label1);
@@ -157,11 +153,10 @@
         private Label label1;
         private Label label3;
         private ComboBox COM_AssociationGroup;
-        private ListView LST_Values;
-        private ColumnHeader columnHeader1;
-        private ColumnHeader columnHeader2;
+        private ListView LST_Associations;
         private ColumnHeader columnHeader3;
         private Button button3;
         private Button button1;
+        private ColumnHeader columnHeader4;
     }
 }

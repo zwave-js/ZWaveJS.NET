@@ -51,7 +51,7 @@
             // 
             // columnHeader1
             // 
-            columnHeader1.Text = "Property";
+            columnHeader1.Text = "Property/Key";
             columnHeader1.Width = 150;
             // 
             // columnHeader2

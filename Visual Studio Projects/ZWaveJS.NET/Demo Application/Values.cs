@@ -43,6 +43,12 @@ namespace Demo_Application
                             ZWaveJS.NET.CMDResult Value = await Node.GetValue(VID);
 
                             ListViewItem LVI = new ListViewItem(VID.property.ToString());
+
+                            if(VID.propertyKey != null)
+                            {
+                                LVI.Text += " / " + VID.propertyKey.ToString();
+                            }
+
                             LVI.Tag = VID;
                             LVI.SubItems.Add(((JObject)Value.ResultPayload)["value"]?.ToString());
                             LVI.SubItems.Add(VID.endpoint.ToString());

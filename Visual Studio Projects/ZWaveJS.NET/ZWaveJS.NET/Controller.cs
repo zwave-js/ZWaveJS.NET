@@ -1041,6 +1041,8 @@ namespace ZWaveJS.NET
         public bool isRebuildingRoutes { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public ControllerStatistics statistics { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceConfig deviceConfig { get; internal set; }
 
     }
 }
