@@ -12,8 +12,8 @@
   },
   "scripts": {
     "build": "npm run do_esbuild && npm run do_pkgbuild",
-    "do_esbuild": "node ./node_modules/esbuild/bin/esbuild server.js --bundle --outfile=server_esbuild.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config",
-    "do_pkgbuild": "node ./node_modules/pkg/lib-es5/bin.js . --compress GZip -t host -o ./dist/server --targets node18"
+    "do_esbuild": "node ./node_modules/.bin/esbuild server.js --bundle --outfile=server_esbuild.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config",
+    "do_pkgbuild": "node ./node_modules/.bin/pkg . --compress GZip -t host -o ./dist/server --targets node18"
   },
   "pkg": {
     "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
