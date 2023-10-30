@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "npm run do_esbuild && npm run do_pkgbuild",
-    "do_esbuild": "node ./node_modules/.bin/esbuild server.js --bundle --outfile=server_esbuild.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config",
+    "do_esbuild": "./node_modules/.bin/esbuild server.js --bundle --outfile=server_esbuild.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config",
     "do_pkgbuild": "node ./node_modules/.bin/pkg . --compress GZip -t host -o ./dist/server --targets node18"
   },
   "pkg": {
