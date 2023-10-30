@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "npm run do_esbuild && npm run do_pkgbuild",
-    "do_esbuild": "./node_modules/.bin/esbuild server_source.js --bundle --outfile=server.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config",
+    "do_esbuild": "./node_modules/.bin/esbuild server_source.js --bundle --outfile=server.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config --external:zwave-js/package.json",
     "do_pkgbuild": "node ./node_modules/.bin/pkg . --compress Brotli -t host --targets node18"
   },
   "pkg": {
