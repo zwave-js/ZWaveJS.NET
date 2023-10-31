@@ -1,0 +1,38 @@
+.env file (FWUS)
+-------------------------------------
+API_REQUIRE_KEY=false
+ADMIN_SECRET=1234567890
+
+
+Wrangler
+-------------------------------------
+cache_persist = false
+
+
+Build / Run
+-------------------------------------
+yarn
+yarn build
+yarn dev
+
+
+Upload Firmware Test
+-------------------------------------
+set ADMIN_SECRET=1234567890
+set BASE_URL=http://localhost:8787
+yarn build:index
+yarn upload
+
+
+S2 Keys (DO NOT USE IN PRODUCTION)
+-------------------------------------
+0d0003d7bda539f90b5553297d043fdd
+c7a2a891f6c786a679453608eb04ade5
+b959a89faedab01ce55fdf23d36e6361
+9142ddbbce0dc0cef42939acaac24f6e
+
+
+
+
+
+

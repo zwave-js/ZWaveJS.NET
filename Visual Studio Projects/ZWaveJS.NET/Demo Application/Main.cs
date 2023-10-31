@@ -155,6 +155,7 @@ namespace Demo_Application
                 GP_Settings.Enabled = false;
 
 
+                LST_Nodes.Items.Clear();
                 ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
                 foreach (ZWaveNode N in Nodes)
                 {
@@ -479,6 +480,32 @@ namespace Demo_Application
             {
                 Associations V = new Associations();
                 V.Show(_Driver, _Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag));
+
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.FileName = "*.bin";
+            openFileDialog.Title = "Choose Backup";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                NVMRestore NVMR = new NVMRestore();
+                NVMR.Start(_Driver, openFileDialog.FileName);
+
+
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                NodeFW FW = new NodeFW();
+                FW.Start(_Driver, _Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag));
+
+
 
             }
         }

@@ -1,0 +1,37 @@
+{
+	"devices": [
+		{
+			"brand": "Some MFG",
+			"model": "Some Device",
+			"manufacturerId": "0x0346",
+			"productType": "0x0101",
+			"productId": "0x0202"
+		}
+	],
+	"upgrades": [
+		{
+			"version": "9.0",
+			"channel": "stable",
+			"changelog": "Bug Fixes:\n* Bug Fixes\n* More bug fixes",
+			"files": [
+				{
+					"target": 0,
+					"url": "https://z-wave.freshdesk.com/helpdesk/attachments/80257130806",
+					"integrity": "sha256:f653271acaf3ed44563dd3bfb6d98cf8bdfe34d5d68d350cf099e95af1e9724b"
+				}
+			]
+		},
+		{
+			"version": "9.5",
+			"channel": "stable",
+			"changelog": "Bug Fixes:\n* More More Bug Fixes\n* More More More bug fixes",
+			"files": [
+				{
+					"target": 0,
+					"url": "https://z-wave.freshdesk.com/helpdesk/attachments/80257130806",
+					"integrity": "sha256:f653271acaf3ed44563dd3bfb6d98cf8bdfe34d5d68d350cf099e95af1e9724b"
+				}
+			]
+		}
+	]
+}

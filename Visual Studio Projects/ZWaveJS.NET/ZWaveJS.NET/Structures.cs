@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace ZWaveJS.NET
@@ -42,7 +44,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int productId { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int firmwareVersion { get; internal set; }
+        public string firmwareVersion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public Enums.RFRegion? rfRegion { get; internal set; }
     }
@@ -87,7 +89,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int totalFragments { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int progress { get; internal set; }
+        public decimal progress { get; internal set; }
     }
 
     public class ControllerFirmwareUpdateResultArgs
@@ -484,9 +486,23 @@ namespace ZWaveJS.NET
 
     public class FirmwareUpdate
     {
+
+        public static FirmwareUpdate Create(string Filename, int Target)
+        {
+            FirmwareUpdate U = new FirmwareUpdate();
+            U.firmwareTarget = Target;
+            U.data = File.ReadAllBytes(Filename);
+            U.filename = new FileInfo(Filename).Name;
+
+            return U;
+
+        }
+
+        internal FirmwareUpdate() { }
+        
         [Newtonsoft.Json.JsonProperty(PropertyName = "file")]
-        public byte[] data { get; set; }
-        public string fileFormat { get; set; }
-        public int? firmwareTarget { get; set; }
+        public byte[] data { get; internal set; }
+        public string filename { get; internal set; }
+        public int? firmwareTarget { get; internal set; }
     }
 }

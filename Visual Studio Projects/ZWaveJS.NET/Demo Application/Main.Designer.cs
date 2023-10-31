@@ -390,6 +390,7 @@
             button1.TabIndex = 2;
             button1.Text = "Update FW";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button3
             // 
@@ -463,7 +464,7 @@
             GP_Controller.Enabled = false;
             GP_Controller.Location = new Point(384, 359);
             GP_Controller.Name = "GP_Controller";
-            GP_Controller.Size = new Size(428, 177);
+            GP_Controller.Size = new Size(428, 183);
             GP_Controller.TabIndex = 4;
             GP_Controller.TabStop = false;
             GP_Controller.Text = "Controller Commands";
@@ -562,6 +563,7 @@
             button9.TabIndex = 14;
             button9.Text = "Restore NVM";
             button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // button8
             // 

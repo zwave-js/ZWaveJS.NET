@@ -13,6 +13,9 @@
     <Compile Update="DSK.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FirmwareUpdateCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="GrantClasses.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -25,7 +28,13 @@
     <Compile Update="NIFWait.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="NodeFW.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="NVMBackup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="NVMRestore.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="RepairNetwork.cs">
