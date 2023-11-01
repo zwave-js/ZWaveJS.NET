@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18]
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-arm-runner, windows-arm-runner]
         include:
           #  Define the binary names to use for uploads
           - os: windows-latest
@@ -24,6 +24,14 @@ jobs:
             file: server
             asset_name: server-x64-ubuntu.psi
             asset_body: "Ubuntu Server Binary"
+          - os: ubuntu-arm-runner
+            file: server
+            asset_name: server-arm-ubuntu.psi
+            asset_body: "Ubuntu Server Binary"
+          - os: windows-arm-runner
+            file: server.exe
+            asset_name: server-arm-win.psi
+            asset_body: "Windows Server Binary"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

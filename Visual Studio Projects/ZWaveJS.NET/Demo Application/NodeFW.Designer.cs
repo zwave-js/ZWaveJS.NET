@@ -40,9 +40,12 @@
             button2 = new Button();
             TXT_Filename = new TextBox();
             button1 = new Button();
-            PB_Progress = new ProgressBar();
+            PB_Progress1 = new ProgressBar();
             label2 = new Label();
             tabPage2 = new TabPage();
+            LBL_Status2 = new Label();
+            button5 = new Button();
+            PB_Progress2 = new ProgressBar();
             button4 = new Button();
             PAN_Updates = new FlowLayoutPanel();
             LBL_Node2 = new Label();
@@ -74,7 +77,7 @@
             tabPage1.Controls.Add(button2);
             tabPage1.Controls.Add(TXT_Filename);
             tabPage1.Controls.Add(button1);
-            tabPage1.Controls.Add(PB_Progress);
+            tabPage1.Controls.Add(PB_Progress1);
             tabPage1.Controls.Add(label2);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
@@ -167,12 +170,12 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // PB_Progress
+            // PB_Progress1
             // 
-            PB_Progress.Location = new Point(128, 364);
-            PB_Progress.Name = "PB_Progress";
-            PB_Progress.Size = new Size(381, 23);
-            PB_Progress.TabIndex = 2;
+            PB_Progress1.Location = new Point(128, 364);
+            PB_Progress1.Name = "PB_Progress1";
+            PB_Progress1.Size = new Size(381, 23);
+            PB_Progress1.TabIndex = 2;
             // 
             // label2
             // 
@@ -187,6 +190,9 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(LBL_Status2);
+            tabPage2.Controls.Add(button5);
+            tabPage2.Controls.Add(PB_Progress2);
             tabPage2.Controls.Add(button4);
             tabPage2.Controls.Add(PAN_Updates);
             tabPage2.Controls.Add(LBL_Node2);
@@ -199,9 +205,35 @@
             tabPage2.Text = "Firmware Update Service";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // LBL_Status2
+            // 
+            LBL_Status2.AutoSize = true;
+            LBL_Status2.Location = new Point(38, 420);
+            LBL_Status2.Name = "LBL_Status2";
+            LBL_Status2.Size = new Size(57, 15);
+            LBL_Status2.TabIndex = 13;
+            LBL_Status2.Text = "Waiting...";
+            // 
+            // button5
+            // 
+            button5.Location = new Point(530, 416);
+            button5.Name = "button5";
+            button5.Size = new Size(70, 23);
+            button5.TabIndex = 12;
+            button5.Text = "Cancel";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button3_Click;
+            // 
+            // PB_Progress2
+            // 
+            PB_Progress2.Location = new Point(155, 416);
+            PB_Progress2.Name = "PB_Progress2";
+            PB_Progress2.Size = new Size(288, 23);
+            PB_Progress2.TabIndex = 11;
+            // 
             // button4
             // 
-            button4.Location = new Point(525, 421);
+            button4.Location = new Point(449, 416);
             button4.Name = "button4";
             button4.Size = new Size(75, 23);
             button4.TabIndex = 10;
@@ -244,12 +276,12 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(667, 508);
-            ControlBox = false;
             Controls.Add(tabControl1);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "NodeFW";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Node Firmware Update";
+            FormClosing += NodeFW_FormClosing;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -268,7 +300,7 @@
         private Label label1;
         private TextBox TXT_Filename;
         private Button button1;
-        private ProgressBar PB_Progress;
+        private ProgressBar PB_Progress1;
         private Button button3;
         private Label LBL_Node;
         private Label label3;
@@ -279,5 +311,8 @@
         private FlowLayoutPanel PAN_Updates;
         private Label LBL_Node2;
         private Button button4;
+        private ProgressBar PB_Progress2;
+        private Button button5;
+        private Label LBL_Status2;
     }
 }

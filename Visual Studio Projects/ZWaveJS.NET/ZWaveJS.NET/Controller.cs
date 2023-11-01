@@ -177,7 +177,7 @@ namespace ZWaveJS.NET
         }
 
         // CHECKED
-        public Task<CMDResult> UpdateFirmwareOTA(int NodeID, FirmwareUpdateInfo Update)
+        public Task<CMDResult> FirmwareUpdateOTA(int NodeID, FirmwareUpdateInfo Update)
         {
             Guid ID = Guid.NewGuid();
 
@@ -329,8 +329,18 @@ namespace ZWaveJS.NET
         }
 
         // CHECKED
-        public Task<CMDResult> FirmwareUpdateOTW(byte[] Data, string FileFormat)
+        public Task<CMDResult> FirmwareUpdateOTW(FirmwareUpdate Update)
         {
+
+            if (Update.firmwareTarget != null)
+            {
+                TaskCompletionSource<CMDResult> Fail = new TaskCompletionSource<CMDResult>();
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.WrongOverride, "Please use the override that DOES NOT include 'firmwareTarget'", false);
+                Fail.SetResult(Res);
+
+                return Fail.Task;
+            }
+
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
@@ -352,8 +362,8 @@ namespace ZWaveJS.NET
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.FirmwareUpdateOTW);
-            Request.Add("file", Data);
-            Request.Add("fileFormat", FileFormat);
+            Request.Add("file", Update.data);
+            Request.Add("filename", Update.filename);
             
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);

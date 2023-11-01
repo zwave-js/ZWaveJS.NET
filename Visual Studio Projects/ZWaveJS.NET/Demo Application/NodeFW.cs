@@ -29,6 +29,9 @@ namespace Demo_Application
             _Driver = Driver;
             _Node = Node;
 
+            _Node.FirmwareUpdateProgress += _Node_FirmwareUpdateProgress;
+            _Node.FirmwareUpdateFinished += _Node_FirmwareUpdateFinished;
+
             LBL_Node.Text = string.Format(LBL_Node.Text, Node.id);
             LBL_Node2.Text = LBL_Node.Text;
             ShowDialog();
@@ -36,27 +39,7 @@ namespace Demo_Application
 
         private void button3_Click(object sender, EventArgs e)
         {
-            _Node.AbortFirmwareUpdate().ContinueWith((C) =>
-            {
-
-                if (C.Result.Success)
-                {
-                    this.Invoke(new Action(() =>
-                    {
-                        Close();
-                    }));
-                }
-                else
-                {
-                    this.Invoke(new Action(() =>
-                    {
-                        MessageBox.Show(C.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
-                }
-
-
-
-            });
+            this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -69,29 +52,51 @@ namespace Demo_Application
             {
                 TXT_Filename.Text = OFD.FileName;
                 LBL_Status.Text = "Ready!";
-
-
-
-
             }
 
         }
 
         private void _Node_FirmwareUpdateFinished(ZWaveJS.NET.ZWaveNode Node, ZWaveJS.NET.NodeFirmwareUpdateResultArgs Args)
         {
-            _Node.FirmwareUpdateProgress -= _Node_FirmwareUpdateProgress;
-            _Node.FirmwareUpdateFinished -= _Node_FirmwareUpdateFinished;
+
+            try
+            {
+                this.Invoke(new Action(() =>
+                {
+                    try
+                    {
+                        this.Close();
+                    }
+                    catch { }
+                }));
+            }
+            catch { }
+
 
 
         }
 
         private void _Node_FirmwareUpdateProgress(ZWaveJS.NET.ZWaveNode Node, ZWaveJS.NET.NodeFirmwareUpdateProgressArgs Args)
         {
-            this.Invoke(new Action(() =>
+            try
             {
-                PB_Progress.Value = Convert.ToInt32(Args.progress);
-                LBL_Status.Text = string.Format("Flashing...{0}", Args.progress);
-            }));
+                this.Invoke(new Action(() =>
+                {
+                    try
+                    {
+                        PB_Progress1.Value = Convert.ToInt32(Args.progress);
+                        PB_Progress2.Value = Convert.ToInt32(Args.progress);
+                        LBL_Status.Text = string.Format("Flashing...{0}%", Args.progress);
+                        LBL_Status2.Text = string.Format("Flashing...{0}%", Args.progress);
+                    }
+                    catch { }
+
+                }));
+            }
+            catch { }
+
+
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -99,18 +104,26 @@ namespace Demo_Application
 
 
             ZWaveJS.NET.FirmwareUpdate FWU = ZWaveJS.NET.FirmwareUpdate.Create(TXT_Filename.Text, Convert.ToInt32(NUM_Target.Value));
+            button2.Enabled = false;
 
-            _Node.FirmwareUpdateProgress += _Node_FirmwareUpdateProgress;
-            _Node.FirmwareUpdateFinished += _Node_FirmwareUpdateFinished;
             _Node.UpdateFirmware(new[] { FWU }).ContinueWith((C) =>
             {
-
                 if (C.Result.Success)
                 {
-                    this.Invoke(new Action(() =>
+                    try
                     {
-                        LBL_Status.Text = "Flashing...";
-                    }));
+                        this.Invoke(new Action(() =>
+                        {
+                            try
+                            {
+
+                                LBL_Status.Text = "Flashing...";
+                            }
+                            catch { }
+
+                        }));
+                    }
+                    catch { }
 
                 }
                 else
@@ -118,6 +131,7 @@ namespace Demo_Application
                     this.Invoke(new Action(() =>
                     {
                         MessageBox.Show(C.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        button2.Enabled = true;
                     }));
                 }
 
@@ -163,6 +177,36 @@ namespace Demo_Application
                 }
 
             });
+        }
+
+        private void NodeFW_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ManualResetEvent Block = new ManualResetEvent(false);
+            bool Cancel = false;
+            _Node.AbortFirmwareUpdate().ContinueWith((C) =>
+            {
+                if (C.Result.Success)
+                {
+                    _Node.FirmwareUpdateProgress -= _Node_FirmwareUpdateProgress;
+                    _Node.FirmwareUpdateFinished -= _Node_FirmwareUpdateFinished;
+                    Cancel = false;
+                }
+                else
+                {
+                    Cancel = true;
+                    this.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show(C.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+
+                }
+                Block.Set();
+            });
+
+            Block.WaitOne();
+            e.Cancel = Cancel;
+
+
         }
     }
 }

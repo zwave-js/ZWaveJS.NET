@@ -486,6 +486,15 @@ namespace ZWaveJS.NET
 
     public class FirmwareUpdate
     {
+        public static FirmwareUpdate Create(string Filename)
+        {
+            FirmwareUpdate U = new FirmwareUpdate();
+            U.data = File.ReadAllBytes(Filename);
+            U.filename = new FileInfo(Filename).Name;
+
+            return U;
+        }
+
 
         public static FirmwareUpdate Create(string Filename, int Target)
         {
@@ -495,7 +504,6 @@ namespace ZWaveJS.NET
             U.filename = new FileInfo(Filename).Name;
 
             return U;
-
         }
 
         internal FirmwareUpdate() { }

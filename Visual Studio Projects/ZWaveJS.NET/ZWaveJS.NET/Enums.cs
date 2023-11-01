@@ -99,6 +99,7 @@
             public const string InvalidkeyLength = "ZWJS.NET.ERR.004";
             public const string WSConnectionError = "ZWJS.NET.ERR.005";
             public const string CommercialAPIKey = "ZWJS.NET.ERR.006";
+            public const string WrongOverride = "ZWJS.NET.ERR.007";
         }
 
         internal class Commands

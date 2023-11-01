@@ -61,8 +61,8 @@
             // 
             // LBL_Version
             // 
-            LBL_Version.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            LBL_Version.Location = new Point(72, 15);
+            LBL_Version.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            LBL_Version.Location = new Point(72, 17);
             LBL_Version.Name = "LBL_Version";
             LBL_Version.Size = new Size(46, 19);
             LBL_Version.TabIndex = 2;
@@ -70,7 +70,7 @@
             // 
             // LBL_Downgrade
             // 
-            LBL_Downgrade.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            LBL_Downgrade.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             LBL_Downgrade.Location = new Point(165, 17);
             LBL_Downgrade.Name = "LBL_Downgrade";
             LBL_Downgrade.Size = new Size(111, 19);
@@ -87,6 +87,7 @@
             button1.TabIndex = 4;
             button1.Text = "Upgrade";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
             // 
             // label5
             // 
@@ -120,7 +121,7 @@
             // 
             // LBL_Files
             // 
-            LBL_Files.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            LBL_Files.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             LBL_Files.Location = new Point(72, 41);
             LBL_Files.Name = "LBL_Files";
             LBL_Files.Size = new Size(46, 19);

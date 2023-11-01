@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ZWaveJS.NET;
 
 namespace Demo_Application
 {
@@ -25,6 +26,13 @@ namespace Demo_Application
             InitializeComponent();
 
             TXT_Changelog.Text = Update.changelog.Replace("\n", Environment.NewLine);
+            TXT_Changelog.Text += Environment.NewLine + Environment.NewLine+"Files:"+Environment.NewLine;
+
+            foreach(FirmwareUpdateFileInfo FI in Update.files)
+            {
+                TXT_Changelog.Text += " - "+FI.url+Environment.NewLine;
+            }
+
             LBL_Files.Text = Update.files.Length.ToString();
             LBL_Version.Text = Update.version;
             LBL_Downgrade.Text = Update.downgrade ? "Downgrade" : "Upgrade";
@@ -39,6 +47,32 @@ namespace Demo_Application
 
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
 
+            _Driver.Controller.FirmwareUpdateOTA(_Node.id, _Update).ContinueWith((C) =>
+            {
+
+                if (C.Result.Success)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        this.Parent.Enabled = false;
+
+                    }));
+
+                }
+                else
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show(C.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+
+            });
+
+
+        }
     }
 }

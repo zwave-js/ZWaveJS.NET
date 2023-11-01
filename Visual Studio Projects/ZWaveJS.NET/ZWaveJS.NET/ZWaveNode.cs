@@ -244,6 +244,19 @@ namespace ZWaveJS.NET
         // CHECKED
         public Task<CMDResult> UpdateFirmware(FirmwareUpdate[] Updates)
         {
+
+            foreach(FirmwareUpdate FWU in Updates)
+            {
+                if(FWU.firmwareTarget == null)
+                {
+                    TaskCompletionSource<CMDResult> Fail = new TaskCompletionSource<CMDResult>();
+                    CMDResult Res = new CMDResult(Enums.ErrorCodes.WrongOverride, "Please use the override that includes 'firmwareTarget'", false);
+                    Fail.SetResult(Res);
+
+                    return Fail.Task;
+                }
+            }
+
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
