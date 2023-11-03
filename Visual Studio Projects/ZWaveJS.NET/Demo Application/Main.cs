@@ -30,8 +30,47 @@ namespace Demo_Application
 
             _Driver = new Driver(COM_SerialPort.SelectedItem.ToString(), Options);
             _Driver.DriverReady += _Driver_DriverReady;
+            _Driver.StartUpError += _Driver_StartUpError;
+            _Driver.ConnectionLost += _Driver_ConnectionLost;
             _Driver.Start();
 
+        }
+
+        private void _Driver_ConnectionLost(string Message)
+        {
+            this.Invoke(new Action(() =>
+            {
+                MessageBox.Show(Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            ));
+        }
+
+        private void Controller_InclusionStopped()
+        {
+            this.Invoke(new Action(() =>
+            {
+                _NW?.Close();
+                _NW = null;
+            }));
+
+        }
+
+        private void Controller_ExclusionStopped()
+        {
+            this.Invoke(new Action(() =>
+            {
+                _NW?.Close();
+                _NW = null;
+            }));
+        }
+
+        private void _Driver_StartUpError(string Message)
+        {
+            this.Invoke(new Action(() =>
+            {
+                MessageBox.Show(Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            ));
         }
 
         private void Controller_NodeAdded(ZWaveNode Node, InclusionResultArgs Args)
@@ -39,7 +78,7 @@ namespace Demo_Application
 
             this.Invoke(new Action(() =>
             {
-                _NW.Close();
+
 
                 ListViewItem LVI = new ListViewItem(string.Format("#{0}", Node.id));
                 LVI.SubItems.Add(Node.interviewStage != "Complete" ? "Interview" : Node.status.ToString());
@@ -48,6 +87,7 @@ namespace Demo_Application
                 LVI.Tag = Node.id;
 
                 LST_Nodes.Items.Add(LVI);
+
             }));
 
             Node.NodeReady += Node_NodeReady;
@@ -91,7 +131,6 @@ namespace Demo_Application
 
             this.Invoke(new Action(() =>
             {
-                _NW.Close();
                 ListViewItem LVI = LST_Nodes.Items.Cast<ListViewItem>().FirstOrDefault((LVI) => LVI.Tag.Equals(Node.id));
                 LST_Nodes.Items.Remove(LVI);
             }));
@@ -99,23 +138,24 @@ namespace Demo_Application
 
         private void _Driver_DriverReady()
         {
-
-
             _Driver.Controller.NodeRemoved += Controller_NodeRemoved;
             _Driver.Controller.NodeAdded += Controller_NodeAdded;
+            _Driver.Controller.ExclusionStopped += Controller_ExclusionStopped;
+            _Driver.Controller.InclusionStopped += Controller_InclusionStopped;
             _Driver.Controller.StatisticsUpdated += Controller_StatisticsUpdated;
 
             this.Invoke(new Action(() =>
             {
                 PB_Connect.Visible = false;
                 BTN_Connect.Text = "Connected!";
-                LBL_Versions.Text = string.Format("Server Version : {0} Driver Version : {1}", _Driver.ZWaveJSServerVersion, _Driver.ZWaveJSDriverVersion);
+                LBL_Versions.Text = string.Format("Server Version : {0} Driver Version : {1}", _Driver.ZWJSS_ServerVersion, _Driver.ZWJSS_DriverVersion);
                 GP_Controller.Enabled = true;
                 GP_Network.Enabled = true;
                 GP_Nodes.Enabled = true;
                 GP_Settings.Enabled = false;
 
 
+                LST_Nodes.Items.Clear();
                 ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
                 foreach (ZWaveNode N in Nodes)
                 {
@@ -194,7 +234,7 @@ namespace Demo_Application
                         _NW = new NIFWait();
                         _NW.Start(false);
 
-                        if (_NW.DialogResult == DialogResult.Cancel)
+                        if (_NW?.DialogResult == DialogResult.Cancel)
                         {
                             _Driver.Controller.StopExclusion();
                         }
@@ -255,7 +295,7 @@ namespace Demo_Application
                             _NW = new NIFWait();
                             _NW.Start(true);
 
-                            if (_NW.DialogResult == DialogResult.Cancel)
+                            if (_NW?.DialogResult == DialogResult.Cancel)
                             {
                                 _Driver.Controller.StopInclusion();
                             }
@@ -280,7 +320,31 @@ namespace Demo_Application
 
         private string ValidateDSK(string PartialDSK)
         {
-            return PartialDSK;
+            string[] Parts = PartialDSK.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
+
+            ManualResetEvent MRE = new ManualResetEvent(false);
+
+            string _DSK = string.Empty;
+
+            this.Invoke(new Action(() =>
+            {
+                DSK DSK = new DSK();
+                DSK.Ask(Parts);
+
+
+
+                if (DSK.DialogResult == DialogResult.OK)
+                {
+                    _DSK = DSK.TXT_DSK.Text;
+                    MRE.Set();
+                }
+            }));
+
+
+
+            MRE.WaitOne();
+            return _DSK;
+
         }
 
         private InclusionGrant Grant(InclusionGrant Requested)
@@ -364,6 +428,152 @@ namespace Demo_Application
                 RepairNetwork RN = new RepairNetwork();
                 RN.Start(_Driver);
 
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you wish to reset your Controller? All data and settings will be lost, and will result in an empty Network.", "Are You Sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+
+                _Driver.HardReset().ContinueWith((C) =>
+                {
+
+                    if (C.Result.Success)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("Controller Reset Succeeded", "Controller Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }));
+                    }
+                    else
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show($"Controller Reset Failed : {C.Result.Message}", "Controller Reset", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
+
+                });
+
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                Values V = new Values();
+                V.Show(_Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag));
+
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                Associations V = new Associations();
+                V.Show(_Driver, _Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag));
+
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.FileName = "*.bin";
+            openFileDialog.Title = "Choose Backup";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                NVMRestore NVMR = new NVMRestore();
+                NVMR.Start(_Driver, openFileDialog.FileName);
+
+
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                NodeFW FW = new NodeFW();
+                FW.Start(_Driver, _Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag));
+
+
+
+            }
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                ZWaveJS.NET.ZWaveNode Node = _Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag);
+
+                Node.Ping().ContinueWith((C) =>
+                {
+
+                    if (C.Result.Success)
+                    {
+                        bool Responded = (bool)C.Result.ResultPayload;
+
+
+                        if (Responded)
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show("The Node responded to a ping", "Ping Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }));
+                        }
+                        else
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show("The Node did not respond to a ping", "Ping Unsucceeded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }));
+                        }
+                    }
+                    else
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show(C.Result.Message, "Ping Command Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
+
+
+                });
+
+
+
+            }
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show("This will check if the Node has Failed, and if, so will be removed. Are you sure?","Are You Sure",MessageBoxButtons.YesNo,MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+
+                    _Driver.Controller.RemoveFailedNode((int)LST_Nodes.SelectedItems[0].Tag).ContinueWith((C) => {
+
+                        if (!C.Result.Success)
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show(C.Result.Message, "Could Not Remove Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }));
+                        }
+                    
+                    });
+                }
             }
         }
     }

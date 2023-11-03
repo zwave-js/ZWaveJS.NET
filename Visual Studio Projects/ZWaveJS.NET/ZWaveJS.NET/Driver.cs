@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 using System.Net.WebSockets;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Linq;
 using Websocket.Client;
 
@@ -16,14 +15,14 @@ namespace ZWaveJS.NET
 
         internal Websocket.Client.WebsocketClient ClientWebSocket;
         internal Dictionary<Guid, Action<JObject>> Callbacks;
-        internal CustomBooleanJsonConverter BoolConverter;
         internal bool Inited = false;
         internal ZWaveOptions Options;
+        internal const string FWUSAPIKey = "921f8000486fcc2744721cfc747aab2db8fc025b5d487cbf2eba76e88ff6f79a064644bf";
 
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 31, 0);
+        private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 33, 0);
         private string SerialPort;
         private bool RequestedExit = false;
 
@@ -79,29 +78,41 @@ namespace ZWaveJS.NET
         {
             NodeEventMap.Add("check lifeline health progress", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
-                int Round = JO.SelectToken("event.round").Value<int>();
-                int Total = JO.SelectToken("event.totalRounds").Value<int>();
-                int LastRating = JO.SelectToken("event.lastRating").Value<int>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
+                int Round = JO.SelectToken("event.round").ToObject<int>();
+                int Total = JO.SelectToken("event.totalRounds").ToObject<int>();
+                int LastRating = JO.SelectToken("event.lastRating").ToObject<int>();
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_LifelineHealthCheckProgress(Round, Total, LastRating);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_LifelineHealthCheckProgress(Round, Total, LastRating);
+                });
             });
 
             NodeEventMap.Add("statistics updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                NodeStatisticsUpdatedArgs NS = JsonConvert.DeserializeObject<NodeStatisticsUpdatedArgs>(JO.SelectToken("event.statistics").ToString());
+                NodeStatisticsUpdatedArgs NS = JO.SelectToken("event.statistics").ToObject<NodeStatisticsUpdatedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_StatisticsUpdated(NS);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_StatisticsUpdated(NS);
+                });
             });
 
             NodeEventMap.Add("firmware update finished", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                NodeFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").Value<NodeFirmwareUpdateResultArgs>();
+                NodeFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").ToObject<NodeFirmwareUpdateResultArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_FirmwareUpdateFinished(Result);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_FirmwareUpdateFinished(Result);
+                });
 
             });
 
@@ -109,103 +120,155 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("firmware update progress", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                NodeFirmwareUpdateProgressArgs Progress  = JO.SelectToken("event.progress").Value<NodeFirmwareUpdateProgressArgs>();
+                NodeFirmwareUpdateProgressArgs Progress  = JO.SelectToken("event.progress").ToObject<NodeFirmwareUpdateProgressArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_FirmwareUpdateProgress(Progress);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_FirmwareUpdateProgress(Progress);
+                });
             });
 
             NodeEventMap.Add("value updated", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ValueUpdatedArgs Args = JsonConvert.DeserializeObject<ValueUpdatedArgs>(JO.SelectToken("event.args").ToString());
+                ValueUpdatedArgs Args = JO.SelectToken("event.args").ToObject<ValueUpdatedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueUpdated(Args);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_ValueUpdated(Args);
+                });
             });
 
             NodeEventMap.Add("value added", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ValueAddedArgs Args = JsonConvert.DeserializeObject<ValueAddedArgs>(JO.SelectToken("event.args").ToString());
+                ValueAddedArgs Args = JO.SelectToken("event.args").ToObject<ValueAddedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueAdded(Args);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_ValueAdded(Args);
+                });
             });
 
             NodeEventMap.Add("value removed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ValueRemovedArgs Args = JsonConvert.DeserializeObject<ValueRemovedArgs>(JO.SelectToken("event.args").ToString());
+                ValueRemovedArgs Args = JO.SelectToken("event.args").ToObject<ValueRemovedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueRemoved(Args);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_ValueRemoved(Args);
+                });
             });
 
             NodeEventMap.Add("value notification", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ValueNotificationArgs Args = JsonConvert.DeserializeObject<ValueNotificationArgs>(JO.SelectToken("event.args").ToString());
+                ValueNotificationArgs Args = JO.SelectToken("event.args").ToObject<ValueNotificationArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_ValueNotification(Args);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_ValueNotification(Args);
+                });
             });
 
             NodeEventMap.Add("notification", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
-                int CCID = JO.SelectToken("event.ccId").Value<int>();
-                JObject IJO = JO.SelectToken("event.args").Value<JObject>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
+                int CCID = JO.SelectToken("event.ccId").ToObject<int>();
+                JObject IJO = JO.SelectToken("event.args").ToObject<JObject>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_Notification(CCID, IJO);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_Notification(CCID, IJO);
+                });
             });
 
             NodeEventMap.Add("dead", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeDead();
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeDead();
+                });
             });
 
             NodeEventMap.Add("wake up", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeAwake();
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeAwake();
+                });
             });
 
             NodeEventMap.Add("sleep", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeAsleep();
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeAsleep();
+                });
             });
 
             NodeEventMap.Add("ready", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
-                ZWaveNode NNI = JsonConvert.DeserializeObject<ZWaveNode>(JO.SelectToken("event.nodeState").ToString(), BoolConverter);
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
+                ZWaveNode NNI = JO.SelectToken("event.nodeState").ToObject<ZWaveNode>();
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 this.Controller.Nodes.ReplaceInformation(NNI, N);
-                N.Trigger_NodeReady();
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeReady();
+                });
             });
 
             NodeEventMap.Add("interview started", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeInterviewStarted();
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeInterviewStarted();
+                });
             });
 
             NodeEventMap.Add("interview completed", (JO) =>
             {
-                int NID = JO.SelectToken("event.nodeId").Value<int>();
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeInterviewCompleted();
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeInterviewCompleted();
+                });
             });
 
             NodeEventMap.Add("interview failed", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").Value<int>();
-                NodeInterviewFailedEventArgs FII = JsonConvert.DeserializeObject<NodeInterviewFailedEventArgs>(JO.SelectToken("event.args").ToString());
+                NodeInterviewFailedEventArgs FII = JO.SelectToken("event.args").ToObject<NodeInterviewFailedEventArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-                N.Trigger_NodeInterviewFailed(FII);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeInterviewFailed(FII);
+                });
             });
         }
 
@@ -213,155 +276,216 @@ namespace ZWaveJS.NET
         {
             ControllerEventMap.Add("firmware update finished", (JO) =>
             {
-                ControllerFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").Value<ControllerFirmwareUpdateResultArgs>();
-                this.Controller.Trigger_FirmwareUpdateFinished(Result);
+                ControllerFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").ToObject<ControllerFirmwareUpdateResultArgs>();
+                
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_FirmwareUpdateFinished(Result);
+                });
 
             });
 
 
             ControllerEventMap.Add("firmware update progress", (JO) =>
             {
-                ControllerFirmwareUpdateProgressArgs Progress = JO.SelectToken("event.progress").Value<ControllerFirmwareUpdateProgressArgs>();
-                this.Controller.Trigger_FirmwareUpdateProgress(Progress);
+                ControllerFirmwareUpdateProgressArgs Progress = JO.SelectToken("event.progress").ToObject<ControllerFirmwareUpdateProgressArgs>();
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_FirmwareUpdateProgress(Progress);
+                });
             });
 
             ControllerEventMap.Add("nvm backup progress", (JO) =>
             {
-                int Read = JO.SelectToken("event.bytesRead").Value<int>();
-                int Total = JO.SelectToken("event.total").Value<int>();
-                this.Controller.Trigger_BackupNVMProgress(Read, Total);
+                int Read = JO.SelectToken("event.bytesRead").ToObject<int>();
+                int Total = JO.SelectToken("event.total").ToObject<int>();
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_BackupNVMProgress(Read, Total);
+                });
             });
 
             ControllerEventMap.Add("nvm convert progress", (JO) =>
             {
-                int Read = JO.SelectToken("event.bytesRead").Value<int>();
-                int Total = JO.SelectToken("event.total").Value<int>();
-                this.Controller.Trigger_ConvertRestoreNVMProgress(Read, Total);
+                int Read = JO.SelectToken("event.bytesRead").ToObject<int>();
+                int Total = JO.SelectToken("event.total").ToObject<int>();
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_ConvertRestoreNVMProgress(Read, Total);
+                });
             });
 
             ControllerEventMap.Add("nvm restore progress", (JO) =>
             {
-                int Written = JO.SelectToken("event.bytesWritten").Value<int>();
-                int Total = JO.SelectToken("event.total").Value<int>();
-                this.Controller.Trigger_RestoreNVMProgressSub(Written, Total);
+                int Written = JO.SelectToken("event.bytesWritten").ToObject<int>();
+                int Total = JO.SelectToken("event.total").ToObject<int>();
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_RestoreNVMProgressSub(Written, Total);
+                });
             });
 
             ControllerEventMap.Add("statistics updated", (JO) =>
             {
-                ControllerStatisticsUpdatedArgs CS = JsonConvert.DeserializeObject<ControllerStatisticsUpdatedArgs>(JO.SelectToken("event.statistics").ToString());
-                this.Controller.Trigger_StatisticsUpdated(CS);
+                ControllerStatisticsUpdatedArgs CS = JO.SelectToken("event.statistics").ToObject<ControllerStatisticsUpdatedArgs>();
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_StatisticsUpdated(CS);
+                });
             });
 
             ControllerEventMap.Add("inclusion aborted", (JO) =>
             {
-                this.Controller.Trigger_InclusionAborted();
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_InclusionAborted();
+                });
             });
 
             ControllerEventMap.Add("inclusion started", (JO) =>
             {
-                bool Secure = JO.SelectToken("event.secure").Value<bool>();
-                this.Controller.Trigger_InclusionStarted(Secure);
+                bool Secure = JO.SelectToken("event.secure").ToObject<bool>();
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_InclusionStarted(Secure);
+                });
             });
 
             ControllerEventMap.Add("inclusion stopped", (JO) =>
             {
-                this.Controller.Trigger_InclusionStopped();
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_InclusionStopped();
+                });
             });
 
             ControllerEventMap.Add("exclusion started", (JO) =>
             {
-                this.Controller.Trigger_ExclusionStarted();
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_ExclusionStarted();
+                });
             });
 
             ControllerEventMap.Add("exclusion stopped", (JO) =>
             {
-                this.Controller.Trigger_ExclusionStopped();
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_ExclusionStopped();
+                });
             });
 
             ControllerEventMap.Add("node removed", (JO) =>
             {
-                int NID = JO.SelectToken("event.node.nodeId").Value<int>();
-                int Reason = JO.SelectToken("event.reason").Value<int>();
-                Enums.RemoveNodeReason RNR = (Enums.RemoveNodeReason)Reason;
+                int NID = JO.SelectToken("event.node.nodeId").ToObject<int>();
+                Enums.RemoveNodeReason Reason = JO.SelectToken("event.reason").ToObject<Enums.RemoveNodeReason>();
+   
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-
-                this.Controller.Trigger_NodeRemoved(N,RNR);
-
                 this.Controller.Nodes.RemoveNodeFromCollection(NID);
+               
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_NodeRemoved(N, Reason);
+                });
+
+               
             });
 
             ControllerEventMap.Add("node added", (JO) =>
             {
-                int NID = JO.SelectToken("event.node.nodeId").Value<int>();
-                InclusionResultArgs IR = JsonConvert.DeserializeObject<InclusionResultArgs>(JO.SelectToken("event.result").ToString());
+                int NID = JO.SelectToken("event.node.nodeId").ToObject<int>();
+                InclusionResultArgs IR = JO.SelectToken("event.result").ToObject<InclusionResultArgs>();
 
                 ZWaveNode NN = new ZWaveNode();
                 NN.id = NID;
 
                 this.Controller.Nodes.AddNodeToCollection(NN);
-                this.Controller.Trigger_NodeAdded(NN, IR);
-            });
-
-            ControllerEventMap.Add("grant security classes",  (JO) =>
-            {
-                InclusionGrant RIG = JsonConvert.DeserializeObject<InclusionGrant>(JO.SelectToken("event.requested").ToString());
-                InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
-
-                Dictionary<string, object> Request = new Dictionary<string, object>();
-                Request.Add("messageId", Guid.NewGuid().ToString());
-                Request.Add("command", Enums.Commands.GrantSecurityClasses);
-                Request.Add("inclusionGrant", SIG);
-
-                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                ClientWebSocket.SendInstant(RequestPL);
                 
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_NodeAdded(NN, IR);
+                });
+         
             });
 
-            ControllerEventMap.Add("validate dsk and enter pin",  (JO) =>
+            ControllerEventMap.Add("grant security classes", (JO) =>
             {
-                string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").Value<string>());
+                Task.Run(() =>
+                 {
+                     InclusionGrant RIG = JO.SelectToken("event.requested").ToObject<InclusionGrant>();
+                     InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
 
-                Dictionary<string, object> Request = new Dictionary<string, object>();
-                Request.Add("messageId", Guid.NewGuid().ToString());
-                Request.Add("command", Enums.Commands.ValidateDSK);
-                Request.Add("pin", DSK);
+                     Dictionary<string, object> Request = new Dictionary<string, object>();
+                     Request.Add("messageId", Guid.NewGuid().ToString());
+                     Request.Add("command", Enums.Commands.GrantSecurityClasses);
+                     Request.Add("inclusionGrant", SIG);
 
-                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                ClientWebSocket.SendInstant(RequestPL);
+                     string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+                     ClientWebSocket.SendInstant(RequestPL);
+                 });
+
             });
 
-            ControllerEventMap.Add("heal network progress", (JO) =>
+            ControllerEventMap.Add("validate dsk and enter pin", (JO) =>
             {
-                Dictionary<string, string> Progress = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.progress").ToString());
+                Task.Run(() =>
+                {
+                    string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").ToObject<string>());
+
+                    Dictionary<string, object> Request = new Dictionary<string, object>();
+                    Request.Add("messageId", Guid.NewGuid().ToString());
+                    Request.Add("command", Enums.Commands.ValidateDSK);
+                    Request.Add("pin", DSK);
+
+                    string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+                    ClientWebSocket.SendInstant(RequestPL);
+                });
+            });
+
+            ControllerEventMap.Add("rebuild routes progress", (JO) =>
+            {
+                Dictionary<string, string> Progress = JO.SelectToken("event.progress").ToObject<Dictionary<string, string>>();
 
                 var Pending = Progress.Where((D) => D.Value.Equals("pending"));
                 var Done = Progress.Where((D) => D.Value.Equals("done"));
                 var Skipped = Progress.Where((D) => D.Value.Equals("skipped"));
                 var Failed = Progress.Where((D) => D.Value.Equals("failed"));
 
-                NetworkHealProgressArgs Args = new NetworkHealProgressArgs();
+                RebuildRoutesProgressArgs Args = new RebuildRoutesProgressArgs();
                 Args.HealedNodes = Done.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.FailedNodes = Failed.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.SkippedNodes = Skipped.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.PendingNodes = Pending.Select(x => Convert.ToInt32(x.Key)).ToArray();
-                
-                this.Controller.Trigger_HealNetworkProgress(Args);
+
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_RebuildRoutesProgress(Args);
+                });
             });
 
-            ControllerEventMap.Add("heal network done", (JO) =>
+            ControllerEventMap.Add("rebuild routes done", (JO) =>
             {
-                Dictionary<string, string> Result = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(JO.SelectToken("event.result").ToString());
+                Dictionary<string, string> Result = JO.SelectToken("event.result").ToObject<Dictionary<string, string>>();
 
                 var Done = Result.Where((D) => D.Value.Equals("done"));
                 var Skipped = Result.Where((D) => D.Value.Equals("skipped"));
                 var Failed = Result.Where((D) => D.Value.Equals("failed"));
 
-                NetworkHealDoneArgs Args = new NetworkHealDoneArgs();
+                RebuildRoutesDoneArgs Args = new RebuildRoutesDoneArgs();
                 Args.HealedNodes = Done.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.FailedNodes = Failed.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.SkippedNodes = Skipped.Select(x => Convert.ToInt32(x.Key)).ToArray();
-                
-                this.Controller.Trigger_HealNetworkDone(Args);
+
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_RebuildRoutesDone(Args);
+                });
 
             });
         }
@@ -370,8 +494,12 @@ namespace ZWaveJS.NET
         {
             DriverEventMap.Add("logging", (JO) =>
             {
-                LoggingEventArgs Args = Newtonsoft.Json.JsonConvert.DeserializeObject<LoggingEventArgs>(JO.SelectToken("event").ToString());
-                Trigger_LoggingEvent(Args);
+                LoggingEventArgs Args = JO.SelectToken("event").ToObject<LoggingEventArgs>();
+
+                Task.Run(() =>
+                {
+                    Trigger_LoggingEvent(Args);
+                });
             });
         }
 
@@ -390,8 +518,13 @@ namespace ZWaveJS.NET
         // Client Mode
         public Driver(Uri Server, int SchemaVersion = 0)
         {
-            
+          
             Instance = this;
+
+            Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            };
 
             if (SchemaVersion > 0)
             {
@@ -400,7 +533,6 @@ namespace ZWaveJS.NET
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
-            BoolConverter = new CustomBooleanJsonConverter();
             
             this.WSAddress = Server;
             this.Host = false;
@@ -415,12 +547,14 @@ namespace ZWaveJS.NET
             
             Instance = this;
 
+            Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+               NullValueHandling = NullValueHandling.Ignore,
+            };
+
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
-            BoolConverter = new CustomBooleanJsonConverter();
-
             
-
             this.SerialPort = SerialPort;
             this.Options = Options;
             this.WSAddress = new Uri("ws://localhost:" + ServerCommunicationPort);
@@ -435,6 +569,7 @@ namespace ZWaveJS.NET
         {
             if (this.Host)
             {
+
                 Server.Start(SerialPort, Options, ServerCommunicationPort);
                 Server.Exited += Server_Exited;
                 Server.FatalError += Server_FatalError;
@@ -476,7 +611,7 @@ namespace ZWaveJS.NET
             });
 
             ClientWebSocket.ReconnectTimeout = null;
-            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(2);
+            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(1);
 
         }
 
@@ -632,8 +767,10 @@ namespace ZWaveJS.NET
             {
                 if (JO.Value<bool>("success"))
                 {
-                    Controller C = JsonConvert.DeserializeObject<Controller>(JO.SelectToken("result.state.controller").ToString());
-                    ZWaveNode[] Nodes = JsonConvert.DeserializeObject<ZWaveNode[]>(JO.SelectToken("result.state.nodes").ToString(), BoolConverter);
+                    Controller C = JO.SelectToken("result.state.controller").ToObject<Controller>();
+                    
+                    ZWaveNode[] Nodes = JO.SelectToken("result.state.nodes").ToObject<ZWaveNode[]>();
+                    C.deviceConfig = Nodes.FirstOrDefault((N) => N.isControllerNode).deviceConfig;
                     Nodes = Nodes.Where((N) => !N.isControllerNode).ToArray();
 
                     this.Controller = C;
@@ -702,6 +839,8 @@ namespace ZWaveJS.NET
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
+
+                Restart();
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();

@@ -53,6 +53,7 @@
             columnHeader3 = new ColumnHeader();
             columnHeader4 = new ColumnHeader();
             GP_Nodes = new GroupBox();
+            button21 = new Button();
             button18 = new Button();
             button17 = new Button();
             button12 = new Button();
@@ -65,6 +66,15 @@
             button6 = new Button();
             button5 = new Button();
             GP_Controller = new GroupBox();
+            label9 = new Label();
+            label8 = new Label();
+            numericUpDown2 = new NumericUpDown();
+            button20 = new Button();
+            numericUpDown1 = new NumericUpDown();
+            label7 = new Label();
+            button19 = new Button();
+            label6 = new Label();
+            comboBox1 = new ComboBox();
             button11 = new Button();
             button9 = new Button();
             button8 = new Button();
@@ -76,23 +86,14 @@
             LST_ControllerStats = new ListView();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
-            comboBox1 = new ComboBox();
-            label6 = new Label();
-            button19 = new Button();
-            label7 = new Label();
-            numericUpDown1 = new NumericUpDown();
-            button20 = new Button();
-            numericUpDown2 = new NumericUpDown();
-            label8 = new Label();
-            label9 = new Label();
             GP_Settings.SuspendLayout();
             GP_Nodes.SuspendLayout();
             GP_Network.SuspendLayout();
             GP_Controller.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             statusStrip1.SuspendLayout();
             groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             SuspendLayout();
             // 
             // GP_Settings
@@ -319,6 +320,7 @@
             // 
             // GP_Nodes
             // 
+            GP_Nodes.Controls.Add(button21);
             GP_Nodes.Controls.Add(button18);
             GP_Nodes.Controls.Add(button17);
             GP_Nodes.Controls.Add(button12);
@@ -335,14 +337,25 @@
             GP_Nodes.TabStop = false;
             GP_Nodes.Text = "Nodes";
             // 
+            // button21
+            // 
+            button21.Location = new Point(266, 230);
+            button21.Name = "button21";
+            button21.Size = new Size(74, 23);
+            button21.TabIndex = 9;
+            button21.Text = "Ping";
+            button21.UseVisualStyleBackColor = true;
+            button21.Click += button21_Click;
+            // 
             // button18
             // 
             button18.Location = new Point(266, 172);
             button18.Name = "button18";
             button18.Size = new Size(74, 23);
             button18.TabIndex = 8;
-            button18.Text = "Remove";
+            button18.Text = "RMV Failed";
             button18.UseVisualStyleBackColor = true;
+            button18.Click += button18_Click;
             // 
             // button17
             // 
@@ -361,6 +374,7 @@
             button12.TabIndex = 6;
             button12.Text = "Assocation";
             button12.UseVisualStyleBackColor = true;
+            button12.Click += button12_Click;
             // 
             // button4
             // 
@@ -379,6 +393,7 @@
             button2.TabIndex = 3;
             button2.Text = "Values";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button1
             // 
@@ -388,6 +403,7 @@
             button1.TabIndex = 2;
             button1.Text = "Update FW";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button3
             // 
@@ -439,7 +455,7 @@
             button5.Name = "button5";
             button5.Size = new Size(108, 27);
             button5.TabIndex = 11;
-            button5.Text = "Repair Network";
+            button5.Text = "Rebuild Routes";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
@@ -461,10 +477,86 @@
             GP_Controller.Enabled = false;
             GP_Controller.Location = new Point(384, 359);
             GP_Controller.Name = "GP_Controller";
-            GP_Controller.Size = new Size(428, 177);
+            GP_Controller.Size = new Size(428, 183);
             GP_Controller.TabIndex = 4;
             GP_Controller.TabStop = false;
             GP_Controller.Text = "Controller Commands";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(125, 147);
+            label9.Name = "label9";
+            label9.Size = new Size(52, 15);
+            label9.TabIndex = 24;
+            label9.Text = "@ 0dbm";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(125, 118);
+            label8.Name = "label8";
+            label8.Size = new Size(34, 15);
+            label8.TabIndex = 23;
+            label8.Text = "Level";
+            // 
+            // numericUpDown2
+            // 
+            numericUpDown2.Location = new Point(183, 145);
+            numericUpDown2.Name = "numericUpDown2";
+            numericUpDown2.Size = new Size(120, 23);
+            numericUpDown2.TabIndex = 22;
+            // 
+            // button20
+            // 
+            button20.Location = new Point(315, 132);
+            button20.Name = "button20";
+            button20.Size = new Size(84, 23);
+            button20.TabIndex = 21;
+            button20.Text = "Update";
+            button20.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(183, 116);
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 20;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(30, 136);
+            label7.Name = "label7";
+            label7.Size = new Size(40, 15);
+            label7.TabIndex = 19;
+            label7.Text = "Power";
+            // 
+            // button19
+            // 
+            button19.Location = new Point(315, 79);
+            button19.Name = "button19";
+            button19.Size = new Size(84, 23);
+            button19.TabIndex = 18;
+            button19.Text = "Update";
+            button19.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(30, 83);
+            label6.Name = "label6";
+            label6.Size = new Size(44, 15);
+            label6.TabIndex = 17;
+            label6.Text = "Region";
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(125, 80);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(178, 23);
+            comboBox1.TabIndex = 16;
             // 
             // button11
             // 
@@ -484,6 +576,7 @@
             button9.TabIndex = 14;
             button9.Text = "Restore NVM";
             button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // button8
             // 
@@ -493,6 +586,7 @@
             button8.TabIndex = 13;
             button8.Text = "Update FW";
             button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // button10
             // 
@@ -502,6 +596,7 @@
             button10.TabIndex = 11;
             button10.Text = "Hard Reset";
             button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
             // 
             // statusStrip1
             // 
@@ -558,82 +653,6 @@
             columnHeader6.Text = "Value";
             columnHeader6.Width = 200;
             // 
-            // comboBox1
-            // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(125, 80);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(178, 23);
-            comboBox1.TabIndex = 16;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(30, 83);
-            label6.Name = "label6";
-            label6.Size = new Size(44, 15);
-            label6.TabIndex = 17;
-            label6.Text = "Region";
-            // 
-            // button19
-            // 
-            button19.Location = new Point(315, 79);
-            button19.Name = "button19";
-            button19.Size = new Size(84, 23);
-            button19.TabIndex = 18;
-            button19.Text = "Update";
-            button19.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(30, 136);
-            label7.Name = "label7";
-            label7.Size = new Size(40, 15);
-            label7.TabIndex = 19;
-            label7.Text = "Power";
-            // 
-            // numericUpDown1
-            // 
-            numericUpDown1.Location = new Point(183, 116);
-            numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(120, 23);
-            numericUpDown1.TabIndex = 20;
-            // 
-            // button20
-            // 
-            button20.Location = new Point(315, 132);
-            button20.Name = "button20";
-            button20.Size = new Size(84, 23);
-            button20.TabIndex = 21;
-            button20.Text = "Update";
-            button20.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown2
-            // 
-            numericUpDown2.Location = new Point(183, 145);
-            numericUpDown2.Name = "numericUpDown2";
-            numericUpDown2.Size = new Size(120, 23);
-            numericUpDown2.TabIndex = 22;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(125, 118);
-            label8.Name = "label8";
-            label8.Size = new Size(34, 15);
-            label8.TabIndex = 23;
-            label8.Text = "Level";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(125, 147);
-            label9.Name = "label9";
-            label9.Size = new Size(52, 15);
-            label9.TabIndex = 24;
-            label9.Text = "@ 0dbm";
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -658,11 +677,11 @@
             GP_Network.ResumeLayout(false);
             GP_Controller.ResumeLayout(false);
             GP_Controller.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
             groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -726,5 +745,6 @@
         private Button button19;
         private Label label9;
         private Label label8;
+        private Button button21;
     }
 }

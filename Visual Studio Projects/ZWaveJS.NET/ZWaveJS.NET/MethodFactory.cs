@@ -36,7 +36,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    object Obj = JO.SelectToken(ObjectPath).Value<object>();
+                    object Obj = JO.SelectToken(ObjectPath).ToObject<object>();
                     Res.SetPayload(Obj);
                 }
                 Result.SetResult(Res);
@@ -66,7 +66,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    object  Obj = JsonConvert.DeserializeObject(JO.SelectToken(ObjectPath).ToString(), MappedClass);
+                    object Obj = JO.SelectToken(ObjectPath).ToObject(MappedClass);
                     Res.SetPayload(Obj);
                 }
                 Result.SetResult(Res);

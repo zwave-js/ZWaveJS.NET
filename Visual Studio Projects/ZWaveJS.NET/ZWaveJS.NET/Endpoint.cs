@@ -10,6 +10,7 @@ namespace ZWaveJS.NET
     {
         internal Endpoint() { }
         
+        // CHECKED
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
@@ -20,7 +21,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.supported").Value<bool>());
+                    Res.SetPayload(JO.SelectToken("result.supported").ToObject<bool>());
                 }
                 Result.SetResult(Res);
 
@@ -40,6 +41,8 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+
+        // CHECKED
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
@@ -50,7 +53,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                    Res.SetPayload(JO.SelectToken("result").ToObject<JObject>());
                 }
                 Result.SetResult(Res);
 

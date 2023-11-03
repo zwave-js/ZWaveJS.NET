@@ -4,8 +4,17 @@
     <_LastSelectedProfileId>C:\Users\Marcus\Documents\GitHub\ZWaveJS.NET\Visual Studio Projects\ZWaveJS.NET\Demo Application\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="Associations.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="DeviceEvents.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DSK.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FirmwareUpdateCard.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="GrantClasses.cs">
       <SubType>Form</SubType>
@@ -19,10 +28,19 @@
     <Compile Update="NIFWait.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="NodeFW.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="NVMBackup.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="NVMRestore.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="RepairNetwork.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Values.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

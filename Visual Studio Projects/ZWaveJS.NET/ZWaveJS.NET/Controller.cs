@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static ZWaveJS.NET.Enums;
 
 namespace ZWaveJS.NET
 {
@@ -42,19 +43,19 @@ namespace ZWaveJS.NET
             StatisticsUpdated?.Invoke(Args);
         }
 
-        public delegate void HealNetworkProgressEvent(NetworkHealProgressArgs Args);
-        public event HealNetworkProgressEvent HealNetworkProgress;
-        internal void Trigger_HealNetworkProgress(NetworkHealProgressArgs Args)
+        public delegate void RebuildRoutesProgressEvent(RebuildRoutesProgressArgs Args);
+        public event RebuildRoutesProgressEvent RebuildRoutesProgress;
+        internal void Trigger_RebuildRoutesProgress(RebuildRoutesProgressArgs Args)
         {
-             HealNetworkProgress?.Invoke(Args);
+             RebuildRoutesProgress?.Invoke(Args);
         }
 
-        public delegate void HealNetworkDoneEvent(NetworkHealDoneArgs Args);
-        public event HealNetworkDoneEvent HealNetworkDone;
-        internal void Trigger_HealNetworkDone(NetworkHealDoneArgs Args)
+        public delegate void RebuildRoutesDoneEvent(RebuildRoutesDoneArgs Args);
+        public event RebuildRoutesDoneEvent RebuldRoutesDone;
+        internal void Trigger_RebuildRoutesDone(RebuildRoutesDoneArgs Args)
         {
-            this.isHealNetworkActive = false;
-            HealNetworkDone?.Invoke(Args);
+            this.isRebuildingRoutes = false;
+            RebuldRoutesDone?.Invoke(Args);
         }
 
         private Abort AbortSub;
@@ -131,7 +132,52 @@ namespace ZWaveJS.NET
             FirmwareUpdateProgress?.Invoke(Args);
         }
 
-        public Task<CMDResult> UpdateFirmwareOTA(int NodeID, FirmwareUpdateFileInfo Update)
+        // CHECKED
+        public Task<CMDResult> GetAvailableFirmwareUpdates(int NodeID, bool IncludePrereleases, UsageEnvironment Environment, string APIKey = null)
+        {
+
+
+        
+
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            if (Environment == UsageEnvironment.Commercial && string.IsNullOrEmpty(APIKey))
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.CommercialAPIKey, "A valid API license key is required for commercial use", false);
+                Result.SetResult(Res);
+                return Result.Task;
+            }
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+
+                if (Res.Success)
+                {
+                    FirmwareUpdateInfo[] FUI = JO.SelectToken("result.updates").ToObject<FirmwareUpdateInfo[]>();
+                    Res.SetPayload(FUI);
+                }
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetAvailableFirmwareUpdates);
+            Request.Add("nodeId", NodeID);
+            Request.Add("apiKey", APIKey ?? Driver.FWUSAPIKey);
+            Request.Add("includePrereleases", IncludePrereleases);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+        // CHECKED
+        public Task<CMDResult> FirmwareUpdateOTA(int NodeID, FirmwareUpdateInfo Update)
         {
             Guid ID = Guid.NewGuid();
 
@@ -142,7 +188,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    NodeFirmwareUpdateResultArgs FUR = JsonConvert.DeserializeObject<NodeFirmwareUpdateResultArgs>(JO.SelectToken("result.result").ToString());
+                    NodeFirmwareUpdateResultArgs FUR = JO.SelectToken("result").ToObject<NodeFirmwareUpdateResultArgs>();
                     Res.SetPayload(FUR);
                 }
 
@@ -155,7 +201,7 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.FirmwareUpdateOTA);
             Request.Add("nodeId", NodeID);
-            Request.Add("updates", Update);
+            Request.Add("updateInfo", Update);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
@@ -163,38 +209,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> GetAvailableFirmwareUpdates(int NodeID, string APIKey, bool IncludePrereleases = false)
-        {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-
-                if (Res.Success)
-                {
-                    FirmwareUpdateInfo FUI = JsonConvert.DeserializeObject<FirmwareUpdateInfo>(JO.SelectToken("result.updates").ToString());
-                    Res.SetPayload(FUI);
-                }
-                Result.SetResult(Res);
-
-            });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.GetAvailableFirmwareUpdates);
-            Request.Add("nodeId", NodeID);
-            Request.Add("apiKey", APIKey);
-            Request.Add("includePrereleases", IncludePrereleases);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
-
-            return Result.Task;
-        }
-
+        // CHECKED
         public Task<CMDResult> GetRFRegion()
         {
             Guid ID = Guid.NewGuid();
@@ -207,8 +222,8 @@ namespace ZWaveJS.NET
 
                 if (Res.Success)
                 {
-                    int Region = JO.SelectToken("result.region").Value<int>();
-                    Res.SetPayload((Enums.RFRegion)Region);
+                    Enums.RFRegion Region = JO.SelectToken("result.region").ToObject<Enums.RFRegion>();
+                    Res.SetPayload(Region);
                 }
                 Result.SetResult(Res);
 
@@ -224,6 +239,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> SetRFRegion(Enums.RFRegion Region)
         {
             Guid ID = Guid.NewGuid();
@@ -248,6 +264,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> GetPowerLevel()
         {
             Guid ID = Guid.NewGuid();
@@ -260,7 +277,7 @@ namespace ZWaveJS.NET
 
                 if (Res.Success)
                 {
-                    PowerLevel Level = JsonConvert.DeserializeObject<PowerLevel>(JO.SelectToken("result").ToString());
+                    PowerLevel Level = JO.SelectToken("result").ToObject<PowerLevel>();
                     Res.SetPayload(Level);
                 }
                 Result.SetResult(Res);
@@ -278,6 +295,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> SetPowerLevel(decimal PowerLevel, decimal Measured0dBm)
         {
             Guid ID = Guid.NewGuid();
@@ -303,19 +321,26 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-       
-
-
-
+        // LOCAL
         public VirtualNode GetMulticastGroup(int[] Nodes)
         {
             VirtualNode VN = new VirtualNode(Nodes);
             return VN;
         }
 
-        // FIXME
-        public Task<CMDResult> FirmwareUpdateOTW(byte[] Data, string FileFormat)
+        // CHECKED
+        public Task<CMDResult> FirmwareUpdateOTW(FirmwareUpdate Update)
         {
+
+            if (Update.firmwareTarget != null)
+            {
+                TaskCompletionSource<CMDResult> Fail = new TaskCompletionSource<CMDResult>();
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.WrongOverride, "Please use the override that DOES NOT include 'firmwareTarget'", false);
+                Fail.SetResult(Res);
+
+                return Fail.Task;
+            }
+
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
@@ -326,8 +351,8 @@ namespace ZWaveJS.NET
 
                 if (Res.Success)
                 {
-                    SmartStartProvisioningEntry[] Entries = JsonConvert.DeserializeObject<SmartStartProvisioningEntry[]>(JO.SelectToken("result.entries").ToString());
-                    Res.SetPayload(Entries);
+                    ControllerFirmwareUpdateResultArgs UpdateResult = JO.SelectToken("result").ToObject<ControllerFirmwareUpdateResultArgs>();
+                    Res.SetPayload(UpdateResult);
                 }
                 Result.SetResult(Res);
 
@@ -337,8 +362,8 @@ namespace ZWaveJS.NET
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.FirmwareUpdateOTW);
-            Request.Add("file", Data);
-            Request.Add("fileFormat", FileFormat);
+            Request.Add("file", Update.data);
+            Request.Add("filename", Update.filename);
             
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
@@ -346,6 +371,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // FIXME
         public Task<CMDResult> GetProvisioningEntries()
         {
             Guid ID = Guid.NewGuid();
@@ -356,7 +382,7 @@ namespace ZWaveJS.NET
 
                  if (Res.Success)
                  {
-                     SmartStartProvisioningEntry[] Entries = JsonConvert.DeserializeObject<SmartStartProvisioningEntry[]>(JO.SelectToken("result.entries").ToString());
+                     SmartStartProvisioningEntry[] Entries = JO.SelectToken("result.entries").ToObject<SmartStartProvisioningEntry[]>();
                      Res.SetPayload(Entries);
                  }
                  Result.SetResult(Res);
@@ -376,16 +402,17 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> RemoveAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
 
-            });
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
@@ -397,11 +424,12 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> AddAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
             Guid ID = Guid.NewGuid();
@@ -428,22 +456,23 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> GetAssociations(int Node, int Endpoint)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                if (Res.Success)
-                {
-                    Dictionary<int, AssociationAddress[]> Associations = JsonConvert.DeserializeObject<Dictionary<int, AssociationAddress[]>>(JO.SelectToken("result.associations").ToString());
-                    Res.SetPayload(Associations);
-                }
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     Dictionary<int, AssociationAddress[]> Associations = JO.SelectToken("result.associations").ToObject<Dictionary<int, AssociationAddress[]>>();
+                     Res.SetPayload(Associations);
+                 }
 
-                Result.SetResult(Res);
+                 Result.SetResult(Res);
 
-            });
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
@@ -452,40 +481,43 @@ namespace ZWaveJS.NET
             Request.Add("endpoint", Endpoint);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> GetAssociationGroups(int Node, int Endpoint)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                if (Res.Success)
-                {
-                    Dictionary<int,AssociationGroup> Groups = JsonConvert.DeserializeObject<Dictionary<int, AssociationGroup>>(JO.SelectToken("result.groups").ToString());
-                    Res.SetPayload(Groups);
-                }
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     Dictionary<int, AssociationGroup> Groups = JO.SelectToken("result.groups").ToObject<Dictionary<int, AssociationGroup>>();
 
-                Result.SetResult(Res);
+                     Res.SetPayload(Groups);
+                 }
 
-            });
+                 Result.SetResult(Res);
+
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.GetAssociationGroups);
-            Request.Add("nodeId",Node);
+            Request.Add("nodeId", Node);
             Request.Add("endpoint", Endpoint);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress ConvertProgress = null, RestoreNVMProgress RestoreProgress = null)
         {
             ConvertRestoreNVMProgressSub = ConvertProgress;
@@ -493,16 +525,16 @@ namespace ZWaveJS.NET
 
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                if (Res.Success)
-                {
-                   Driver.Instance.Restart();
-                }
-                Result.SetResult(Res);
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     Driver.Instance.Restart();
+                 }
+                 Result.SetResult(Res);
 
-            });
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
@@ -510,40 +542,42 @@ namespace ZWaveJS.NET
             Request.Add("nvmData", Convert.ToBase64String(NVMData));
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> BackupNVMRaw(BackupNVMProgress OnProgress = null)
         {
             BackupNVMProgressSub = OnProgress;
 
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                if (Res.Success)
-                {
-                    string B64 = JO.SelectToken("result.nvmData").ToString();
-                    Res.SetPayload(Convert.FromBase64String(B64));
-                }
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     string B64 = JO.SelectToken("result.nvmData").ToObject<string>();
+                     Res.SetPayload(Convert.FromBase64String(B64));
+                 }
 
-                Result.SetResult(Res);
-                
-            });
+                 Result.SetResult(Res);
+
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.BackUpNVM);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> ReplaceFailedNode(int NodeID, InclusionOptions Options)
         {
             ValidateDSKAndEnterPINSub = null;
@@ -552,7 +586,7 @@ namespace ZWaveJS.NET
 
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-            
+
             switch (Options.strategy)
             {
                 case Enums.InclusionStrategy.Default:
@@ -567,7 +601,7 @@ namespace ZWaveJS.NET
                     break;
 
             }
-            
+
             if (Options.strategy == Enums.InclusionStrategy.Security_S2)
             {
                 if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
@@ -577,7 +611,7 @@ namespace ZWaveJS.NET
                     return Result.Task;
                 }
 
-                if (Driver.Instance.Options != null &&Driver.Instance.Options.MissingKeys(true, false))
+                if (Driver.Instance.Options != null && Driver.Instance.Options.MissingKeys(true, false))
                 {
                     CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
@@ -585,9 +619,9 @@ namespace ZWaveJS.NET
                 }
             }
 
-            if(Options.strategy == Enums.InclusionStrategy.Security_S0)
+            if (Options.strategy == Enums.InclusionStrategy.Security_S0)
             {
-                if (Driver.Instance.Options != null &&Driver.Instance.Options.MissingKeys(false, true))
+                if (Driver.Instance.Options != null && Driver.Instance.Options.MissingKeys(false, true))
                 {
                     CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
@@ -602,12 +636,12 @@ namespace ZWaveJS.NET
                 return Result.Task;
             }
 
-            
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> _Options = new Dictionary<string, object>();
             _Options.Add("strategy", (int)Options.strategy);
@@ -619,21 +653,22 @@ namespace ZWaveJS.NET
             Request.Add("options", _Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> RemoveFailedNode(int NodeID)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult RES = new CMDResult(JO);
-                Result.SetResult(RES);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult RES = new CMDResult(JO);
+                 Result.SetResult(RES);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
@@ -642,21 +677,27 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", NodeID);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
-        public Task<CMDResult> HealNode(int NodeID)
+        // CHECKED
+        public Task<CMDResult> RebuildNodeRoutes(int NodeID)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     bool Success = JO.SelectToken("result.success").ToObject<bool>();
+                     Res.SetPayload(Success);
+                 }
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
@@ -665,54 +706,62 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", NodeID);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
-        public Task<CMDResult> BeginHealingNetwork()
+        // CHECKED
+        public Task<CMDResult> BeginRebuildingRoutes(RebuildRoutesOptions Options)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                if (Res.Success)
-                {
-                    this.isHealNetworkActive = true;
-                }
-
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     if (Res.Success)
+                     {
+                         bool Success = JO.SelectToken("result.success").ToObject<bool>();
+                         Res.SetPayload(Success);
+                         this.isRebuildingRoutes = Success;
+                     }
+                   
+                 }
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.BeginHealingNetwork);
+            Request.Add("options", Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
-        public Task<CMDResult> StopHealingNetwork()
+        // CHECKED
+        public Task<CMDResult> StopRebuildingRoutes()
         {
-            
+
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                if (Res.Success)
-                {
-                    this.isHealNetworkActive = false;
-                }
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 if (Res.Success)
+                 {
+                     this.isRebuildingRoutes = false;
+                 }
 
-                Result.SetResult(Res);
-            });
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
@@ -720,11 +769,12 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StopHealingNetwork);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> BeginInclusion(InclusionOptions Options)
         {
             ValidateDSKAndEnterPINSub = null;
@@ -743,7 +793,7 @@ namespace ZWaveJS.NET
                     AbortSub = Options.userCallbacks?.abort ?? null;
                     break;
             }
-            
+
             if (Options.strategy == Enums.InclusionStrategy.Default)
             {
 
@@ -754,7 +804,7 @@ namespace ZWaveJS.NET
                     return Result.Task;
                 }
 
-                if (Driver.Instance.Options != null &&Driver.Instance.Options.MissingKeys(true, true))
+                if (Driver.Instance.Options != null && Driver.Instance.Options.MissingKeys(true, true))
                 {
                     CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
@@ -772,7 +822,7 @@ namespace ZWaveJS.NET
                     return Result.Task;
                 }
 
-                if (Driver.Instance.Options != null &&Driver.Instance.Options.MissingKeys(true, false))
+                if (Driver.Instance.Options != null && Driver.Instance.Options.MissingKeys(true, false))
                 {
                     CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
@@ -782,7 +832,7 @@ namespace ZWaveJS.NET
 
             if (Options.strategy == Enums.InclusionStrategy.Security_S0)
             {
-                if (Driver.Instance.Options != null &&Driver.Instance.Options.MissingKeys(false, true))
+                if (Driver.Instance.Options != null && Driver.Instance.Options.MissingKeys(false, true))
                 {
                     CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                     Result.SetResult(Res);
@@ -799,11 +849,11 @@ namespace ZWaveJS.NET
                 return Result.Task;
             }
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> _Options = new Dictionary<string, object>();
             _Options.Add("strategy", (int)Options.strategy);
@@ -815,52 +865,56 @@ namespace ZWaveJS.NET
             Request.Add("options", _Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> StopInclusion()
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.StopInclusion);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
         
+        // LOCAL
         public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
         {
             return _UnprovisionSmartStartNode(NodeID);
         }
 
+        // LOCAL
         public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
         {
             return _UnprovisionSmartStartNode(DSK);
         }
 
+        // CHECKED
         private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
@@ -869,18 +923,18 @@ namespace ZWaveJS.NET
             Request.Add("dskOrNodeId", dskOrNodeId);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
-
+        // CHECKED
         public Task<CMDResult> ProvisionSmartStartNode(string QRCode)
         {
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-            if(Driver.Instance.Options != null &&Driver.Instance.Options.MissingKeys(true,true))
+            if (Driver.Instance.Options != null && Driver.Instance.Options.MissingKeys(true, true))
             {
                 CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
                 Result.SetResult(Res);
@@ -894,11 +948,11 @@ namespace ZWaveJS.NET
                 return Result.Task;
             }
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
@@ -907,11 +961,12 @@ namespace ZWaveJS.NET
             Request.Add("entry", QRCode);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> BeginExclusion(ExclusionOptions Options)
         {
             Guid ID = Guid.NewGuid();
@@ -936,17 +991,18 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> StopExclusion()
         {
             Guid ID = Guid.NewGuid();
 
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
-           Driver.Instance.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
@@ -954,7 +1010,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.StopExclusion);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -996,9 +1052,12 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public bool supportsTimers { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public bool isHealNetworkActive { get; internal set; }
+        public bool isRebuildingRoutes { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public ControllerStatistics statistics { get; internal set; }
-
+        [Newtonsoft.Json.JsonProperty]
+        public DeviceConfig deviceConfig { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.RFRegion? rfRegion { get; internal set; }
     }
 }

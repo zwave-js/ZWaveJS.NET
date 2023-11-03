@@ -1,8 +1,8 @@
 - v4.0.0
 
   - Versions
-    - ZWave JS Driver Version: 11.13.0
-    - ZWave JS Server Version: 1.31.0 (Schema Version 31)
+    - ZWave JS Driver Version: 12.2.1
+    - ZWave JS Server Version: 1.33.0 (Schema Version 33)
 
   - Breaking Changes
     - Removed support for **NET45**  
@@ -21,6 +21,10 @@
     - Setting the Node **name**, **location** and **keepAwake** values is now only possible with methods for each.
       This is to address some unintentional communication between the Driver runtime and the lib.  
     - The method **GetAllEndpoints** has been removed, and is replaced with an **endpoints** property
+    - The Controller property **isHealNetworkActive** has been renamed to **isRebuildingRoutes**
+    - The Controller methods of **HealNode**, **BeginHealingNetwork**, **StopHealingNetwork** have been renamed to:  
+      **RebuildNodeRoutes**, **RebuildNodeRoutes**, **StopRebuildingRoutes**
+      This inccludes the associated events
 
   - New Features  
     - Added **SetRawConfigParameterValue** method to the ZWaveNode class.

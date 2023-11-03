@@ -25,7 +25,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.count").Value<int>());
+                    Res.SetPayload(JO.SelectToken("result.count").ToObject<int>());
                 }
                 Result.SetResult(Res);
             });
@@ -80,7 +80,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JsonConvert.DeserializeObject<ValueID[]>(JO.SelectToken("result.valueIDs").ToString()));
+                    Res.SetPayload(JO.SelectToken("result.valueIds").ToObject<ValueID[]>());
                 }
 
                 Result.SetResult(Res);
@@ -108,7 +108,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.supported").Value<bool>());
+                    Res.SetPayload(JO.SelectToken("result.supported").ToObject<bool>());
 
                 }
                 Result.SetResult(Res);
@@ -136,7 +136,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JsonConvert.DeserializeObject<JObject>(JO.SelectToken("result").ToString()));
+                    Res.SetPayload(JO.SelectToken("result").ToObject<JObject>());
                 }
                 Result.SetResult(Res);
 

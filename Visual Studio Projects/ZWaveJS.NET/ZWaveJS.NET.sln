@@ -5,7 +5,9 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWaveJS.NET", "ZWaveJS.NET\ZWaveJS.NET.csproj", "{98625F2D-8F29-4DDD-9E83-7C8607803FE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo Application", "Demo Application\Demo Application.csproj", "{737223B0-DD67-4A96-8429-AC16B2C4CF94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo Application", "Demo Application\Demo Application.csproj", "{737223B0-DD67-4A96-8429-AC16B2C4CF94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "Debug\Debug.csproj", "{11947CCB-C963-49C2-B0DF-7F12624416FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{737223B0-DD67-4A96-8429-AC16B2C4CF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{737223B0-DD67-4A96-8429-AC16B2C4CF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{737223B0-DD67-4A96-8429-AC16B2C4CF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11947CCB-C963-49C2-B0DF-7F12624416FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11947CCB-C963-49C2-B0DF-7F12624416FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11947CCB-C963-49C2-B0DF-7F12624416FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11947CCB-C963-49C2-B0DF-7F12624416FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

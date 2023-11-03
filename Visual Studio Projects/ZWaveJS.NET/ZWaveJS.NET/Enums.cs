@@ -3,6 +3,27 @@
     public class Enums
     {
 
+        public enum SetValueStatus
+        {
+           
+            NoDeviceSupport = 0x00,
+            Working = 0x01,
+            Fail = 0x02,
+            EndpointNotFound = 0x03,
+            NotImplemented = 0x04,
+            InvalidValue = 0x05,
+            SuccessUnsupervised = 0xfe,
+            Success = 0xff,
+        }
+
+
+        public enum UsageEnvironment
+        {
+            Non_Commercial,
+            Commercial
+
+        }
+
         public enum RFRegion
         {
             Europe = 0x00,
@@ -77,6 +98,8 @@
             public const string MissingKeys = "ZWJS.NET.ERR.003";
             public const string InvalidkeyLength = "ZWJS.NET.ERR.004";
             public const string WSConnectionError = "ZWJS.NET.ERR.005";
+            public const string CommercialAPIKey = "ZWJS.NET.ERR.006";
+            public const string WrongOverride = "ZWJS.NET.ERR.007";
         }
 
         internal class Commands
