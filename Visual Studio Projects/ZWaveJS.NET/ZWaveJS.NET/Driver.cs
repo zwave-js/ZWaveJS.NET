@@ -898,13 +898,13 @@ namespace ZWaveJS.NET
 
                     if (Semver.SemVersion.Parse(_ZWaveJSServerVersion, Semver.SemVersionStyles.Strict).Major != SchemaVersionID.Major)
                     {
-                        StartUpError?.Invoke("The Platform Support Image version (server.psi) and the requested schema version are not compatible");
+                        StartUpError?.Invoke("The Server Schema version is not compatible with the requested library version");
                         return;
                     }
 
                     if (Semver.SemVersion.Parse(_ZWaveJSServerVersion, Semver.SemVersionStyles.Strict).ComparePrecedenceTo(SchemaVersionID) < 0)
                     {
-                        StartUpError?.Invoke("The Platform Support Image version (server.psi) is lower than the requested schema version");
+                        StartUpError?.Invoke("The Server Schema version is lower than what was requested by the library");
                         return;
              
                     }
