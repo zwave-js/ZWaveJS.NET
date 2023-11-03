@@ -24,7 +24,7 @@ The library strictly follows the structure of the zwave-js API.
 Examples:  
 
 ```c#
-Driver.Controller.BeginHealingNetwork()
+Driver.Controller.BeginRebuildingRoutes()
 Driver.Controller.Nodes.Get(4).GetDefinedValueIDs()
 Driver.Controller.Nodes.Get(4).SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
 Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, string Method, params object[] Params)
@@ -32,7 +32,7 @@ Driver.Controller.Nodes.Get(4).GetEndpoint(2).InvokeCCAPI(int CommandClass, stri
 
 ## Features
 
-The library contains most of the ZWave JS API whilst the code base is structured in such a way, exposing new methods offered by the server can be achieved in minutes.   
+The library contains most of the ZWave JS API whilst the code base is structured in such a way, enabling access to new methods, can be achieved within minutes.
 
 ## Getting Started.
 
@@ -54,26 +54,24 @@ and it contains everything necessary for .NET to work with zwave-js.
 
 ## Prebuilt PSI's
  - Windows x64
- - MacOS x64 (Should support Apple Silicon via Rosetta 2)
+ - Windows ARM64
+ - macOS x64 (Should support Apple Silicon also via Rosetta 2)
  - Ubuntu Linux x64
- - Debian ARM64
+ - Ubuntu Linux ARM64
 
 ## Building yor own platform specific binary.
 
-To build an image for your platform:
+To build an image for your platform (Note this will require Node & NPM on the machine building the image):
  - Clone the repo
  - cd to **./PSI**
- - run `npm install`
- - and finally `npm run build`
- - rename **dist/server** to **server.psi**, and distrubute with the library.
+ - run `npm install && npm run buld`
+ - rename **./dist/server** to **./server.psi**, and distrubute with the library.
 
 Every release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
 
 There is also a Helper method that pulls down the correct image if one is needed **ZWaveJS.NET.Helpers.DownloadPSI()**  
 
 **server.psi** is not needed, if using the library in Client Mode.
-
-The class library contains most of the methods you will need, from including a secure device, to removing it.
 
 ## Installing.
 
@@ -112,7 +110,7 @@ private static void _Driver_DriverReady()
     // All methods return a task, as to not block the UI
     _Driver.Controller.Nodes.Get(4).SetValue(VID, 200, SVO).ContinueWith((res) => {
         if (res.Result.Success)
-	{
+	    {
             Console.WriteLine("Value Updated");
         }
     });
@@ -130,11 +128,11 @@ private static void _Driver_DriverReady()
      // Other Node methods
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
         if(res.Result.Success)
-	{
+        {
             // Do something with Value ID's (res.Result.ResultPayload)
         }
-	else
-	{
+	    else
+	    {
             // See res.Result.Message and res.Result.ErrorCode
         }
     });
