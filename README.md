@@ -65,7 +65,7 @@ To build an image for your platform (Note this will require Node & NPM on the ma
  - Clone the repo
  - cd to **./PSI**
  - run `npm install && npm run buld`
- - rename **./dist/server** to **./server.psi**, and distrubute with the library.
+ - rename **./dist/server** to **./dist/server.psi**, and distrubute the image with the library.
 
 Every release will include a set of PSI images, so download the one for your platform, and rename it to **server.psi**, and ensure its in the same location as the dll.
 
