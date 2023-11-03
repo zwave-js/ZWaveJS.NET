@@ -53,23 +53,14 @@ namespace Demo_Application
             _Driver.Controller.FirmwareUpdateOTA(_Node.id, _Update).ContinueWith((C) =>
             {
 
-                if (C.Result.Success)
-                {
-                    this.Invoke(new Action(() =>
-                    {
-                        this.Parent.Enabled = false;
-
-                    }));
-
-                }
-                else
+                if (!C.Result.Success)
                 {
                     this.Invoke(new Action(() =>
                     {
                         MessageBox.Show(C.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
-                }
 
+                }
             });
 
 

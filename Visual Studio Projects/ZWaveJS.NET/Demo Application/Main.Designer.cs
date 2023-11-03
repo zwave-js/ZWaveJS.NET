@@ -53,6 +53,7 @@
             columnHeader3 = new ColumnHeader();
             columnHeader4 = new ColumnHeader();
             GP_Nodes = new GroupBox();
+            button21 = new Button();
             button18 = new Button();
             button17 = new Button();
             button12 = new Button();
@@ -319,6 +320,7 @@
             // 
             // GP_Nodes
             // 
+            GP_Nodes.Controls.Add(button21);
             GP_Nodes.Controls.Add(button18);
             GP_Nodes.Controls.Add(button17);
             GP_Nodes.Controls.Add(button12);
@@ -335,14 +337,25 @@
             GP_Nodes.TabStop = false;
             GP_Nodes.Text = "Nodes";
             // 
+            // button21
+            // 
+            button21.Location = new Point(266, 230);
+            button21.Name = "button21";
+            button21.Size = new Size(74, 23);
+            button21.TabIndex = 9;
+            button21.Text = "Ping";
+            button21.UseVisualStyleBackColor = true;
+            button21.Click += button21_Click;
+            // 
             // button18
             // 
             button18.Location = new Point(266, 172);
             button18.Name = "button18";
             button18.Size = new Size(74, 23);
             button18.TabIndex = 8;
-            button18.Text = "Remove";
+            button18.Text = "RMV Failed";
             button18.UseVisualStyleBackColor = true;
+            button18.Click += button18_Click;
             // 
             // button17
             // 
@@ -732,5 +745,6 @@
         private Button button19;
         private Label label9;
         private Label label8;
+        private Button button21;
     }
 }

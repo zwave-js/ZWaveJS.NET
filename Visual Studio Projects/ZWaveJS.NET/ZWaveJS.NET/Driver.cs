@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 using System.Net.WebSockets;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Linq;
 using Websocket.Client;
 
@@ -519,8 +518,13 @@ namespace ZWaveJS.NET
         // Client Mode
         public Driver(Uri Server, int SchemaVersion = 0)
         {
-            
+          
             Instance = this;
+
+            Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            };
 
             if (SchemaVersion > 0)
             {
@@ -542,6 +546,11 @@ namespace ZWaveJS.NET
         {
             
             Instance = this;
+
+            Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+               NullValueHandling = NullValueHandling.Ignore,
+            };
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();

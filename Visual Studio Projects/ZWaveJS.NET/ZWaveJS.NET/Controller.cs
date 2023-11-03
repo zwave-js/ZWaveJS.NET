@@ -1057,6 +1057,7 @@ namespace ZWaveJS.NET
         public ControllerStatistics statistics { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public DeviceConfig deviceConfig { get; internal set; }
-
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.RFRegion? rfRegion { get; internal set; }
     }
 }

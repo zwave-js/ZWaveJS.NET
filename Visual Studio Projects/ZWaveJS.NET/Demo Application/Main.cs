@@ -509,5 +509,72 @@ namespace Demo_Application
 
             }
         }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                ZWaveJS.NET.ZWaveNode Node = _Driver.Controller.Nodes.Get((int)LST_Nodes.SelectedItems[0].Tag);
+
+                Node.Ping().ContinueWith((C) =>
+                {
+
+                    if (C.Result.Success)
+                    {
+                        bool Responded = (bool)C.Result.ResultPayload;
+
+
+                        if (Responded)
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show("The Node responded to a ping", "Ping Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }));
+                        }
+                        else
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show("The Node did not respond to a ping", "Ping Unsucceeded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }));
+                        }
+                    }
+                    else
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show(C.Result.Message, "Ping Command Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
+
+
+                });
+
+
+
+            }
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            if (LST_Nodes.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show("This will check if the Node has Failed, and if, so will be removed. Are you sure?","Are You Sure",MessageBoxButtons.YesNo,MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+
+                    _Driver.Controller.RemoveFailedNode((int)LST_Nodes.SelectedItems[0].Tag).ContinueWith((C) => {
+
+                        if (!C.Result.Success)
+                        {
+                            this.Invoke(new Action(() =>
+                            {
+                                MessageBox.Show(C.Result.Message, "Could Not Remove Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }));
+                        }
+                    
+                    });
+                }
+            }
+        }
     }
 }

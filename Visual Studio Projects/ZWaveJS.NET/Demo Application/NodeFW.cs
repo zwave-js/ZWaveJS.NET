@@ -84,6 +84,8 @@ namespace Demo_Application
                 {
                     try
                     {
+                        button2.Enabled = false;
+                        PAN_Updates.Enabled = false;
                         PB_Progress1.Value = Convert.ToInt32(Args.progress);
                         PB_Progress2.Value = Convert.ToInt32(Args.progress);
                         LBL_Status.Text = string.Format("Flashing...{0}%", Args.progress);
@@ -108,31 +110,15 @@ namespace Demo_Application
 
             _Node.UpdateFirmware(new[] { FWU }).ContinueWith((C) =>
             {
-                if (C.Result.Success)
-                {
-                    try
-                    {
-                        this.Invoke(new Action(() =>
-                        {
-                            try
-                            {
-
-                                LBL_Status.Text = "Flashing...";
-                            }
-                            catch { }
-
-                        }));
-                    }
-                    catch { }
-
-                }
-                else
+                if (!C.Result.Success)
                 {
                     this.Invoke(new Action(() =>
                     {
                         MessageBox.Show(C.Result.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         button2.Enabled = true;
+                        PAN_Updates.Enabled = true;
                     }));
+
                 }
 
             });
