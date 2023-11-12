@@ -80,7 +80,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    Res.SetPayload(JO.SelectToken("result.valueIds").ToObject<ValueID[]>());
+                    Res.SetPayload(JO.SelectToken("result.valueIDs").ToObject<ValueID[]>());
                 }
 
                 Result.SetResult(Res);

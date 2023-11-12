@@ -14,8 +14,8 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageIconUrl />
     <UserSecretsId>d23bfce5-76f4-45a1-820d-7afd4ac2a291</UserSecretsId>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Semver" Version="2.3.0" />

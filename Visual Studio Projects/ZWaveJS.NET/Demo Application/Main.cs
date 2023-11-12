@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Xml.Linq;
 using ZWaveJS.NET;
 namespace Demo_Application
 {
@@ -159,6 +160,7 @@ namespace Demo_Application
                 ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
                 foreach (ZWaveNode N in Nodes)
                 {
+                    N.NodeReady += Node_NodeReady;
                     ListViewItem LVI = new ListViewItem(string.Format("#{0}", N.id));
 
                     LVI.SubItems.Add(N.interviewStage != "Complete" ? "Interview" : N.status.ToString());
@@ -559,10 +561,11 @@ namespace Demo_Application
         {
             if (LST_Nodes.SelectedItems.Count > 0)
             {
-                if (MessageBox.Show("This will check if the Node has Failed, and if, so will be removed. Are you sure?","Are You Sure",MessageBoxButtons.YesNo,MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("This will check if the Node has Failed, and if, so will be removed. Are you sure?", "Are You Sure", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
 
-                    _Driver.Controller.RemoveFailedNode((int)LST_Nodes.SelectedItems[0].Tag).ContinueWith((C) => {
+                    _Driver.Controller.RemoveFailedNode((int)LST_Nodes.SelectedItems[0].Tag).ContinueWith((C) =>
+                    {
 
                         if (!C.Result.Success)
                         {
@@ -571,7 +574,7 @@ namespace Demo_Application
                                 MessageBox.Show(C.Result.Message, "Could Not Remove Node", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }));
                         }
-                    
+
                     });
                 }
             }

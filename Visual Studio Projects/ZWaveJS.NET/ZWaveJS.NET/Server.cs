@@ -48,20 +48,10 @@ namespace ZWaveJS.NET
             ProcessStartInfo PSI = new ProcessStartInfo();
             PSI.RedirectStandardError = true;
             PSI.RedirectStandardInput = true;
-            
-            // If Debugging and FWUS is setup locally, setup an EV to use it (will help with UI development)
-            if(System.Diagnostics.Debugger.IsAttached)
-            {
-                using (TcpClient tcpClient = new TcpClient())
-                {
-                    try
-                    {
-                        tcpClient.Connect("localhost", 8787);
-                        PSI.EnvironmentVariables.Add("ZWAVEJS_FW_SERVICE_URL", "http://localhost:8787");
-                    }
-                    catch (Exception){}
-                }
-            }
+
+#if FWULOCAL
+            PSI.EnvironmentVariables.Add("ZWAVEJS_FW_SERVICE_URL", "http://localhost:8787");
+#endif
             
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
             PSI.EnvironmentVariables.Add("SERIAL_PORT", SerialPort);
