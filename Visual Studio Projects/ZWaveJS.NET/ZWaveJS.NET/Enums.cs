@@ -130,9 +130,6 @@
             public const string GrantSecurityClasses = "controller.grant_security_classes";
             public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
             public const string RefreshInfo = "node.refresh_info";
-            public const string BeginHealingNetwork = "controller.begin_healing_network";
-            public const string StopHealingNetwork = "controller.stop_healing_network";
-            public const string HealNode = "controller.heal_node";
             public const string BeginRebuildingRoutes = "controller.begin_rebuilding_routes";
             public const string StopRebuildingRoutes = "controller.stop_rebuilding_routes";
             public const string RebuildNodeRoutes = "controller.rebuild_node_routes";
