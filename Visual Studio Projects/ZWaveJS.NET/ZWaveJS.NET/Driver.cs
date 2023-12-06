@@ -852,7 +852,29 @@ namespace ZWaveJS.NET
             ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
+        }
 
+        public Task<CMDResult> SoftReset()
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SoftReset);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
         }
 
         // Proces Message

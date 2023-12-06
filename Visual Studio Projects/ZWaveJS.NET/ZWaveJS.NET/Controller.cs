@@ -51,11 +51,11 @@ namespace ZWaveJS.NET
         }
 
         public delegate void RebuildRoutesDoneEvent(RebuildRoutesDoneArgs Args);
-        public event RebuildRoutesDoneEvent RebuldRoutesDone;
+        public event RebuildRoutesDoneEvent RebuildRoutesDone;
         internal void Trigger_RebuildRoutesDone(RebuildRoutesDoneArgs Args)
         {
             this.isRebuildingRoutes = false;
-            RebuldRoutesDone?.Invoke(Args);
+            RebuildRoutesDone?.Invoke(Args);
         }
 
         private Abort AbortSub;
@@ -702,7 +702,7 @@ namespace ZWaveJS.NET
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
             Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.HealNode);
+            Request.Add("command", Enums.Commands.RebuildNodeRoutes);
             Request.Add("nodeId", NodeID);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
@@ -736,7 +736,7 @@ namespace ZWaveJS.NET
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
             Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.BeginHealingNetwork);
+            Request.Add("command", Enums.Commands.BeginRebuildingRoutes);
             Request.Add("options", Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
@@ -766,7 +766,7 @@ namespace ZWaveJS.NET
             Dictionary<string, object> Request = new Dictionary<string, object>();
 
             Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.StopHealingNetwork);
+            Request.Add("command", Enums.Commands.StopRebuildingRoutes);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
