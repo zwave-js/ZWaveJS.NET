@@ -119,6 +119,7 @@
             public const string PollValue = "node.poll_value";
             public const string SetRawConfigParameterValue = "node.set_raw_config_parameter_value";
             public const string RefreshValues = "node.refresh_values";
+            public const string RefreshCCValues = "node.refresh_cc_values";
             public const string GetDefinedValueIDs = "node.get_defined_value_ids";
             public const string GetValueMetadata = "node.get_value_metadata";
             public const string BeginInclusion = "controller.begin_inclusion";
