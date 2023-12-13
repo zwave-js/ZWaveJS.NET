@@ -448,6 +448,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED
         public Task<CMDResult> RefreshCCValues(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
