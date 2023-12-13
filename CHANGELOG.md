@@ -29,6 +29,7 @@
   - New Features  
     - Added **SetRawConfigParameterValue** method to the ZWaveNode class.
     - Added **RefreshValues** method to the ZWaveNode class.
+    - Added **RefreshCCValues** method to the ZWaveNode class.
     - Added **WaitForWakeUp** method to the ZWaveNode class.
     - Added **Ping**, method to the ZwaveNode class.
     - Added **StartListeningLogs**, **StopListeningLogs** methods and the associated events to the Driver class.
