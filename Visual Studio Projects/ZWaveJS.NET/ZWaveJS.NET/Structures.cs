@@ -240,6 +240,14 @@ namespace ZWaveJS.NET
         public Dictionary<string, string> states { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public Dictionary<string, object> ccSpecific { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? valueSize { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? format { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool? allowManualEntry { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool? isFromConfig { get; internal set; }
     }
 
     public class DeviceClass
