@@ -399,7 +399,7 @@ namespace ZWaveJS.NET
         }
 
         // FIX ME
-        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int ValueSize)
+        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int? ValueSize = null, int? ValueFormat = null)
         {
             Guid ID = Guid.NewGuid();
 
@@ -416,7 +416,14 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", this.id);
             Request.Add("parameter", Parameter);
             Request.Add("value", Value);
-            Request.Add("valueSize", ValueSize);
+            if (ValueSize.HasValue)
+            {
+                Request.Add("valueSize", ValueSize);
+            }
+            if (ValueFormat.HasValue)
+            {
+                Request.Add("valueFormat", ValueFormat);
+            }
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
