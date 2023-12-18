@@ -3,6 +3,14 @@
     public class Enums
     {
 
+        public enum ConfigValueFormat
+        {
+            SignedInteger = 0x00,
+            UnsignedInteger = 0x01,
+            Enumerated = 0x02,
+            BitField = 0x03
+        }
+
         public enum SetValueStatus
         {
            
@@ -13,7 +21,7 @@
             NotImplemented = 0x04,
             InvalidValue = 0x05,
             SuccessUnsupervised = 0xfe,
-            Success = 0xff,
+            Success = 0xff
         }
 
 
