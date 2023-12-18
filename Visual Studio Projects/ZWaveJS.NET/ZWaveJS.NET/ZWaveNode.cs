@@ -398,8 +398,8 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // FIX ME
-        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int? ValueSize = null, int? ValueFormat = null)
+        // CHECKED - Variant 1: Normal parameter, defined in a config file
+        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value)
         {
             Guid ID = Guid.NewGuid();
 
@@ -416,14 +416,7 @@ namespace ZWaveJS.NET
             Request.Add("nodeId", this.id);
             Request.Add("parameter", Parameter);
             Request.Add("value", Value);
-            if (ValueSize.HasValue)
-            {
-                Request.Add("valueSize", ValueSize);
-            }
-            if (ValueFormat.HasValue)
-            {
-                Request.Add("valueFormat", ValueFormat);
-            }
+
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
@@ -431,6 +424,61 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // CHECKED - Variant 2: Normal parameter, not defined in a config file
+        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int ValueSize, Enums.ConfigValueFormat ValueFormat)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SetRawConfigParameterValue);
+            Request.Add("nodeId", this.id);
+            Request.Add("parameter", Parameter);
+            Request.Add("value", Value);
+            Request.Add("valueSize", ValueSize);
+            Request.Add("valueFormat", ValueFormat);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+        // CHECKED - Variant 3: Partial parameter, must be defined in a config file
+        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Bitmask, int Value)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Driver.Instance.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.SetRawConfigParameterValue);
+            Request.Add("nodeId", this.id);
+            Request.Add("parameter", Parameter);
+            Request.Add("bitMask", Bitmask);
+            Request.Add("value", Value);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            Driver.Instance.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+        
         // CHECKED
         public Task<CMDResult> RefreshValues()
         {

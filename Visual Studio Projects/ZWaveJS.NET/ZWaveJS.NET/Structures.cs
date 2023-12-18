@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using Newtonsoft.Json;
+using static ZWaveJS.NET.Enums;
 
 namespace ZWaveJS.NET
 {
@@ -243,7 +244,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int? valueSize { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int? format { get; internal set; }
+        public ConfigValueFormat? format { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public bool? allowManualEntry { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
