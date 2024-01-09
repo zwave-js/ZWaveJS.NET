@@ -263,6 +263,10 @@ namespace ZWaveJS.NET
             Driver.Instance.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
+                if(JO.ContainsKey("result"))
+                {
+                    Res.SetPayload(JO.SelectToken("result.result").ToObject<NodeFirmwareUpdateResultArgs>());
+                }
                 Result.SetResult(Res);
             });
             
