@@ -1,3 +1,65 @@
+- v4.0.0
+
+  - Versions
+    - ZWave JS Driver Version: 12.2.1
+    - ZWave JS Server Version: 1.33.0 (Schema Version 33)
+
+  - Breaking Changes
+    - Removed support for **NET45**  
+      The supported frameworks are as follows: **NET 48**, **NET 5.0**, **NET 6.0**, **NET 7.0**, **NETSTANDARD 2.0**, **NETSTANDARD 2.1**
+    - The **NodeStatistics** arg on the ZWaveNode class event **StatisticsUpdated**  has been renamed to **NodeStatisticsUpdatedArgs**
+    - The **ControllerStatistics** arg on the Controller class event **StatisticsUpdated**  has been renamed to **ControllerStatisticsUpdatedArgs**
+    - The **InclusionResult** argument has been renamed to **InclusionResultArgs**
+    - The **ValueUpdated** event now uses a dedicated class for the args parameter
+    - The **ValueNotification** event now uses a dedicated class for the args parameter
+    - The **NodeRemoved** event now contains a reason Enum as to why it was removed.
+    - The **NetworkHealDone** and **NetworkHealProgress** events now use dedicated classes for the args parameter
+    - The **BeginExclusion** method now requires an Exclusion Options instance
+    - The Node **BeginFirmwareUpdate** method has been renamed to **UpdateFrimware**, and requires a class instance.
+    - The Node **FirmwareUpdateProgress** event now passes an args parameter
+    - The Node **FirmwareUpdateFinished** event now passes an args parameter
+    - Setting the Node **name**, **location** and **keepAwake** values is now only possible with methods for each.
+      This is to address some unintentional communication between the Driver runtime and the lib.  
+    - The method **GetAllEndpoints** has been removed, and is replaced with an **endpoints** property
+    - The Controller property **isHealNetworkActive** has been renamed to **isRebuildingRoutes**
+    - The Controller methods of **HealNode**, **BeginHealingNetwork**, **StopHealingNetwork** have been renamed to:  
+      **RebuildNodeRoutes**, **RebuildNodeRoutes**, **StopRebuildingRoutes**
+      This inccludes the associated events
+
+  - New Features  
+    - Added **SetRawConfigParameterValue** method to the ZWaveNode class.
+    - Added **RefreshValues** method to the ZWaveNode class.
+    - Added **RefreshCCValues** method to the ZWaveNode class.
+    - Added **WaitForWakeUp** method to the ZWaveNode class.
+    - Added **Ping**, method to the ZwaveNode class.
+    - Added **StartListeningLogs**, **StopListeningLogs** methods and the associated events to the Driver class.
+    - Added **ValueAdded**, **ValueRemoved** events. **ValueRemoved** was never added until now, **ValueAdded**, previously used the **ValueUpdated** event
+    - Added **endpointLabel** to the Endpoint class
+    - Added **Interview** method, to the ZWaveNode class - this should only be used if  "disableOnNodeAdded" is set to true
+    - Allow specifying Refresh Info options, when re-interviewing a node.
+    - Added **FirmwareUpdateOTW** method (and supporting events) to update the Controller Firmware
+    - Added **SetRFRegion**, **GetRFRegion**  methods to the Controller class
+    - Added **SetPowerlevel**, **GetPowerlevel**  methods to the Controller class
+    - Added **GetAvailableFirmwareUpdates** methods to the Controller class
+    - Added **FirmwareUpdateOTA** method to the Controller class, to update a node with the fetched Updates via **GetAvailableFirmwareUpdates**
+    - Added **HardReset** method to the Driver class  
+            **Warning!!!** This will Reset your controller, and will result in a clean network with no included nodes.  
+    - Added **SoftReset** method to the Driver class  
+    - Added the **ccSpecific** property to the **ValueMetadata** class
+    - Added the ability to add new server methods to the library during runtime.  
+      This is helpful if you want to use a method that is not yet implemented, or to support an older version of an exetrnal server
+
+
+
+  - Internal changes
+    - Switched to an alternative websocket client package
+    - Massive structural / performance improvements
+    - Better (hopefully) recovery/connection error handling
+    - Redeveloped the Demo Application / Debug App
+    - Updated some of the defaults in the Zwave Options to mirror the Driver defaults
+    - Internal logic to ensure the server satifies the specified expected schema requested by the library
+
+
 - v3.1.0
   
   - Versions
@@ -9,7 +71,7 @@
     - The child classes of **ZWaveOptions** are now instanciated with default values when calling their constructors.
     - The **DownloadPSI** method now pulls down version locked binaries, to remove the potential for incompatible Binary/library combinations
 
-  - New Fearures  
+  - New Features  
     - Added ARM prebuilt binary (Debian, RPi)
     - The **DownloadPSI** method - now has an optional override, allwowing the PSI to be focibly downloaded, i.e to ensure you have the correct version.
 

@@ -1,25 +1,136 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using Newtonsoft.Json;
+using static ZWaveJS.NET.Enums;
+
 namespace ZWaveJS.NET
 {
-    class CustomBooleanJsonConverter : JsonConverter<bool>
+  
+    public class SetValueResult
     {
-        public override bool ReadJson(JsonReader reader, Type objectType, bool existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            if (reader.ValueType == typeof(string) && reader.Value.ToString().Equals("unknown"))
-            {
-                return false;
-            }
-            else
-            {
-                return Convert.ToBoolean(reader.Value);
-            }
-        }
-        public override void WriteJson(JsonWriter writer, bool value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value);
-        }
+        internal SetValueResult() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.SetValueStatus status { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string remainingDuration { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string message { get; internal set; }
+    }
+
+
+
+    public class FirmwareUpdateFileInfo
+    {
+        internal FirmwareUpdateFileInfo() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int target { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string url { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string integrity { get; internal set; }
+    }
+
+    public class FirmwareUpdateDeviceID
+    {
+        internal FirmwareUpdateDeviceID() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int manufacturerId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string firmwareVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.RFRegion? rfRegion { get; internal set; }
+    }
+
+
+    public class FirmwareUpdateInfo
+    {
+        internal FirmwareUpdateInfo() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public FirmwareUpdateDeviceID device { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string version { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string changelog { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string channel { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public FirmwareUpdateFileInfo[] files { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool downgrade { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string normalizedVersion { get; internal set; }
+    }
+
+    public class PowerLevel
+    {
+        internal PowerLevel() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public decimal powerlevel { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public decimal measured0dBm { get; internal set; }
+    }
+
+    public class FirmwareUpdateProgress
+    {
+        internal FirmwareUpdateProgress() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int sentFragments { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int totalFragments { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public decimal progress { get; internal set; }
+    }
+
+    public class ControllerFirmwareUpdateResultArgs
+    {
+        internal ControllerFirmwareUpdateResultArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public bool success { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.ControllerFirmwareUpdateStatus status { get; internal  set; }
+    }
+
+
+    public class NodeFirmwareUpdateResultArgs
+    {
+        internal NodeFirmwareUpdateResultArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.NodeFirmwareUpdateStatus status { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool success { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? waitTime { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool reInterview { get; internal set; }
+    }
+
+    public class ControllerFirmwareUpdateProgressArgs : FirmwareUpdateProgress
+    {
+        internal ControllerFirmwareUpdateProgressArgs() { }
+    }
+
+    public class NodeFirmwareUpdateProgressArgs : FirmwareUpdateProgress
+    {
+        internal NodeFirmwareUpdateProgressArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public int currentFile { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public  int totalFiles { get; internal set; }
     }
 
     public class SmartStartProvisioningEntry
@@ -27,37 +138,60 @@ namespace ZWaveJS.NET
         internal SmartStartProvisioningEntry() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public string dsk { get; private set; }
+        public string dsk { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int[] securityClasses { get; private set; }
-        public int version { get; private set; }
+        public int[] securityClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int[] requestedSecurityClasses { get; private set; }
+        public int version { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int genericDeviceClass { get; private set; }
+        public int[] requestedSecurityClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int specificDeviceClass { get; private set; }
+        public int genericDeviceClass { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int installerIconType { get; private set; }
+        public int specificDeviceClass { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int manufacturerId { get; private set; }
+        public int installerIconType { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int productType { get; private set; }
+        public int manufacturerId { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int productId { get; private set; }
+        public int productType { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public decimal applicationVersion { get; private set; }
-
-
+        public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public decimal applicationVersion { get; internal set; }
     }
+
+    public class RebuildRoutesOptions
+    {
+        public bool includeSleeping { get; set; }
+    }
+
 
     public class AssociationAddress
     {
-        [Newtonsoft.Json.JsonProperty]
-        public int nodeId { get;  set; }
-
-        [Newtonsoft.Json.JsonProperty]
+        public int nodeId { get; set; }
         public int? endpoint { get;  set; }
+    }
+
+    public class RebuildRouteStats
+    {
+        internal RebuildRouteStats() { }
+
+        public int[] HealedNodes { get; internal set; }
+        public int[] SkippedNodes { get; internal set; }
+        public int[] FailedNodes { get; internal set; }
+    }
+
+    public class RebuildRoutesDoneArgs : RebuildRouteStats
+    {
+        internal RebuildRoutesDoneArgs() { }
+    }
+
+    public class RebuildRoutesProgressArgs : RebuildRouteStats
+    {
+        internal RebuildRoutesProgressArgs() { }
+
+        public int[] PendingNodes { get; internal set; }
     }
 
     public class AssociationGroup
@@ -67,10 +201,8 @@ namespace ZWaveJS.NET
 
         [Newtonsoft.Json.JsonProperty]
         public int maxNodes { get; internal set; }
-
         [Newtonsoft.Json.JsonProperty]
         public bool isLifeline { get; internal set; }
-
         [Newtonsoft.Json.JsonProperty]
         public string label { get; internal set; }
     }
@@ -96,13 +228,27 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public string description { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int @default { get; internal set; }
+        public int? @default { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int min { get; internal set; }
+        public int? min { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int max { get; internal set; }
+        public int? max { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? steps { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string unit { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public Dictionary<string, string> states { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Dictionary<string, object> ccSpecific { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? valueSize { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public ConfigValueFormat? format { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool? allowManualEntry { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool? isFromConfig { get; internal set; }
     }
 
     public class DeviceClass
@@ -185,18 +331,7 @@ namespace ZWaveJS.NET
         public int productId { get; internal set; }
     }
 
-    public class ValueID
-    {
-        public int commandClass { get; set; }
-        public int endpoint { get; set; }
-        public object property { get; set; }
-        public object propertyKey { get; set; }
-        public string commandClassName { get; set; }
-        public string propertyName { get; set; }
-        public string propertyKeyName { get; set; }
-    }
-
-    public class SetValueAPIOptions
+   public class SetValueAPIOptions
     {
         public string transitionDuration { get; set; }
         public int volume { get; set; }
@@ -248,16 +383,24 @@ namespace ZWaveJS.NET
         public int rating { get; internal set; }
     }
 
-    public class InclusionResult
+    public class InclusionResultArgs
     {
-        internal InclusionResult() { }
+        internal InclusionResultArgs() { }
+
         [Newtonsoft.Json.JsonProperty]
         public bool lowSecurity { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.SecurityBootstrapFailure lowSecurityReason { get; internal set; }
     }
 
     public delegate string ValidateDSKAndEnterPIN(string dsk);
     public delegate InclusionGrant GrantSecurityClasses(InclusionGrant requested);
     public delegate void Abort();
+
+    public class ExclusionOptions
+    {
+        public Enums.ExclusionStrategy strategy { get; set; }
+    }
 
     public class InclusionOptions
     {
@@ -271,5 +414,112 @@ namespace ZWaveJS.NET
         public ValidateDSKAndEnterPIN validateDSKAndEnterPIN { get; set; }
         public GrantSecurityClasses grantSecurityClasses { get; set; }
         public Abort abort { get; set; }
+    }
+
+    public class LoggingEventArgs
+    {
+        internal LoggingEventArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public string formattedMessage { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string direction { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string primaryTags { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string secondaryTags { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? secondaryTagPadding { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool? multiline { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string timestamp { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string label { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string message { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string level { get; internal set; }
+    }
+
+    public class ValueID
+    {
+        public int commandClass { get; set; }
+        public int endpoint { get; set; }
+        public object property { get; set; }
+        public object propertyKey { get; set; }
+        public string commandClassName { get; set; }
+        public string propertyName { get; set; }
+        public string propertyKeyName { get; set; }
+    }
+
+    public class ValueUpdatedArgs : ValueID
+    {
+        internal ValueUpdatedArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object prevValue { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public object newValue { get; internal set; }
+    }
+
+    public class ValueAddedArgs : ValueID
+    {
+        internal ValueAddedArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object newValue { get; internal set; }
+    }
+
+    public class ValueRemovedArgs : ValueID
+    {
+        internal ValueRemovedArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object prevValue { get; internal set; }
+    }
+
+    public class ValueNotificationArgs : ValueID
+    {
+        internal ValueNotificationArgs() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public object value { get; internal set; }
+    }
+
+    public class RefreshInfoOptions
+    {
+        public bool resetSecurityClasses { get; set; }
+        public bool waitForWakeup { get; set; }
+    }
+
+    public class FirmwareUpdate
+    {
+        public static FirmwareUpdate Create(string Filename)
+        {
+            FirmwareUpdate U = new FirmwareUpdate();
+            U.data = File.ReadAllBytes(Filename);
+            U.filename = new FileInfo(Filename).Name;
+
+            return U;
+        }
+
+
+        public static FirmwareUpdate Create(string Filename, int Target)
+        {
+            FirmwareUpdate U = new FirmwareUpdate();
+            U.firmwareTarget = Target;
+            U.data = File.ReadAllBytes(Filename);
+            U.filename = new FileInfo(Filename).Name;
+
+            return U;
+        }
+
+        internal FirmwareUpdate() { }
+        
+        [Newtonsoft.Json.JsonProperty(PropertyName = "file")]
+        public byte[] data { get; internal set; }
+        public string filename { get; internal set; }
+        public int? firmwareTarget { get; internal set; }
     }
 }

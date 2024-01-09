@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Net;
@@ -10,10 +8,10 @@ namespace ZWaveJS.NET
 {
     public class Helpers
     {
-        private const string MacOSBinary = "server-macos.psi";
-        private const string WinBinary = "server-win.psi";
-        private const string UnixBinary = "server-ubuntu.psi";
-        private const string UnixBinaryARM = "server-debian-arm.psi";
+        private const string MacOSBinary = "server-x64-macos.psi";
+        private const string WinBinary = "server-x64-win.psi";
+        private const string UnixBinary = "server-x64-ubuntu.psi";
+        private const string UnixBinaryARM = "server-arm64-ubuntu.psi";
 
         internal static Enums.Platform RunningPlatform()
         {
@@ -40,9 +38,7 @@ namespace ZWaveJS.NET
                     return Enums.Platform.Windows;
             }
         }
-
-      
-
+        
         public static Task<bool> DownloadPSI(bool Force = false)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

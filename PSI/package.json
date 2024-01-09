@@ -1,20 +1,22 @@
 {
-  "version": "3.1.0",
+  "version": "4.0.0",
   "name": "server",
   "bin": "./server.js",
   "dependencies": {
-    "@zwave-js/server": "1.17.0",
-    "zwave-js": "9.4.0"
+    "@zwave-js/server": "1.33.0",
+    "zwave-js": "12.2.1"
   },
   "devDependencies": {
-    "pkg": "^5.7.0"
+    "pkg": "^5.8.1",
+    "esbuild": "^0.19.5"
   },
   "scripts": {
-    "build": "pkg . --compress GZip -t host"
+    "build": "npm run do_esbuild && npm run do_pkgbuild",
+    "do_esbuild": "esbuild server_source.js --bundle --outfile=server.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config --external:zwave-js/package.json",
+    "do_pkgbuild": "pkg . --compress Brotli -t host --targets node18"
   },
   "pkg": {
     "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
     "outputPath": "dist"
-  },
-  "packageManager": "yarn@3.2.1"
+  }
 }

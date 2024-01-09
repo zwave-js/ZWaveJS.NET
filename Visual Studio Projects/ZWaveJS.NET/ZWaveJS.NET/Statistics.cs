@@ -1,7 +1,11 @@
-﻿using System;
-namespace ZWaveJS.NET
+﻿namespace ZWaveJS.NET
 {
-    public class NodeStatistics
+    public class NodeStatisticsUpdatedArgs : NodeStatistics
+    {
+        internal NodeStatisticsUpdatedArgs() { }
+    }
+
+    public class NodeStatistics 
     {
         internal NodeStatistics() { }
 
@@ -23,7 +27,11 @@ namespace ZWaveJS.NET
         public RouteStatisctics lwr { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public RouteStatisctics nlwr { get; internal set; }
+    }
 
+    public class ControllerStatisticsUpdatedArgs : ControllerStatistics
+    {
+        internal ControllerStatisticsUpdatedArgs() { }
     }
 
     public class ControllerStatistics
