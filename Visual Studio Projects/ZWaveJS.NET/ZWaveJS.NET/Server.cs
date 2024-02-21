@@ -8,16 +8,15 @@ namespace ZWaveJS.NET
 {
     internal class Server
     {
-
-        private static Process ServerProcess;
+        private Process ServerProcess;
 
         internal delegate void FatalErrorEvent();
-        internal static event FatalErrorEvent FatalError;
+        internal event FatalErrorEvent FatalError;
 
         internal delegate void ProcessdExitedEvent();
-        internal static event ProcessdExitedEvent Exited;
+        internal event ProcessdExitedEvent Exited;
 
-        internal static void Terminate()
+        internal void Terminate()
         {
             if (ServerProcess != null && !ServerProcess.HasExited)
             {
@@ -26,10 +25,8 @@ namespace ZWaveJS.NET
             }
         }
 
-        internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
+        internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
-
-
             Process[] Zombies = Process.GetProcessesByName("server.psi");
             foreach(Process Zombie in Zombies)
             {
@@ -70,17 +67,15 @@ namespace ZWaveJS.NET
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
             ServerProcess.BeginErrorReadLine();
-
-          
         }
 
-        private static void ServerProcess_Exited(object sender, EventArgs e)
+        private void ServerProcess_Exited(object sender, EventArgs e)
         {
             // Exited?.Invoke(); I think this will be indirectly handled by the socket client now
             ServerProcess.Dispose();
         }
 
-        private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             int Code;
             if (int.TryParse(e.Data, out Code))
@@ -92,8 +87,6 @@ namespace ZWaveJS.NET
                         break;
                 }
             }
-
-
         }
     }
 }
