@@ -8,6 +8,9 @@ namespace ZWaveJS.NET
 {
     internal class Server
     {
+
+        
+
         private Process ServerProcess;
 
         internal delegate void FatalErrorEvent();
@@ -27,16 +30,23 @@ namespace ZWaveJS.NET
 
         internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
-            Process[] Zombies = Process.GetProcessesByName("server.psi");
+
+
+            string ProcessName = string.Format("server.{0}.psi", WSPort);
+
+            Process[] Zombies = Process.GetProcessesByName(ProcessName);
             foreach(Process Zombie in Zombies)
             {
                 Zombie.Kill();
+                File.Delete(ProcessName);
             }
 
             if (!File.Exists("server.psi"))
             {
                 throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");
             }
+
+            File.Copy("server.psi",ProcessName, true);
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
             JSS.NullValueHandling = NullValueHandling.Ignore;
@@ -55,7 +65,7 @@ namespace ZWaveJS.NET
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
             PSI.EnvironmentVariables.Add("NODE_ENV", "production");
 
-            PSI.FileName = "server.psi";
+            PSI.FileName = ProcessName;
             PSI.UseShellExecute = false;
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
             PSI.CreateNoWindow = true;

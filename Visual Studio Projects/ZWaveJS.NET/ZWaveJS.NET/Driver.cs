@@ -11,6 +11,9 @@ namespace ZWaveJS.NET
 {
     public class Driver
     {
+        // Global List of Socket Ports that are registered
+        internal static List<int> UsedPorts = new List<int>();
+
         internal Websocket.Client.WebsocketClient ClientWebSocket;
         internal Dictionary<Guid, Action<JObject>> Callbacks;
         internal bool Inited = false;
@@ -548,6 +551,14 @@ namespace ZWaveJS.NET
         // Host Mode
         public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001, int ServerErrorThrottleTime = 10000)
         {
+
+            if (UsedPorts.Contains(ServerCommunicationPort))
+            {
+                throw new Exception(string.Format("Web Socket Port: {0} already in use", ServerCommunicationPort));
+            }
+
+            UsedPorts.Add(ServerCommunicationPort);
+            
             Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
@@ -664,6 +675,11 @@ namespace ZWaveJS.NET
                 if (ClientWebSocket.IsRunning)
                 {
                     ClientWebSocket.Stop(WebSocketCloseStatus.NormalClosure, "Destroy");
+                }
+
+                if (Host)
+                {
+                    UsedPorts.Remove(WSAddress.Port);
                 }
 
                 ClientWebSocket.Dispose();
