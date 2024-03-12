@@ -11,7 +11,8 @@ namespace ZWaveJS.NET
 {
     public class Driver
     {
-        internal static volatile Driver Instance;
+        // Global List of Socket Ports that are registered
+        internal static List<int> UsedPorts = new List<int>();
 
         internal Websocket.Client.WebsocketClient ClientWebSocket;
         internal Dictionary<Guid, Action<JObject>> Callbacks;
@@ -22,13 +23,15 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private static Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 33, 0);
+        private Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 34, 0);
         private string SerialPort;
         private bool RequestedExit = false;
+        private JsonSerializer _jsonSerializer;
 
 
         private Uri WSAddress;
         private bool Host = true;
+        private Server _server;
         
         private string _ZWaveJSDriverVersion;
         public string ZWJSS_DriverVersion
@@ -48,8 +51,8 @@ namespace ZWaveJS.NET
             }
         }
 
-        public static int ServerCommunicationPort = 50001;
-        public static int ServerErrorThrottleTime = 10000;
+        public int ServerCommunicationPort { get; private set; }
+        public int ServerErrorThrottleTime { get; private set; }
         private DateTime LastError;
 
         public Controller Controller { get; internal set; }
@@ -226,7 +229,7 @@ namespace ZWaveJS.NET
             NodeEventMap.Add("ready", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
-                ZWaveNode NNI = JO.SelectToken("event.nodeState").ToObject<ZWaveNode>();
+                ZWaveNode NNI = JO.SelectToken("event.nodeState").ToObject<ZWaveNode>(_jsonSerializer);
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 this.Controller.Nodes.ReplaceInformation(NNI, N);
@@ -402,7 +405,7 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.node.nodeId").ToObject<int>();
                 InclusionResultArgs IR = JO.SelectToken("event.result").ToObject<InclusionResultArgs>();
 
-                ZWaveNode NN = new ZWaveNode();
+                ZWaveNode NN = new ZWaveNode(this);
                 NN.id = NID;
 
                 this.Controller.Nodes.AddNodeToCollection(NN);
@@ -516,15 +519,19 @@ namespace ZWaveJS.NET
         }
         
         // Client Mode
-        public Driver(Uri Server, int SchemaVersion = 0)
+        public Driver(Uri Server, int SchemaVersion = 0, int ServerErrorThrottleTime = 10000)
         {
-          
-            Instance = this;
-
             Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            settings.Converters.Add(new ZWJSSJsonConverter(this));
+            _jsonSerializer = JsonSerializer.Create(settings);
 
             if (SchemaVersion > 0)
             {
@@ -536,32 +543,46 @@ namespace ZWaveJS.NET
             
             this.WSAddress = Server;
             this.Host = false;
+            this.ServerErrorThrottleTime = ServerErrorThrottleTime;
 
             InternalPrep();
-
         }
 
         // Host Mode
-        public Driver(string SerialPort, ZWaveOptions Options)
+        public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001, int ServerErrorThrottleTime = 10000)
         {
-            
-            Instance = this;
 
+            if (UsedPorts.Contains(ServerCommunicationPort))
+            {
+                throw new Exception(string.Format("Web Socket Port: {0} already in use", ServerCommunicationPort));
+            }
+
+            UsedPorts.Add(ServerCommunicationPort);
+            
             Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-               NullValueHandling = NullValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            settings.Converters.Add(new ZWJSSJsonConverter(this));
+            _jsonSerializer = JsonSerializer.Create(settings);
 
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
             
             this.SerialPort = SerialPort;
             this.Options = Options;
+            this.ServerCommunicationPort = ServerCommunicationPort;
             this.WSAddress = new Uri("ws://localhost:" + ServerCommunicationPort);
             this.Host = true;
+            this.ServerErrorThrottleTime = ServerErrorThrottleTime;
+            this._server = new Server();
 
             InternalPrep();
-
         }
 
         // Prep
@@ -569,10 +590,9 @@ namespace ZWaveJS.NET
         {
             if (this.Host)
             {
-
-                Server.Start(SerialPort, Options, ServerCommunicationPort);
-                Server.Exited += Server_Exited;
-                Server.FatalError += Server_FatalError;
+                _server.Start(SerialPort, Options, ServerCommunicationPort);
+                _server.Exited += Server_Exited;
+                _server.FatalError += Server_FatalError;
             }
 
             var Factory = new Func<ClientWebSocket>(() => new ClientWebSocket
@@ -657,6 +677,11 @@ namespace ZWaveJS.NET
                     ClientWebSocket.Stop(WebSocketCloseStatus.NormalClosure, "Destroy");
                 }
 
+                if (Host)
+                {
+                    UsedPorts.Remove(WSAddress.Port);
+                }
+
                 ClientWebSocket.Dispose();
                 ClientWebSocket = null;
             }
@@ -664,7 +689,7 @@ namespace ZWaveJS.NET
 
         private void DestroyServer()
         {
-            Server.Terminate();
+            _server?.Terminate();
         }
 
         public void Destroy()
@@ -678,10 +703,7 @@ namespace ZWaveJS.NET
             }
             
             DestroySocket();
-            DestroyServer();
-            
-            
-            
+            DestroyServer(); 
         }
 
         async internal void Restart()
@@ -767,9 +789,10 @@ namespace ZWaveJS.NET
             {
                 if (JO.Value<bool>("success"))
                 {
-                    Controller C = JO.SelectToken("result.state.controller").ToObject<Controller>();
+                    Controller C = JO.SelectToken("result.state.controller").ToObject<Controller>(_jsonSerializer);
                     
-                    ZWaveNode[] Nodes = JO.SelectToken("result.state.nodes").ToObject<ZWaveNode[]>();
+                    
+                    ZWaveNode[] Nodes = JO.SelectToken("result.state.nodes").ToObject<ZWaveNode[]>(_jsonSerializer);
                     C.deviceConfig = Nodes.FirstOrDefault((N) => N.isControllerNode).deviceConfig;
                     Nodes = Nodes.Where((N) => !N.isControllerNode).ToArray();
 

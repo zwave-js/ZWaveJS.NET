@@ -9,15 +9,17 @@ namespace ZWaveJS.NET
     internal class Server
     {
 
-        private static Process ServerProcess;
+        
+
+        private Process ServerProcess;
 
         internal delegate void FatalErrorEvent();
-        internal static event FatalErrorEvent FatalError;
+        internal event FatalErrorEvent FatalError;
 
         internal delegate void ProcessdExitedEvent();
-        internal static event ProcessdExitedEvent Exited;
+        internal event ProcessdExitedEvent Exited;
 
-        internal static void Terminate()
+        internal void Terminate()
         {
             if (ServerProcess != null && !ServerProcess.HasExited)
             {
@@ -26,20 +28,25 @@ namespace ZWaveJS.NET
             }
         }
 
-        internal static void Start(string SerialPort, ZWaveOptions Config, int WSPort)
+        internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
 
 
-            Process[] Zombies = Process.GetProcessesByName("server.psi");
+            string ProcessName = string.Format("server.{0}.psi", WSPort);
+
+            Process[] Zombies = Process.GetProcessesByName(ProcessName);
             foreach(Process Zombie in Zombies)
             {
                 Zombie.Kill();
+                File.Delete(ProcessName);
             }
 
             if (!File.Exists("server.psi"))
             {
                 throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");
             }
+
+            File.Copy("server.psi",ProcessName, true);
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
             JSS.NullValueHandling = NullValueHandling.Ignore;
@@ -58,7 +65,7 @@ namespace ZWaveJS.NET
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
             PSI.EnvironmentVariables.Add("NODE_ENV", "production");
 
-            PSI.FileName = "server.psi";
+            PSI.FileName = ProcessName;
             PSI.UseShellExecute = false;
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
             PSI.CreateNoWindow = true;
@@ -70,17 +77,15 @@ namespace ZWaveJS.NET
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
             ServerProcess.BeginErrorReadLine();
-
-          
         }
 
-        private static void ServerProcess_Exited(object sender, EventArgs e)
+        private void ServerProcess_Exited(object sender, EventArgs e)
         {
             // Exited?.Invoke(); I think this will be indirectly handled by the socket client now
             ServerProcess.Dispose();
         }
 
-        private static void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             int Code;
             if (int.TryParse(e.Data, out Code))
@@ -92,8 +97,6 @@ namespace ZWaveJS.NET
                         break;
                 }
             }
-
-
         }
     }
 }
