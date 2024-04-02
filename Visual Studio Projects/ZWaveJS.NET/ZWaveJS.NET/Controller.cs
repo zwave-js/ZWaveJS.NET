@@ -119,6 +119,13 @@ namespace ZWaveJS.NET
             NodeAdded?.Invoke(Node, Args);
         }
 
+        public delegate void NodeFoundEvent(int NodeID);
+        public event NodeFoundEvent NodeFound;
+        internal void Trigger_NodeFound(int NodeID)
+        {
+            NodeFound?.Invoke(NodeID);
+        }
+
         public delegate void FirmwareUpdateFinishedEvent(ControllerFirmwareUpdateResultArgs Args);
         public event FirmwareUpdateFinishedEvent FirmwareUpdateFinished;
         internal void Trigger_FirmwareUpdateFinished(ControllerFirmwareUpdateResultArgs Args)

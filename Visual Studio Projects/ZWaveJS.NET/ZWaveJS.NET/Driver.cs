@@ -417,6 +417,17 @@ namespace ZWaveJS.NET
          
             });
 
+            ControllerEventMap.Add("node found", (JO) =>
+            {
+                int NID = JO.SelectToken("event.node.nodeId").ToObject<int>();
+
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_NodeFound(NID);
+                });
+
+            });
+
             ControllerEventMap.Add("grant security classes", (JO) =>
             {
                 Task.Run(() =>
