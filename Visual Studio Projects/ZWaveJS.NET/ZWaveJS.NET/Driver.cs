@@ -921,7 +921,8 @@ namespace ZWaveJS.NET
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                System.Diagnostics.Debug.WriteLine(Message);
+                System.Diagnostics.Debug.WriteLine(Message.Text);
+             
             }
 
             if (Message.MessageType == WebSocketMessageType.Text)

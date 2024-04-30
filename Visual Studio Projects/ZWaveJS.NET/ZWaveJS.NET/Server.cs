@@ -38,6 +38,7 @@ namespace ZWaveJS.NET
             foreach(Process Zombie in Zombies)
             {
                 Zombie.Kill();
+                Zombie.WaitForExit();
                 File.Delete(ProcessName);
             }
 
