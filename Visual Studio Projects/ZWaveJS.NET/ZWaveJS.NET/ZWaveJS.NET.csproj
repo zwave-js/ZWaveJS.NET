@@ -16,7 +16,6 @@
     <UserSecretsId>d23bfce5-76f4-45a1-820d-7afd4ac2a291</UserSecretsId>
     <Configurations>Debug;Release</Configurations>
 	<LangVersion>8.0</LangVersion>
-	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />

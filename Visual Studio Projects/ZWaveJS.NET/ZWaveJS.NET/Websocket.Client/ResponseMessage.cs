@@ -1,4 +1,5 @@
-﻿using System.Net.WebSockets;
+﻿#nullable enable
+using System.Net.WebSockets;
 
 namespace Websocket.Client
 {
