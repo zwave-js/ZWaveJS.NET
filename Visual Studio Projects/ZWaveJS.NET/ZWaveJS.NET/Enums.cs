@@ -2,6 +2,17 @@
 {
     public class Enums
     {
+       public enum QRCodeVersion
+        {
+            S2 = 0,
+            SmartStart = 1,
+        }
+
+        public enum Protocols
+        {
+            ZWave = 0,
+            ZWaveLongRange = 1,
+        }
 
         public enum ConfigValueFormat
         {
@@ -73,14 +84,6 @@
             Error_Aborted,
             Error_NotSupported,
             OK = 0xff
-        }
-
-        internal enum Platform
-        {
-            Windows,
-            Linux,
-            LinuxARM,
-            Mac
         }
 
         public enum SecurityBootstrapFailure
@@ -174,6 +177,7 @@
             public const string FirmwareUpdateOTA = "controller.firmware_update_ota";
             public const string HardReset = "driver.hard_reset";
             public const string SoftReset = "driver.soft_reset";
+            public const string ParseQRCodeString = "utils.parse_qr_code_string";
         }
 
         public enum SecurityClass

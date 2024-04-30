@@ -15,11 +15,15 @@
     <PackageIconUrl />
     <UserSecretsId>d23bfce5-76f4-45a1-820d-7afd4ac2a291</UserSecretsId>
     <Configurations>Debug;Release</Configurations>
+	<LangVersion>8.0</LangVersion>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Semver" Version="2.3.0" />
-    <PackageReference Include="Websocket.Client" Version="4.6.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

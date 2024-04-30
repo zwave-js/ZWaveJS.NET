@@ -11,6 +11,7 @@ namespace ZWaveJS.NET
             this.interview = new CFGInterview();
             this.storage = new CFGStorage();
             this.securityKeys = new CFGSecurityKeys();
+            this.securityKeysLongRange = new CFGSecurityKeysLR();
             this.timeouts = new CFGTimeouts();
             this.enableSoftReset = true;
             this.disableOptimisticValueUpdate = false;
@@ -21,10 +22,27 @@ namespace ZWaveJS.NET
         public CFGLogConfig logConfig { get; set; }
         public CFGStorage storage { get; set; }
         public CFGSecurityKeys securityKeys { get; set; }
+        public CFGSecurityKeysLR securityKeysLongRange { get; set; }
         public CFGInterview interview { get; set; }
         public bool enableSoftReset { get; set; }
         public bool disableOptimisticValueUpdate { get; set; }
         public bool emitValueUpdateAfterSetValue { get; set; }
+
+        internal bool MissingLRKeys()
+        {
+            if (this.securityKeysLongRange == null)
+                return true;
+
+            if (this.securityKeysLongRange.S2_AccessControl == null)
+                return true;
+
+            if (this.securityKeysLongRange.S2_Authenticated == null)
+                return true;
+
+
+
+            return false;
+        }
 
         internal bool MissingKeys(bool IncludeS2, bool IncludeS0)
         {
@@ -47,6 +65,18 @@ namespace ZWaveJS.NET
 
         }
 
+        internal bool CheckKeyLengthLR()
+        {
+            if (this.securityKeysLongRange != null && this.securityKeysLongRange.S2_AccessControl != null && this.securityKeysLongRange.S2_AccessControl.Length != 32)
+                return false;
+
+            if (this.securityKeysLongRange != null && this.securityKeysLongRange.S2_Authenticated != null && this.securityKeysLongRange.S2_Authenticated.Length != 32)
+                return false;
+
+            return true;
+
+        }
+
         internal bool CheckKeyLength()
         {
             if (this.securityKeys != null && this.securityKeys.S0_Legacy != null && this.securityKeys.S0_Legacy.Length != 32)
@@ -62,7 +92,6 @@ namespace ZWaveJS.NET
                 return false;
 
             return true;
-
 
         }
     }
@@ -126,5 +155,11 @@ namespace ZWaveJS.NET
         public string S2_Authenticated { get; set; }
         public string S2_AccessControl { get; set; }
         public string S0_Legacy { get; set; }
+    }
+
+    public class CFGSecurityKeysLR
+    {
+        public string S2_Authenticated { get; set; }
+        public string S2_AccessControl { get; set; }
     }
 }

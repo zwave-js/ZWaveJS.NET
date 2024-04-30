@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using static ZWaveJS.NET.Enums;
 
 namespace ZWaveJS.NET
 {
@@ -832,6 +833,8 @@ namespace ZWaveJS.NET
         public CommandClass[] commandClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public NodeStatistics statistics { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Protocols protocol { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
         public int id { get; internal set; }

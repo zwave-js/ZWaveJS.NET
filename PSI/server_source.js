@@ -16,6 +16,15 @@ if (driverOptions.securityKeys) {
     }
 }
 
+if (driverOptions.securityKeysLongRange) {
+    for (const key of Object.keys(driverOptions.securityKeysLongRange)) {
+        driverOptions.securityKeysLongRange[key] = Buffer.from(
+            driverOptions.securityKeysLongRange[key],
+            "hex"
+        );
+    }
+}
+
 const driver = new Driver(serialPort, driverOptions);
 const server = new ZwavejsServer(driver, { port: wsPort, host: "localhost" });
 server.on("listening",() =>{

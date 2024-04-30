@@ -23,7 +23,7 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 34, 0);
+        private Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 35, 0);
         private string SerialPort;
         private bool RequestedExit = false;
         private JsonSerializer _jsonSerializer;
@@ -56,6 +56,7 @@ namespace ZWaveJS.NET
         private DateTime LastError;
 
         public Controller Controller { get; internal set; }
+        public Utils Utils { get; internal set; }
 
         public delegate void DriverReadyEvent();
         public event DriverReadyEvent DriverReady;
@@ -812,6 +813,8 @@ namespace ZWaveJS.NET
 
                     Inited = true;
 
+                    this.Utils = new Utils(this);
+
                     DriverReady?.Invoke();
                 }
             }
@@ -954,7 +957,7 @@ namespace ZWaveJS.NET
 
                     if (Semver.SemVersion.Parse(_ZWaveJSServerVersion, Semver.SemVersionStyles.Strict).Major != SchemaVersionID.Major)
                     {
-                        StartUpError?.Invoke("The Server Schema version is not compatible with the requested library version");
+                        StartUpError?.Invoke("The Server Schema version is not compatible with the library version");
                         return;
                     }
 

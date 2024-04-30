@@ -7,7 +7,38 @@ using static ZWaveJS.NET.Enums;
 
 namespace ZWaveJS.NET
 {
-  
+    public class QRProvisioningInformation
+    {
+        internal QRProvisioningInformation() { }
+
+        [Newtonsoft.Json.JsonProperty]
+        public QRCodeVersion version { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public SecurityClass[] securityClasses { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string dsk { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int genericDeviceClass { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int specificDeviceClass { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int installerIconType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int manufacturerId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productType { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int productId { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string applicationVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public int? maxInclusionRequestInterval { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public  string uuid { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Protocols[] supportedProtocols { get; internal set; }
+    }
+
     public class SetValueResult
     {
         internal SetValueResult() { }
