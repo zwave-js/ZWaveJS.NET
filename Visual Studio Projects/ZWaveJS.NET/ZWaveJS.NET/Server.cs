@@ -57,10 +57,6 @@ namespace ZWaveJS.NET
             PSI.RedirectStandardError = true;
             PSI.RedirectStandardInput = true;
 
-#if FWULOCAL
-            PSI.EnvironmentVariables.Add("ZWAVEJS_FW_SERVICE_URL", "http://localhost:8787");
-#endif
-            
             PSI.EnvironmentVariables.Add("CONFIG", _Config);
             PSI.EnvironmentVariables.Add("SERIAL_PORT", SerialPort);
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
@@ -68,8 +64,10 @@ namespace ZWaveJS.NET
 
             PSI.FileName = ProcessName;
             PSI.UseShellExecute = false;
+#if !DEBUG
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
             PSI.CreateNoWindow = true;
+#endif
             ServerProcess = new Process();
             ServerProcess.EnableRaisingEvents = true;
             ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;
