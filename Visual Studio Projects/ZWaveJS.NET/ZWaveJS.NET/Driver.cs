@@ -194,6 +194,17 @@ namespace ZWaveJS.NET
                 });
             });
 
+            NodeEventMap.Add("alive", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+
+                Task.Run(() =>
+                {
+                    N.Trigger_NodeAlive();
+                });
+            });
+
             NodeEventMap.Add("dead", (JO) =>
             {
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();

@@ -27,6 +27,8 @@
         public RouteStatisctics lwr { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public RouteStatisctics nlwr { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string lastSeen { get; internal set; }
     }
 
     public class ControllerStatisticsUpdatedArgs : ControllerStatistics
