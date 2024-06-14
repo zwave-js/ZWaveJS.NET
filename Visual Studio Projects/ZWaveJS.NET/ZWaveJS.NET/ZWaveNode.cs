@@ -842,6 +842,8 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public NodeStatistics statistics { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
+        public DateTime? lastSeen { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
         public Protocols protocol { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
