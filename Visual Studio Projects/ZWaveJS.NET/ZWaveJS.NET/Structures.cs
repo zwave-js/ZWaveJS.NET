@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using static ZWaveJS.NET.Enums;
 
@@ -168,17 +169,33 @@ namespace ZWaveJS.NET
     {
         internal SmartStartProvisioningEntry() { }
 
-        public SmartStartProvisioningEntry(string dsk, SecurityClass[] securityClasses, Protocols protocol = Protocols.ZWave)
+        public SmartStartProvisioningEntry(QRProvisioningInformation ProvisioningInformation, Protocols protocol = Protocols.ZWave, ProvisioningEntryStatus status = ProvisioningEntryStatus.Active)
+        {
+            if(!ProvisioningInformation.supportedProtocols.Contains(protocol))
+            {
+                throw new NotSupportedException("The provided protocol is not supported by this device.");
+            }
+           
+            this.dsk = ProvisioningInformation.dsk;
+            this.securityClasses = ProvisioningInformation.securityClasses;
+            this.requestedSecurityClasses = ProvisioningInformation.securityClasses;
+            this.supportedProtocols = ProvisioningInformation.supportedProtocols;
+            this.protocol = protocol;
+            this.status = status;
+        }
+
+        public SmartStartProvisioningEntry(string dsk, SecurityClass[] securityClasses, Protocols protocol = Protocols.ZWave, ProvisioningEntryStatus status = ProvisioningEntryStatus.Active)
         {
             this.dsk = dsk;
             this.securityClasses = securityClasses;
             this.requestedSecurityClasses = securityClasses;
             this.protocol = protocol;
+            this.status = status;
             this.supportedProtocols = new Protocols[1] { protocol };
         }
 
         [Newtonsoft.Json.JsonProperty]
-        public ProvisioningEntryStatus status { get; internal set; }
+        public ProvisioningEntryStatus? status { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public string dsk { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -186,27 +203,11 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public Protocols[] supportedProtocols { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public SecurityClass[] securityClasses { get; internal set; }
+        public SecurityClass[] securityClasses { get;  set; }
         [Newtonsoft.Json.JsonProperty]
         public SecurityClass[] requestedSecurityClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public int version { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int genericDeviceClass { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int specificDeviceClass { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int installerIconType { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int manufacturerId { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int productType { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int productId { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public decimal applicationVersion { get; internal set; }
-        [Newtonsoft.Json.JsonProperty]
-        public int nodeId { get; internal set; }
+        public int? nodeId { get; internal set; }
     }
 
     public class RebuildRoutesOptions

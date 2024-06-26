@@ -935,62 +935,6 @@ namespace ZWaveJS.NET
         }
 
         // CHECKED
-        public Task<CMDResult> ProvisionSmartStartNode(QRProvisioningInformation ProvisioningInformation)
-        {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            if (_driver.Options != null && _driver.Options.MissingKeys(true, true))
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                Result.SetResult(Res);
-                return Result.Task;
-            }
-
-            if (_driver.Options != null && !_driver.Options.CheckKeyLength())
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                Result.SetResult(Res);
-                return Result.Task;
-            }
-
-            if (ProvisioningInformation.supportedProtocols.Contains(Protocols.ZWaveLongRange))
-            {
-                if (_driver.Options != null && _driver.Options.MissingLRKeys())
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-
-
-                if (_driver.Options != null && !_driver.Options.CheckKeyLengthLR())
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-            }
-
-            _driver.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.ProvisionSmartStartNode);
-            Request.Add("entry", ProvisioningInformation);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            _driver.ClientWebSocket.SendInstant(RequestPL);
-
-            return Result.Task;
-        }
-
-        // CHECKED
         public Task<CMDResult> ProvisionSmartStartNode(SmartStartProvisioningEntry ProvisioningInformation)
         {
             Guid ID = Guid.NewGuid();
@@ -1039,44 +983,6 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.ProvisionSmartStartNode);
             Request.Add("entry", ProvisioningInformation);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            _driver.ClientWebSocket.SendInstant(RequestPL);
-
-            return Result.Task;
-        }
-
-        // CHECKED
-        public Task<CMDResult> ProvisionSmartStartNode(string QRCode)
-        {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            if (_driver.Options != null && _driver.Options.MissingKeys(true, true))
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                Result.SetResult(Res);
-                return Result.Task;
-            }
-
-            if (_driver.Options != null && !_driver.Options.CheckKeyLength())
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                Result.SetResult(Res);
-                return Result.Task;
-            }
-
-            _driver.Callbacks.Add(ID, (JO) =>
-             {
-                 CMDResult Res = new CMDResult(JO);
-                 Result.SetResult(Res);
-             });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.ProvisionSmartStartNode);
-            Request.Add("entry", QRCode);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
