@@ -8,47 +8,48 @@ let ServerStarted = false;
 let DriverStarted = false;
 
 if (driverOptions.securityKeys) {
-    for (const key of Object.keys(driverOptions.securityKeys)) {
-        driverOptions.securityKeys[key] = Buffer.from(
-            driverOptions.securityKeys[key],
-            "hex"
-        );
-    }
+  for (const key of Object.keys(driverOptions.securityKeys)) {
+    driverOptions.securityKeys[key] = Buffer.from(
+      driverOptions.securityKeys[key],
+      "hex"
+    );
+  }
 }
 
 if (driverOptions.securityKeysLongRange) {
-    for (const key of Object.keys(driverOptions.securityKeysLongRange)) {
-        driverOptions.securityKeysLongRange[key] = Buffer.from(
-            driverOptions.securityKeysLongRange[key],
-            "hex"
-        );
-    }
+  for (const key of Object.keys(driverOptions.securityKeysLongRange)) {
+    driverOptions.securityKeysLongRange[key] = Buffer.from(
+      driverOptions.securityKeysLongRange[key],
+      "hex"
+    );
+  }
 }
 
 const driver = new Driver(serialPort, driverOptions);
 const server = new ZwavejsServer(driver, { port: wsPort, host: "localhost" });
-server.on("listening",() =>{
-    ServerStarted = true;
-})
+server.on("listening", () => {
+  ServerStarted = true;
+});
 driver.on("error", (e) => {});
 
 driver.on("driver ready", () => {
-    server.start();
+  server.start();
 });
 
-driver.start()
-.then(() =>{
+driver
+  .start()
+  .then(() => {
     DriverStarted = true;
-    process.stdin.on("data",HandleInput)
-})
-.catch((e) => {
+    process.stdin.on("data", HandleInput);
+  })
+  .catch((e) => {
     process.stderr.write("1\n");
-})
+  });
 
-const HandleInput = async (Data) =>{
-    if(Data.toString().trim() === "KILL"){
-        if(ServerStarted) await server.destroy();
-        if(DriverStarted) await driver.destroy();
-        process.exit(0);
-    }
-}
+const HandleInput = async (Data) => {
+  if (Data.toString().trim() === "KILL") {
+    if (ServerStarted) await server.destroy();
+    if (DriverStarted) await driver.destroy();
+    process.exit(0);
+  }
+};

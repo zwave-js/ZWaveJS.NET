@@ -8,7 +8,7 @@
 
 # Node Stuff
 **/node_modules/*
-**/dist/*
+**/build/*
 
 # Yarn config and stuff
 **/.yarn/*
@@ -21,3 +21,4 @@
 
 PSI/server.js
 PSI/package-lock.json
+package-lock.json

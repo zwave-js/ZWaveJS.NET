@@ -1,0 +1,50 @@
+name: Release Workflow
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [18]
+        include:
+          - os: ubuntu-latest
+            output-path: build/dist/server
+            output-name: server.psi.ubuntu
+          - os: windows-latest
+            output-path: build/dist/server.exe
+            output-name: server.psi.win
+          - os: macos-latest
+            output-path: build/dist/server
+            output-name: server.psi.macos
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run script from package.json
+        run: |
+          cd PSI
+          npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ matrix.output-path }}
+          asset_name: ${{ matrix.output-name }}
+          asset_content_type: application/octet-stream

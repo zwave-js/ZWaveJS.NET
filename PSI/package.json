@@ -12,11 +12,8 @@
   },
   "scripts": {
     "build": "npm run do_esbuild && npm run do_pkgbuild",
-    "do_esbuild": "esbuild server_source.js --bundle --outfile=server.js --platform=node --target=node18 --external:@serialport/* --external:@zwave-js/config --external:zwave-js/package.json",
-    "do_pkgbuild": "pkg . --compress gzip -t host --targets node18"
-  },
-  "pkg": {
-    "assets": "./node_modules/@serialport/bindings-cpp/prebuilds/**/*",
-    "outputPath": "dist"
+    "do_esbuild": "node esb.js",
+    "do_pkgbuild": "pkg ./build/package.json --compress gzip -t host --targets node18 --output ./build/dist/server",
+    "test": "export WS_PORT=7070 SERIAL_PORT=/dev/tty.usbmodem214301 CONFIG=$(<./test_config.json) && ./build/dist/server"
   }
 }
