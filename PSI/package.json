@@ -1,19 +1,23 @@
 {
-  "version": "4.0.0",
-  "name": "server",
-  "bin": "./server.js",
-  "dependencies": {
-    "@zwave-js/server": "1.35.0",
-    "zwave-js": "12.5.6"
-  },
-  "devDependencies": {
-    "@yao-pkg/pkg": "^5.11.5",
-    "esbuild": "^0.20.2"
-  },
-  "scripts": {
-    "build": "npm run do_esbuild && npm run do_pkgbuild",
-    "do_esbuild": "node esb.js",
-    "do_pkgbuild": "pkg ./build/package.json --compress gzip -t host --targets node18 --output ./build/dist/server",
-    "test": "export WS_PORT=7070 SERIAL_PORT=/dev/tty.usbmodem214301 CONFIG=$(<./test_config.json) && ./build/dist/server"
-  }
+	"version": "4.0.0",
+	"name": "server",
+	"bin": "./server.js",
+	"dependencies": {
+		"@zwave-js/server": "1.35.0",
+		"zwave-js": "12.5.6"
+	},
+	"devDependencies": {
+		"@yao-pkg/pkg": "^5.11.5",
+		"esbuild": "^0.21.5",
+		"eslint": "^8.57.0",
+		"prettier": "^3.3.2"
+	},
+	"scripts": {
+		"build": "npm run do_esbuild && npm run do_pkgbuild",
+		"do_esbuild": "node esb.js",
+		"do_pkgbuild": "pkg ./build/package.json --compress gzip -t host --targets node18 --output ./build/dist/server",
+		"test": "export WS_PORT=7070 SERIAL_PORT=/dev/tty.usbmodem214301 CONFIG=$(<./test_config.json) && ./build/dist/server",
+		"lint": "eslint --ext .js .",
+		"lint:fix": "eslint --fix --ext .js . && prettier -w ."
+	}
 }
