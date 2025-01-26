@@ -183,6 +183,7 @@
             public const string HardReset = "driver.hard_reset";
             public const string SoftReset = "driver.soft_reset";
             public const string ParseQRCodeString = "utils.parse_qr_code_string";
+            public const string ManuallyIdleNotificationValue = "node.manually_idle_notification_value";
         }
 
         public enum SecurityClass

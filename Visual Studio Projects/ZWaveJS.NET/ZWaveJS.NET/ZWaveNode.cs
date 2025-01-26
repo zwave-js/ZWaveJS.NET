@@ -15,6 +15,13 @@ namespace ZWaveJS.NET
         {
             _driver = driver;
         }
+
+        public delegate void MetadataUpdatedEvent(ZWaveNode Node, MetadataUpdatedArgs Args);
+        public event MetadataUpdatedEvent MetadataUpdated;
+        internal void Trigger_MetadataUpdated(MetadataUpdatedArgs Args)
+        {
+            MetadataUpdated?.Invoke(this, Args);
+        }
         
         public delegate void LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating);
         private LifelineHealthCheckProgress LifelineHealthCheckProgressSub;
@@ -139,6 +146,61 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeInterviewFailed(NodeInterviewFailedEventArgs Args)
         {
             NodeInterviewFailed?.Invoke(this, Args);
+        }
+        
+        public Task<CMDResult> ManuallyIdleNotificationValue(ValueID VID)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            _driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.ManuallyIdleNotificationValue);
+            Request.Add("nodeId", this.id);
+            Request.Add("valueId", VID);
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+        public Task<CMDResult> ManuallyIdleNotificationValue(int notificationType, int prevValue, int? endpointIndex = null)
+        {
+            Guid ID = Guid.NewGuid();
+
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            _driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.ManuallyIdleNotificationValue);
+            Request.Add("nodeId", this.id);
+            Request.Add("notificationType", notificationType);
+            Request.Add("prevValue", prevValue);
+            if (endpointIndex.HasValue)
+            {
+                Request.Add("endpointIndex", endpointIndex.Value);
+            }
+
+            string RequestPL = JsonConvert.SerializeObject(Request);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
         }
 
         // CHECKED

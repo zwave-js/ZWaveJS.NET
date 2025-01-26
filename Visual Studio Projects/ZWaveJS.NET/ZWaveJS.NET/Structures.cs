@@ -262,6 +262,14 @@ namespace ZWaveJS.NET
         public bool clientSideAuth { get; set; }
     }
 
+     public class MetadataUpdatedArgs : ValueID
+     {
+         internal MetadataUpdatedArgs() { }
+
+         [Newtonsoft.Json.JsonProperty]
+         public ValueMetadata metadata { get; internal set; }
+     }
+
     public class ValueMetadata
     {
         internal ValueMetadata() { }

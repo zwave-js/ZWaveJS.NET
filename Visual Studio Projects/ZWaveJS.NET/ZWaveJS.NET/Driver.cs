@@ -23,7 +23,7 @@ namespace ZWaveJS.NET
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
-        private Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 35, 0);
+        private Semver.SemVersion SchemaVersionID = new Semver.SemVersion(1, 40, 0);
         private string SerialPort;
         private bool RequestedExit = false;
         private JsonSerializer _jsonSerializer;
@@ -284,6 +284,18 @@ namespace ZWaveJS.NET
                 {
                     N.Trigger_NodeInterviewFailed(FII);
                 });
+            });
+
+             NodeEventMap.Add("metadata updated", (JO) =>
+            {
+                 int NID = JO.SelectToken("event.nodeId").Value<int>();
+                 MetadataUpdatedArgs Args = JO.SelectToken("event.args").ToObject<MetadataUpdatedArgs>();
+                 ZWaveNode N = this.Controller.Nodes.Get(NID);
+
+                 Task.Run(() =>
+                 {
+                     N.Trigger_MetadataUpdated(Args);
+                 });
             });
         }
 
