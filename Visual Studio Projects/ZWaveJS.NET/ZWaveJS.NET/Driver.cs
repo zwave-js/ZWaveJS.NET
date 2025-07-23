@@ -15,7 +15,7 @@ namespace ZWaveJS.NET
         internal static List<int> UsedPorts = new List<int>();
 
         internal Websocket.Client.WebsocketClient ClientWebSocket;
-        internal Dictionary<Guid, Action<JObject>> Callbacks;
+        internal TSafeDictionary<Guid, Action<JObject>> Callbacks;
         internal bool Inited = false;
         internal ZWaveOptions Options;
         internal const string FWUSAPIKey = "921f8000486fcc2744721cfc747aab2db8fc025b5d487cbf2eba76e88ff6f79a064644bf";
@@ -574,7 +574,7 @@ namespace ZWaveJS.NET
                 _schemaVersion = SchemaVersion;
             }
 
-            Callbacks = new Dictionary<Guid, Action<JObject>>();
+            Callbacks = new TSafeDictionary<Guid, Action<JObject>>();
             MapEvents();
             
             this.WSAddress = Server;
@@ -607,7 +607,7 @@ namespace ZWaveJS.NET
             settings.Converters.Add(new ZWJSSJsonConverter(this));
             _jsonSerializer = JsonSerializer.Create(settings);
 
-            Callbacks = new Dictionary<Guid, Action<JObject>>();
+            Callbacks = new TSafeDictionary<Guid, Action<JObject>>();
             MapEvents();
             
             this.SerialPort = SerialPort;

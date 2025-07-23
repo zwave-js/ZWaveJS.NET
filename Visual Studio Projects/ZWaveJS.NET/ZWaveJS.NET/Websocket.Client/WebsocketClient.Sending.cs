@@ -59,6 +59,12 @@ namespace Websocket.Client
         }
 
         /// <summary>
+        /// Synchronize the SendInstant calls to avoid
+        /// the documented issue with simultaneous usage.
+        /// </summary>
+        private Object _sendInstantLock = new Object();
+
+        /// <summary>
         /// Send text message to the websocket channel. 
         /// It doesn't use a sending queue, 
         /// beware of issue while sending two messages in the exact same time 
@@ -69,7 +75,9 @@ namespace Websocket.Client
         {
             Validations.Validations.ValidateInput(message, nameof(message));
 
-            return SendInternalSynchronized(message);
+            lock (_sendInstantLock) {
+                return SendInternalSynchronized(message);
+            }
         }
 
         /// <summary>
@@ -81,7 +89,9 @@ namespace Websocket.Client
         /// <param name="message">Message to be sent</param>
         public Task SendInstant(byte[] message)
         {
-            return SendInternalSynchronized(new ArraySegment<byte>(message));
+            lock (_sendInstantLock) {
+                return SendInternalSynchronized(new ArraySegment<byte>(message));
+            }
         }
 
         /// <summary>
