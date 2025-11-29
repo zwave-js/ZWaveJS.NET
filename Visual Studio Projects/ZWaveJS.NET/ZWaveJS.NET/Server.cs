@@ -30,8 +30,7 @@ namespace ZWaveJS.NET
 
         internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
-
-
+            
             string ProcessName = string.Format("server.{0}.psi", WSPort);
 
             Process[] Zombies = Process.GetProcessesByName(ProcessName);

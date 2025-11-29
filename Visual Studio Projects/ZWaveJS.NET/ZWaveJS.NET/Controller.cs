@@ -144,12 +144,7 @@ namespace ZWaveJS.NET
         // CHECKED
         public Task<CMDResult> GetAvailableFirmwareUpdates(int NodeID, bool IncludePrereleases, UsageEnvironment Environment, string APIKey = null)
         {
-
-
-        
-
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             if (Environment == UsageEnvironment.Commercial && string.IsNullOrEmpty(APIKey))
@@ -189,7 +184,6 @@ namespace ZWaveJS.NET
         public Task<CMDResult> FirmwareUpdateOTA(int NodeID, FirmwareUpdateInfo Update)
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -200,10 +194,7 @@ namespace ZWaveJS.NET
                     NodeFirmwareUpdateResultArgs FUR = JO.SelectToken("result").ToObject<NodeFirmwareUpdateResultArgs>();
                     Res.SetPayload(FUR);
                 }
-
-
                 Result.SetResult(Res);
-
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -222,13 +213,11 @@ namespace ZWaveJS.NET
         public Task<CMDResult> GetRFRegion()
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-
                 if (Res.Success)
                 {
                     Enums.RFRegion Region = JO.SelectToken("result.region").ToObject<Enums.RFRegion>();
@@ -252,7 +241,6 @@ namespace ZWaveJS.NET
         public Task<CMDResult> SetRFRegion(Enums.RFRegion Region)
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -272,12 +260,67 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
+        
+        // CHECKED
+        public Task<CMDResult> SetMaxLongRangePowerlevel(decimal Limit)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            _driver.Callbacks.Add(ID, (JO) =>
+            {
+              
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("limit", Limit);
+            Request.Add("command", Enums.Commands.SetLRMaxPower);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+        // CHECKED
+        public Task<CMDResult> GetMaxLongRangePowerlevel()
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            _driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+
+                if (Res.Success)
+                {
+                    decimal Level = JO.SelectToken("result.limit").ToObject<decimal>();
+                    Res.SetPayload(Level);
+                }
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.GetLRMaxPower);
+
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
 
         // CHECKED
         public Task<CMDResult> GetPowerLevel()
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -308,7 +351,6 @@ namespace ZWaveJS.NET
         public Task<CMDResult> SetPowerLevel(decimal PowerLevel, decimal Measured0dBm)
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -340,7 +382,6 @@ namespace ZWaveJS.NET
         // CHECKED
         public Task<CMDResult> FirmwareUpdateOTW(FirmwareUpdate Update)
         {
-
             if (Update.firmwareTarget != null)
             {
                 TaskCompletionSource<CMDResult> Fail = new TaskCompletionSource<CMDResult>();
@@ -351,7 +392,6 @@ namespace ZWaveJS.NET
             }
 
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -402,6 +442,29 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.GetProvisioningEntries);
 
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+
+        // Checked
+        public Task<CMDResult> ToggleRF(bool Enabled)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            _driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.ToggleRF);
+            Request.Add("enabled", Enabled);
+            
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
@@ -754,7 +817,6 @@ namespace ZWaveJS.NET
         // CHECKED
         public Task<CMDResult> StopRebuildingRoutes()
         {
-
             Guid ID = Guid.NewGuid();
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
@@ -845,9 +907,7 @@ namespace ZWaveJS.NET
                     return Result.Task;
                 }
             }
-
-
-
+            
             if (_driver.Options != null && !_driver.Options.CheckKeyLength())
             {
                 CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
@@ -994,7 +1054,6 @@ namespace ZWaveJS.NET
         public Task<CMDResult> BeginExclusion(ExclusionOptions Options)
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -1019,7 +1078,6 @@ namespace ZWaveJS.NET
         public Task<CMDResult> StopExclusion()
         {
             Guid ID = Guid.NewGuid();
-
             TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
             _driver.Callbacks.Add(ID, (JO) =>

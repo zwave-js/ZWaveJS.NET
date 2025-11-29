@@ -86,6 +86,13 @@ namespace ZWaveJS.NET
         {
             Notification?.Invoke(this, CCID, Args);
         }
+        
+        public delegate void NodeInfoEvent(ZWaveNode Node);
+        public event NodeInfoEvent NodeInfo;
+        internal void Trigger_NodeInfo()
+        {
+            NodeInfo?.Invoke(this);
+        }
 
         public delegate void NodeAliveEvent(ZWaveNode Node);
         public event NodeAliveEvent NodeAlive;

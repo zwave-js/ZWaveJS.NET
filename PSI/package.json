@@ -1,16 +1,16 @@
 {
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"name": "server",
 	"bin": "./server.js",
 	"dependencies": {
-		"@zwave-js/server": "^3.1.0",
-		"zwave-js": "^15.3.0"
+		"@zwave-js/server": "^3.5.0",
+		"zwave-js": "^15.17.1"
 	},
 	"devDependencies": {
-		"@yao-pkg/pkg": "^6.5.1",
-		"esbuild": "^0.25.6",
-		"eslint": "^9.31.0",
-		"prettier": "^3.6.2"
+		"@yao-pkg/pkg": "^6.10.1",
+		"esbuild": "^0.27.0",
+		"eslint": "^9.39.1",
+		"prettier": "^3.7.2"
 	},
 	"scripts": {
 		"build": "npm run do_esbuild && npm run do_pkgbuild",

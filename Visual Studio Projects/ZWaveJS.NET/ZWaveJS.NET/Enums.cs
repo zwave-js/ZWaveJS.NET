@@ -138,6 +138,7 @@
             public const string RefreshCCValues = "node.refresh_cc_values";
             public const string GetDefinedValueIDs = "node.get_defined_value_ids";
             public const string GetValueMetadata = "node.get_value_metadata";
+            public const string ToggleRF = "controller.toggle_rf";
             public const string BeginInclusion = "controller.begin_inclusion";
             public const string StopInclusion = "controller.stop_inclusion";
             public const string BeginExclusion = "controller.begin_exclusion";
@@ -188,6 +189,9 @@
             public const string LookupDevice = "config_manager.lookup_device";
             public const string LoadManufacturers = "config_manager.load_manufacturers";
             public const string LoadDeviceIndex = "config_manager.load_device_index";
+            public const string GetLRMaxPower = "controller.get_max_long_range_powerlevel";
+            public const string SetLRMaxPower = "controller.set_max_long_range_powerlevel";
+            
             
    
         }
