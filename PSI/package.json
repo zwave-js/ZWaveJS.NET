@@ -16,7 +16,7 @@
 		"build": "npm run do_esbuild && npm run do_pkgbuild",
 		"do_esbuild": "node esb.js",
 		"do_pkgbuild": "pkg ./build/package.json --compress gzip -t host --targets node20 --output ./build/dist/server",
-		"test": "export WS_PORT=7070 SERIAL_PORT=/dev/tty.usbmodem114201 CONFIG=$(<./test_config.json) && ./build/dist/server",
+		"test": "export WS_PORT=7070 SERIAL_PORT=/dev/tty.usbmodem1101 CONFIG=$(<./test_config.json) && ./build/dist/server",
 		"lint": "eslint --ext .js .",
 		"lint:fix": "eslint --fix --ext .js . && prettier -w ."
 	}

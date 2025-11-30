@@ -1,0 +1,62 @@
+-- SET API --------------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "set_api_schema",
+  "schemaVersion": 44
+}
+
+-- START ----------------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "start_listening"
+}
+
+-- GET PL ---------------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "controller.get_powerlevel"
+}
+
+-- GET PEs ---------------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "controller.get_provisioning_entries"
+}
+
+
+-- NODE PIN ---------------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "node.ping",
+  "nodeId": 3
+}
+
+-- NODE VALUE GET ---------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "node.get_value",
+  "nodeId": 3,
+  "valueId":{"commandClass": 128, "endpoint": 0,"property": "level"}
+}
+
+-- NODE VALUE SET ---------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "node.set_value",
+  "nodeId": 3,
+  "valueId":{"commandClass": 128, "endpoint": 0,"property": "level"},
+  "value": 0
+}
+
+-- NODE FW UD ---------------------------------------------
+{
+  "messageId": "AABBCCDDEEFF",
+  "command": "node.update_firmware",
+  "nodeId": 3,
+  "updates": [
+    {
+      "file": "obLD1OX2ESIzRFVmd4iZqg==",
+      "filename": "test.bin"
+    }
+  ]
+}

@@ -121,6 +121,7 @@
         internal class Commands
         {
 
+            // ---------------- CONTROLLER ----------------
             public const string RemoveAssociations = "controller.remove_associations";
             public const string AddAssociations = "controller.add_associations";
             public const string GetAssociationGroups = "controller.get_association_groups";
@@ -128,8 +129,31 @@
             public const string GetProvisioningEntries = "controller.get_provisioning_entries";
             public const string UnprovisionSmartStartNode = "controller.unprovision_smart_start_node";
             public const string ProvisionSmartStartNode = "controller.provision_smart_start_node";
-            public const string SetAPIVersion = "set_api_schema";
-            public const string StartListetning = "start_listening";
+            public const string ToggleRF = "controller.toggle_rf";
+            public const string BeginInclusion = "controller.begin_inclusion";
+            public const string StopInclusion = "controller.stop_inclusion";
+            public const string BeginExclusion = "controller.begin_exclusion";
+            public const string StopExclusion = "controller.stop_exclusion";
+            public const string GrantSecurityClasses = "controller.grant_security_classes";
+            public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
+            public const string BeginRebuildingRoutes = "controller.begin_rebuilding_routes";
+            public const string StopRebuildingRoutes = "controller.stop_rebuilding_routes";
+            public const string RebuildNodeRoutes = "controller.rebuild_node_routes";
+            public const string RemoveFailedNode = "controller.remove_failed_node";
+            public const string ReplaceFailedNode = "controller.replace_failed_node";
+            public const string BackUpNVM = "controller.backup_nvm_raw";
+            public const string RestoreNVM = "controller.restore_nvm";
+            public const string FirmwareUpdateOTW = "controller.firmware_update_otw";
+            public const string SetRFRegion = "controller.set_rf_region";
+            public const string GetRFRegion = "controller.get_rf_region";
+            public const string SetPowerlevel = "controller.set_powerlevel";
+            public const string GetPowerlevel = "controller.get_powerlevel";
+            public const string GetAvailableFirmwareUpdates = "controller.get_available_firmware_updates";
+            public const string FirmwareUpdateOTA = "controller.firmware_update_ota";
+            public const string GetLRMaxPower = "controller.get_max_long_range_powerlevel";
+            public const string SetLRMaxPower = "controller.set_max_long_range_powerlevel";
+
+            // ---------------- NODE ----------------
             public const string SetValue = "node.set_value";
             public const string GetValue = "node.get_value";
             public const string PollValue = "node.poll_value";
@@ -138,62 +162,50 @@
             public const string RefreshCCValues = "node.refresh_cc_values";
             public const string GetDefinedValueIDs = "node.get_defined_value_ids";
             public const string GetValueMetadata = "node.get_value_metadata";
-            public const string ToggleRF = "controller.toggle_rf";
-            public const string BeginInclusion = "controller.begin_inclusion";
-            public const string StopInclusion = "controller.stop_inclusion";
-            public const string BeginExclusion = "controller.begin_exclusion";
-            public const string StopExclusion = "controller.stop_exclusion";
-            public const string InvokeCCAPI = "endpoint.invoke_cc_api";
-            public const string SupportsCCAPI = "endpoint.supports_cc_api";
-            public const string GrantSecurityClasses = "controller.grant_security_classes";
-            public const string ValidateDSK = "controller.validate_dsk_and_enter_pin";
             public const string RefreshInfo = "node.refresh_info";
-            public const string BeginRebuildingRoutes = "controller.begin_rebuilding_routes";
-            public const string StopRebuildingRoutes = "controller.stop_rebuilding_routes";
-            public const string RebuildNodeRoutes = "controller.rebuild_node_routes";
             public const string SetName = "node.set_name";
             public const string SetLocation = "node.set_location";
             public const string KeepNodeAwake = "node.set_keep_awake";
-            public const string RemoveFailedNode = "controller.remove_failed_node";
-            public const string ReplaceFailedNode = "controller.replace_failed_node";
             public const string UpdateFirmware = "node.update_firmware";
             public const string AbortFirmwareUpdate = "node.abort_firmware_update";
             public const string HasSecurityClass = "node.has_security_class";
             public const string GetHighestSecurityClass = "node.get_highest_security_class";
             public const string GetEndpointCount = "node.get_endpoint_count";
-            public const string BackUpNVM = "controller.backup_nvm_raw";
-            public const string RestoreNVM = "controller.restore_nvm";
             public const string CheckLifelineHealth = "node.check_lifeline_health";
+            public const string WaitForWakeUp = "node.wait_for_wakeup";
+            public const string Interview = "node.interview";
+            public const string Ping = "node.ping";
+            public const string ManuallyIdleNotificationValue = "node.manually_idle_notification_value";
+
+            // ---------------- ENDPOINT ----------------
+            public const string InvokeCCAPI = "endpoint.invoke_cc_api";
+            public const string SupportsCCAPI = "endpoint.supports_cc_api";
+
+            // ---------------- MULTICAST GROUP ----------------
             public const string MCGetEndpointCount = "multicast_group.get_endpoint_count";
             public const string MCSetValue = "multicast_group.set_value";
             public const string MCGetDefinedValueIDs = "multicast_group.get_defined_value_ids";
             public const string MCSupportsCCAPI = "multicast_group.supports_cc_api";
             public const string MCInvokeCCAPI = "multicast_group.invoke_cc_api";
-            public const string StartListeningLogs = "start_listening_logs";
-            public const string StopListeningLogs = "stop_listening_logs";
-            public const string WaitForWakeUp = "node.wait_for_wakeup";
-            public const string Interview = "node.interview";
-            public const string FirmwareUpdateOTW = "controller.firmware_update_otw";
-            public const string SetRFRegion = "controller.set_rf_region";
-            public const string GetRFRegion = "controller.get_rf_region";
-            public const string SetPowerlevel = "controller.set_powerlevel";
-            public const string GetPowerlevel = "controller.get_powerlevel";
-            public const string Ping = "node.ping";
-            public const string GetAvailableFirmwareUpdates = "controller.get_available_firmware_updates";
-            public const string FirmwareUpdateOTA = "controller.firmware_update_ota";
+
+            // ---------------- DRIVER ----------------
             public const string HardReset = "driver.hard_reset";
             public const string SoftReset = "driver.soft_reset";
+
+            // ---------------- UTILS ----------------
             public const string ParseQRCodeString = "utils.parse_qr_code_string";
-            public const string ManuallyIdleNotificationValue = "node.manually_idle_notification_value";
+
+            // ---------------- CONFIG MANAGER ----------------
             public const string LookupManufacturer = "config_manager.lookup_manufacturer";
             public const string LookupDevice = "config_manager.lookup_device";
             public const string LoadManufacturers = "config_manager.load_manufacturers";
             public const string LoadDeviceIndex = "config_manager.load_device_index";
-            public const string GetLRMaxPower = "controller.get_max_long_range_powerlevel";
-            public const string SetLRMaxPower = "controller.set_max_long_range_powerlevel";
-            
-            
-   
+
+            // ---------------- ROOT-LEVEL (no prefix) ----------------
+            public const string SetAPIVersion = "set_api_schema";
+            public const string StartListetning = "start_listening";
+            public const string StartListeningLogs = "start_listening_logs";
+            public const string StopListeningLogs = "stop_listening_logs";
         }
 
         public enum SecurityClass

@@ -65,6 +65,8 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public string integrity { get; internal set; }
     }
+    
+    
 
     public class FirmwareUpdateDeviceID
     {

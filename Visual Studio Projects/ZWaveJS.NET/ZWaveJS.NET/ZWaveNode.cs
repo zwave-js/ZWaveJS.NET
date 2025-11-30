@@ -155,8 +155,7 @@ namespace ZWaveJS.NET
             NodeInterviewFailed?.Invoke(this, Args);
         }
         
-        
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> Ping()
         {
             Guid ID = Guid.NewGuid();
@@ -185,7 +184,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> Interview()
         {
             Guid ID = Guid.NewGuid();
@@ -209,7 +208,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
         
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
         {
             LifelineHealthCheckProgressSub = OnProgress;
@@ -242,7 +241,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> AbortFirmwareUpdate()
         {
             Guid ID = Guid.NewGuid();
@@ -266,7 +265,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> UpdateFirmware(FirmwareUpdate[] Updates)
         {
 
@@ -288,10 +287,11 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-                if(JO.ContainsKey("result"))
+                if (Res.Success)
                 {
                     Res.SetPayload(JO.SelectToken("result.result").ToObject<NodeFirmwareUpdateResultArgs>());
                 }
+                
                 Result.SetResult(Res);
             });
             
@@ -307,7 +307,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RefreshInfo(RefreshInfoOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
@@ -333,7 +333,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetValue(ValueID ValueID)
         {
             Guid ID = Guid.NewGuid();
@@ -363,7 +363,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHEKCED
+        // Checked as of : 3.5.0
         public Task<CMDResult> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
@@ -374,7 +374,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    SetValueResult SVR = JO.SelectToken("result").ToObject<SetValueResult>();
+                    SetValueResult SVR = JO.SelectToken("result.result").ToObject<SetValueResult>();
                     Res.SetPayload(SVR);
                 }
                 Result.SetResult(Res);

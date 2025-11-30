@@ -14,6 +14,7 @@ namespace ZWaveJS.NET
             this.Nodes = Nodes;
         }
 
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetEndpointCount()
         {
             Guid ID = Guid.NewGuid();
@@ -41,6 +42,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // Checked as of : 3.5.0
         public Task<CMDResult> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
             Guid ID = Guid.NewGuid();
@@ -49,7 +51,11 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
+                if (Res.Success)
+                {
+                    Res.SetPayload(JO.SelectToken("result.result").ToObject<SetValueResult>());
+                }
+                
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -70,6 +76,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetDefinedValueIDs()
         {
             Guid ID = Guid.NewGuid();
@@ -98,6 +105,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        // Checked as of : 3.5.0
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
@@ -125,7 +133,8 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-
+        
+        // Checked as of : 3.5.0
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();

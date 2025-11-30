@@ -14,7 +14,7 @@ namespace ZWaveJS.NET
             _driver = driver;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
@@ -46,7 +46,7 @@ namespace ZWaveJS.NET
         }
 
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();

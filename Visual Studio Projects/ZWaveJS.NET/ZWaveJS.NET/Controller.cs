@@ -141,7 +141,7 @@ namespace ZWaveJS.NET
             FirmwareUpdateProgress?.Invoke(Args);
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetAvailableFirmwareUpdates(int NodeID, bool IncludePrereleases, UsageEnvironment Environment, string APIKey = null)
         {
             Guid ID = Guid.NewGuid();
@@ -180,7 +180,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> FirmwareUpdateOTA(int NodeID, FirmwareUpdateInfo Update)
         {
             Guid ID = Guid.NewGuid();
@@ -191,7 +191,7 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 if (Res.Success)
                 {
-                    NodeFirmwareUpdateResultArgs FUR = JO.SelectToken("result").ToObject<NodeFirmwareUpdateResultArgs>();
+                    NodeFirmwareUpdateResultArgs FUR = JO.SelectToken("result.result").ToObject<NodeFirmwareUpdateResultArgs>();
                     Res.SetPayload(FUR);
                 }
                 Result.SetResult(Res);
@@ -209,7 +209,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetRFRegion()
         {
             Guid ID = Guid.NewGuid();
@@ -237,7 +237,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> SetRFRegion(Enums.RFRegion Region)
         {
             Guid ID = Guid.NewGuid();
@@ -247,7 +247,6 @@ namespace ZWaveJS.NET
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
-
             });
             
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -261,7 +260,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
         
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> SetMaxLongRangePowerlevel(decimal Limit)
         {
             Guid ID = Guid.NewGuid();
@@ -269,10 +268,8 @@ namespace ZWaveJS.NET
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
-              
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
-
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -287,7 +284,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetMaxLongRangePowerlevel()
         {
             Guid ID = Guid.NewGuid();
@@ -317,7 +314,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetPowerLevel()
         {
             Guid ID = Guid.NewGuid();
@@ -347,7 +344,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> SetPowerLevel(decimal PowerLevel, decimal Measured0dBm)
         {
             Guid ID = Guid.NewGuid();
@@ -372,14 +369,9 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // LOCAL
-        public VirtualNode GetMulticastGroup(int[] Nodes)
-        {
-            VirtualNode VN = new VirtualNode(_driver, Nodes);
-            return VN;
-        }
+      
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> FirmwareUpdateOTW(FirmwareUpdate Update)
         {
             if (Update.firmwareTarget != null)
@@ -400,7 +392,7 @@ namespace ZWaveJS.NET
 
                 if (Res.Success)
                 {
-                    ControllerFirmwareUpdateResultArgs UpdateResult = JO.SelectToken("result").ToObject<ControllerFirmwareUpdateResultArgs>();
+                    ControllerFirmwareUpdateResultArgs UpdateResult = JO.SelectToken("result.result").ToObject<ControllerFirmwareUpdateResultArgs>();
                     Res.SetPayload(UpdateResult);
                 }
                 Result.SetResult(Res);
@@ -420,7 +412,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetProvisioningEntries()
         {
             Guid ID = Guid.NewGuid();
@@ -448,7 +440,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // Checked
+        // Checked as of : 3.5.0
         public Task<CMDResult> ToggleRF(bool Enabled)
         {
             Guid ID = Guid.NewGuid();
@@ -471,7 +463,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RemoveAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
             Guid ID = Guid.NewGuid();
@@ -498,7 +490,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> AddAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
             Guid ID = Guid.NewGuid();
@@ -525,7 +517,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetAssociations(int Node, int Endpoint)
         {
             Guid ID = Guid.NewGuid();
@@ -555,7 +547,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetAssociationGroups(int Node, int Endpoint)
         {
             Guid ID = Guid.NewGuid();
@@ -586,7 +578,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RestoreNVM(byte[] NVMData, ConvertRestoreNVMProgress ConvertProgress = null, RestoreNVMProgress RestoreProgress = null)
         {
             ConvertRestoreNVMProgressSub = ConvertProgress;
@@ -616,7 +608,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> BackupNVMRaw(BackupNVMProgress OnProgress = null)
         {
             BackupNVMProgressSub = OnProgress;
@@ -646,7 +638,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> ReplaceFailedNode(int NodeID, InclusionOptions Options)
         {
             ValidateDSKAndEnterPINSub = null;
@@ -727,7 +719,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RemoveFailedNode(int NodeID)
         {
             Guid ID = Guid.NewGuid();
@@ -751,7 +743,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RebuildNodeRoutes(int NodeID)
         {
             Guid ID = Guid.NewGuid();
@@ -760,11 +752,6 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
-                 if (Res.Success)
-                 {
-                     bool Success = JO.SelectToken("result.success").ToObject<bool>();
-                     Res.SetPayload(Success);
-                 }
                  Result.SetResult(Res);
              });
 
@@ -780,7 +767,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> BeginRebuildingRoutes(RebuildRoutesOptions Options)
         {
             Guid ID = Guid.NewGuid();
@@ -789,15 +776,9 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
-                 if (Res.Success)
+                 if (Res.Success && Res.ResultPayload is bool b && b)
                  {
-                     if (Res.Success)
-                     {
-                         bool Success = JO.SelectToken("result.success").ToObject<bool>();
-                         Res.SetPayload(Success);
-                         this.isRebuildingRoutes = Success;
-                     }
-                   
+                     this.isRebuildingRoutes = true;
                  }
                  Result.SetResult(Res);
              });
@@ -814,7 +795,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> StopRebuildingRoutes()
         {
             Guid ID = Guid.NewGuid();
@@ -823,7 +804,7 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
-                 if (Res.Success)
+                 if (Res.Success && Res.ResultPayload is bool b && b)
                  {
                      this.isRebuildingRoutes = false;
                  }
@@ -842,7 +823,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> BeginInclusion(InclusionOptions Options)
         {
             ValidateDSKAndEnterPINSub = null;
@@ -936,7 +917,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> StopInclusion()
         {
             Guid ID = Guid.NewGuid();
@@ -958,43 +939,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
         
-        // LOCAL
-        public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
-        {
-            return _UnprovisionSmartStartNode(NodeID);
-        }
-
-        // LOCAL
-        public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
-        {
-            return _UnprovisionSmartStartNode(DSK);
-        }
-
-        // CHECKED
-        private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
-        {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            _driver.Callbacks.Add(ID, (JO) =>
-             {
-                 CMDResult Res = new CMDResult(JO);
-                 Result.SetResult(Res);
-             });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", dskOrNodeId);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            _driver.ClientWebSocket.SendInstant(RequestPL);
-
-            return Result.Task;
-        }
-
-        // CHECKED
+        // MMMM
         public Task<CMDResult> ProvisionSmartStartNode(SmartStartProvisioningEntry ProvisioningInformation)
         {
             Guid ID = Guid.NewGuid();
@@ -1050,7 +995,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> BeginExclusion(ExclusionOptions Options)
         {
             Guid ID = Guid.NewGuid();
@@ -1074,7 +1019,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> StopExclusion()
         {
             Guid ID = Guid.NewGuid();
@@ -1095,6 +1040,49 @@ namespace ZWaveJS.NET
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
+        }
+        
+        // Checked as of : 3.5.0
+        private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
+        {
+            Guid ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            _driver.Callbacks.Add(ID, (JO) =>
+            {
+                CMDResult Res = new CMDResult(JO);
+                Result.SetResult(Res);
+            });
+
+            Dictionary<string, object> Request = new Dictionary<string, object>();
+
+            Request.Add("messageId", ID);
+            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
+            Request.Add("dskOrNodeId", dskOrNodeId);
+
+            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
+
+            return Result.Task;
+        }
+        
+        // LOCAL
+        public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
+        {
+            return _UnprovisionSmartStartNode(NodeID);
+        }
+
+        // LOCAL
+        public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
+        {
+            return _UnprovisionSmartStartNode(DSK);
+        }
+        
+        // LOCAL
+        public VirtualNode GetMulticastGroup(int[] Nodes)
+        {
+            VirtualNode VN = new VirtualNode(_driver, Nodes);
+            return VN;
         }
 
         public NodesCollection Nodes { get; internal set; }

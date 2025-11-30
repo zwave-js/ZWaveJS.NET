@@ -16,6 +16,13 @@ namespace ZWaveJS.NET
         {
             this.Success = Res.Value<bool>("success");
 
+            if (Res.ContainsKey("result"))
+            {
+                bool? success = Res.SelectToken("result.success")?.Value<bool?>();
+                if (success.HasValue)
+                    SetPayload(success.Value);
+            }
+
             if(Res.ContainsKey("zwaveErrorCode"))
                 this.ErrorCode = Res.Value<string>("zwaveErrorCode");
 
