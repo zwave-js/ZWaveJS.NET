@@ -30,6 +30,11 @@ namespace ZWaveJS.NET
                 this.Message = Res.Value<string>("zwaveErrorMessage");
         }
 
+        public T ResultPayloadAs<T>()
+        {
+            return ResultPayload is T value ? value : default!;
+        }
+
         internal void SetPayload(object Payload)
         {
             this.ResultPayload = Payload;

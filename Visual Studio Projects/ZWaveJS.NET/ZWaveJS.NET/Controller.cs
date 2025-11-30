@@ -157,6 +157,7 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
+                
 
                 if (Res.Success)
                 {
@@ -776,7 +777,7 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
-                 if (Res.Success && Res.ResultPayload is bool b && b)
+                 if (Res.Success && Res.ResultPayloadAs<bool>())
                  {
                      this.isRebuildingRoutes = true;
                  }
@@ -804,7 +805,7 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
-                 if (Res.Success && Res.ResultPayload is bool b && b)
+                 if (Res.Success && Res.ResultPayloadAs<bool>())
                  {
                      this.isRebuildingRoutes = false;
                  }
@@ -939,7 +940,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
         
-        // MMMM
+        // Checked as of : 3.5.0
         public Task<CMDResult> ProvisionSmartStartNode(SmartStartProvisioningEntry ProvisioningInformation)
         {
             Guid ID = Guid.NewGuid();

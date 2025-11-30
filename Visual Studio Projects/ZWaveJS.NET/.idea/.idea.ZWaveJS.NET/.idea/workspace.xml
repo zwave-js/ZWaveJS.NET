@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7ce1b50-6fc7-402d-b06c-e8d4ea8c93cc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../PSI/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../PSI/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ZWaveJS.NET/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ZWaveJS.NET/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/CMDResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/CMDResult.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/Endpoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/Endpoint.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/Enums.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/Enums.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/Structures.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/Structures.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/VirtualNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/VirtualNode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ZWaveJS.NET/ZWaveNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ZWaveJS.NET/ZWaveNode.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,21 +31,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;modern&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "5.0.0",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f7ce1b50-6fc7-402d-b06c-e8d4ea8c93cc" name="Changes" comment="" />
@@ -62,6 +57,7 @@
       <workItem from="1760178848184" duration="107000" />
       <workItem from="1764404662859" duration="33568000" />
       <workItem from="1764491670875" duration="10432000" />
+      <workItem from="1764517403973" duration="2693000" />
     </task>
     <servers />
   </component>
