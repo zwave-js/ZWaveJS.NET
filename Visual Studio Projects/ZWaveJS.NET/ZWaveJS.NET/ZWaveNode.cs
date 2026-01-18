@@ -427,7 +427,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED - Variant 1: Normal parameter, defined in a config file
+        // Checked as of : 3.5.0 - Variant 1: Normal parameter, defined in a config file
         public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value)
         {
             Guid ID = Guid.NewGuid();
@@ -453,7 +453,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED - Variant 2: Normal parameter, not defined in a config file
+        // Checked as of : 3.5.0 - Variant 2: Normal parameter, not defined in a config file
         public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int ValueSize, Enums.ConfigValueFormat ValueFormat)
         {
             Guid ID = Guid.NewGuid();
@@ -481,7 +481,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED - Variant 3: Partial parameter, must be defined in a config file
+        // Checked as of : 3.5.0 - Variant 3: Partial parameter, must be defined in a config file
         public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Bitmask, int Value)
         {
             Guid ID = Guid.NewGuid();
@@ -508,7 +508,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
         
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RefreshValues()
         {
             Guid ID = Guid.NewGuid();
@@ -532,7 +532,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> RefreshCCValues(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
@@ -557,7 +557,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHEKCED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetDefinedValueIDs()
         {
             Guid ID = Guid.NewGuid();
@@ -586,7 +586,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetValueMetadata(ValueID VID)
         {
             Guid ID = Guid.NewGuid();
@@ -617,7 +617,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
             Guid ID = Guid.NewGuid();
@@ -646,7 +646,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
             Guid ID = Guid.NewGuid();
@@ -677,14 +677,9 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // LOCAL
-        public Endpoint GetEndpoint(int Index)
-        {
-            Endpoint EP = this.endpoints.FirstOrDefault((E) => E.index.Equals(Index));
-            return EP;
-        }
+       
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetEndpointCount()
         {
             Guid ID = Guid.NewGuid();
@@ -712,7 +707,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> GetHighestSecurityClass()
         {
             Guid ID = Guid.NewGuid();
@@ -743,7 +738,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> HasSecurityClass(Enums.SecurityClass Class)
         {
             Guid ID = Guid.NewGuid();
@@ -773,7 +768,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> WaitForWakeup()
         {
             Guid ID = Guid.NewGuid();
@@ -798,7 +793,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> ManuallyIdleNotificationValue(ValueID VID)
         {
             Guid ID = Guid.NewGuid();
@@ -824,7 +819,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> ManuallyIdleNotificationValue(int notificationType, int prevValue, int? endpointIndex = null)
         {
             Guid ID = Guid.NewGuid();
@@ -853,6 +848,13 @@ namespace ZWaveJS.NET
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
+        }
+
+         // LOCAL
+        public Endpoint GetEndpoint(int Index)
+        {
+            Endpoint EP = this.endpoints.FirstOrDefault((E) => E.index.Equals(Index));
+            return EP;
         }
 
         [Newtonsoft.Json.JsonProperty]

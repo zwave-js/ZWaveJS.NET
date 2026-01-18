@@ -16,7 +16,7 @@ namespace ZWaveJS.NET
             _driver = Driver;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> ParseQRCodeString(string QR)
         {
             Guid ID = Guid.NewGuid();

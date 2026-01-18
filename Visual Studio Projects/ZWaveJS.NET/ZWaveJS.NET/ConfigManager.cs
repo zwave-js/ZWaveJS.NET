@@ -35,7 +35,7 @@ namespace ZWaveJS.NET
            
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> LookupDevice(int ManufacturerID, int ProductTypeID, int ProductId)
         {
             
@@ -65,7 +65,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        // CHECKED
+        // Checked as of : 3.5.0
         public Task<CMDResult> LookupManufacturer(int ManufacturerID)
         {
             Guid ID = Guid.NewGuid();
