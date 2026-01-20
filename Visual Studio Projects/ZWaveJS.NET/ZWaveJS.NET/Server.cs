@@ -79,7 +79,7 @@ namespace ZWaveJS.NET
 
         private void ServerProcess_Exited(object sender, EventArgs e)
         {
-            // Exited?.Invoke(); I think this will be indirectly handled by the socket client now
+            Exited?.Invoke();
             ServerProcess.Dispose();
         }
 

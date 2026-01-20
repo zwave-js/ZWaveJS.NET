@@ -678,11 +678,9 @@ namespace ZWaveJS.NET
 
         }
 
-        // OBSOLETE
-        // Server Process Exit
+        // Server Process Exit Unexpected
         private void Server_Exited()
         {
-
             if (!RequestedExit)
             {
                 Inited = false;
@@ -690,14 +688,17 @@ namespace ZWaveJS.NET
                 Controller = null;
 
                 DestroySocket();
-                SettleCallbacksError();
-                
+               
                 if(UnexpectedHostExit != null)
                 {
                     if (UnexpectedHostExit.Invoke())
                     {
                         Restart();
                     }
+                }
+                else
+                {
+                     SettleCallbacksError();
                 }
 
                
@@ -791,7 +792,7 @@ namespace ZWaveJS.NET
             Controller = null;
             DestroySocket();
             DestroyServer();
-            StartUpError?.Invoke("Fatal ZWave Server Error.");
+            StartUpError?.Invoke("Fatal ZWaveJS Server (OR Driver) Error.");
         }
         
         private void SetAPIVersionCB(JObject JO)
