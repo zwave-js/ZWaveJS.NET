@@ -660,26 +660,21 @@ namespace ZWaveJS.NET
             {
                 if (!RequestedExit)
                 {
-                    if (LastError == DateTime.MinValue || (DateTime.Now - LastError).TotalMilliseconds > ServerErrorThrottleTime)
+                    DateTime now = DateTime.UtcNow;
+                    if (LastError == DateTime.MinValue || (now - LastError).TotalMilliseconds > ServerErrorThrottleTime)
                     {
-                        LastError = DateTime.Now;
-
+                        LastError = now;
+                        string message = DisconnectionInfo?.Exception?.Message ?? "Unknown error";
                         if (!Inited)
-                        {
-                            StartUpError?.Invoke($"Could not connect to the server, Connection will continue to try: {DisconnectionInfo?.Exception?.Message}");
-                        }
+                            StartUpError?.Invoke($"Could not connect to the server. Connection will continue to try: {message}");
                         else
-                        {
-                            ConnectionLost?.Invoke($"Connection to the server was lost. Connection will attempt to be restored: {DisconnectionInfo?.Exception?.Message}");
-                        }
+                            ConnectionLost?.Invoke($"Connection to the server was lost. Attempting to restore: {message}");
                     }
                 }
-               
-
             });
 
-            ClientWebSocket.ReconnectTimeout = null;
-            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(1);
+            ClientWebSocket.ReconnectTimeout = null; // Dont attempt to reconnect when quite
+            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(3);
 
         }
 
