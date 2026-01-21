@@ -1,8 +1,62 @@
+- v5.0.0
+
+  - Versions
+    - ZWave JS Driver Version: 15.20.0
+    - ZWave JS Server Version: 3.5.0 (Schema Version 44)
+
+  - Breaking Changes
+    - Dropped frameworks, the following frameworks are now as follows:
+      - net6.0
+      - net7.0
+      - net8.0
+      - net9.0
+      - netstandard2.1
+
+    - Driver class init signature changes
+      - ```public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001)```
+      - ```public Driver(Uri Server, int SchemaVersion = 0)```
+
+     - Re-engineered error/connection handling.  
+       All Driver/Server error handling, is now handled through the **ServerConnectionError** event.  
+       This event has the following signature:
+
+       ```csharp
+       ServerConnectionError(string ErrorCode, string Message, Action<bool, int?> Retry)
+       ```
+
+       The possible error codes via this event are as follows:
+
+       ```csharp
+        ZWDNET-ER-00 : Unknown Error  (Supports Retry)
+        ZWDNET-ER-01 : Connection Timeout (Supports Retry)
+        ZWDNET-ER-02 : Schema Mismatch
+        ZWDNET-ER-03 : Fatal Error During Server Start up
+       ```
+
+       Where the error code, supports a retry, ```Retry``` will not be ```null```  
+       Arguments: **Should Retry**, **New Timeout Value** (if <1, defaults to 15s)
+
+    - All interaction error codes have been updated  
+      ```csharp
+      ZWDNET-ER-04 : S2 Call backs missing
+      ZWDNET-ER-05 : Invalid Strategy
+      ZWDNET-ER-06 : Missing Security Keys
+      ZWDNET-ER-07 : Invalid Key Length
+      ZWDNET-ER-08 : Missing API key (Commercial use)
+      ZWDNET-ER-09 : Use of incorrect override
+      ``` 
+
+  - Internal Chnages.
+    - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
+
+
+
+
 - v4.0.0
 
   - Versions
-    - ZWave JS Driver Version: 12.2.1
-    - ZWave JS Server Version: 1.33.0 (Schema Version 33)
+    - ZWave JS Driver Version: 15.20.0
+    - ZWave JS Server Version: 3.5.0 (Schema Version 44)
 
   - Breaking Changes
     - Removed support for **NET45**  
