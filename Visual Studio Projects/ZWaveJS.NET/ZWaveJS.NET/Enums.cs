@@ -105,17 +105,19 @@
             Unknown
         }
 
-
-
         internal class ErrorCodes
         {
-            public const string MissingS2Callbacks = "ZWJS.NET.ERR.001";
-            public const string InvalidStrategy = "ZWJS.NET.ERR.002";
-            public const string MissingKeys = "ZWJS.NET.ERR.003";
-            public const string InvalidkeyLength = "ZWJS.NET.ERR.004";
-            public const string WSConnectionError = "ZWJS.NET.ERR.005";
-            public const string CommercialAPIKey = "ZWJS.NET.ERR.006";
-            public const string WrongOverride = "ZWJS.NET.ERR.007";
+            public const string Unknown = "ZWDNET-ER-00";
+            public const string WSConnectionTimout = "ZWDNET-ER-01";
+            public const string SchemaMisMatch = "ZWDNET-ER-02";
+            public const string StartUpError = "ZWDNET-ER-03";
+            
+            public const string MissingS2Callbacks = "ZWDNET-ER-04";
+            public const string InvalidStrategy = "ZWDNET-ER-05";
+            public const string MissingKeys = "ZWDNET-ER-06";
+            public const string InvalidkeyLength = "ZWDNET-ER-07";
+            public const string CommercialAPIKey = "ZWDNET-ER-08";
+            public const string WrongOverride = "ZWDNET-ER-09";
         }
 
         internal class Commands

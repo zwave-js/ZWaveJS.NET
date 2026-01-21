@@ -53,7 +53,6 @@ namespace ZWaveJS.NET
 
         public int ServerCommunicationPort { get; private set; }
         public int ServerErrorThrottleTime { get; private set; }
-        private DateTime LastError;
 
         public Controller Controller { get; internal set; }
         public Utils Utils { get; internal set; }
@@ -62,15 +61,9 @@ namespace ZWaveJS.NET
         public delegate void DriverReadyEvent();
         public event DriverReadyEvent DriverReady;
 
-        public delegate void StartupErrorEvent(string Message);
-        public event StartupErrorEvent StartUpError;
-
-        public delegate void ConnectionLostEvent(string Message);
-        public event ConnectionLostEvent ConnectionLost;
-
-
-        public delegate bool UnexpectedHostExitEvent();
-        public event UnexpectedHostExitEvent UnexpectedHostExit;
+        // NEW
+        public delegate void ServerConnectionErrorEvent(string ErrorCode, string message, Action<bool, int?> Retry);
+        public event ServerConnectionErrorEvent ServerConnectionError;
         
         public delegate void LoggingEventDelegate(LoggingEventArgs args);
         public event LoggingEventDelegate ZWJSS_LoggingEvent;
@@ -645,10 +638,14 @@ namespace ZWaveJS.NET
 
             var Factory = new Func<ClientWebSocket>(() => new ClientWebSocket
             {
-                Options = { KeepAliveInterval = TimeSpan.FromSeconds(5) }
+                Options = {
+                    KeepAliveInterval = TimeSpan.FromSeconds(5),
+                    RemoteCertificateValidationCallback = (sender, cert, chain, errors) => true 
+                }
             });
 
             ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress, Factory);
+            ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
            
 
             ClientWebSocket.MessageReceived.Subscribe((Message) =>
@@ -658,23 +655,24 @@ namespace ZWaveJS.NET
 
             ClientWebSocket.DisconnectionHappened.Subscribe((DisconnectionInfo) =>
             {
-                if (!RequestedExit)
+                if (!RequestedExit && DisconnectionInfo.Type == DisconnectionType.Error)
                 {
-                    DateTime now = DateTime.UtcNow;
-                    if (LastError == DateTime.MinValue || (now - LastError).TotalMilliseconds > ServerErrorThrottleTime)
-                    {
-                        LastError = now;
-                        string message = DisconnectionInfo?.Exception?.Message ?? "Unknown error";
-                        if (!Inited)
-                            StartUpError?.Invoke($"Could not connect to the server. Connection will continue to try: {message}");
-                        else
-                            ConnectionLost?.Invoke($"Connection to the server was lost. Attempting to restore: {message}");
-                    }
+                   ServerConnectionError?.Invoke(Enums.ErrorCodes.WSConnectionTimout,"Could not connect to the ZWaveJS Websocket (timeout)", (retry, timeout) =>
+                   {
+                       if (retry)
+                       {
+                           if (timeout.HasValue && timeout.Value > 0)
+                           {
+                               ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
+                           }
+                           ClientWebSocket.Reconnect();
+                       }
+                   });
                 }
             });
 
             ClientWebSocket.ReconnectTimeout = null; // Dont attempt to reconnect when quite
-            ClientWebSocket.ErrorReconnectTimeout = TimeSpan.FromSeconds(3);
+            ClientWebSocket.ErrorReconnectTimeout = null;
 
         }
 
@@ -688,19 +686,21 @@ namespace ZWaveJS.NET
                 Controller = null;
 
                 DestroySocket();
-               
-                if(UnexpectedHostExit != null)
-                {
-                    if (UnexpectedHostExit.Invoke())
-                    {
-                        Restart();
-                    }
-                }
-                else
-                {
-                     SettleCallbacksError();
-                }
 
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.Unknown,"The Server process unexpectedly terminted.", (retry, timeout) =>
+                {
+                    SettleCallbacksError();
+
+                     if (retry)
+                       {
+                           if (timeout.HasValue && timeout.Value > 0)
+                           {
+                               ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
+                           }
+
+                           Restart();
+                       }
+                });
                
             }
         }
@@ -767,7 +767,7 @@ namespace ZWaveJS.NET
             {
                 JObject JO = new JObject();
                 JO.Add("success", false);
-                JO.Add("zwaveErrorCode", Enums.ErrorCodes.WSConnectionError);
+                JO.Add("zwaveErrorCode", Enums.ErrorCodes.Unknown);
                 JO.Add("zwaveErrorMessage", "The Server process unexpectedly terminted. It is unknown if the command was successfull, assuming false. Subscribe to the 'UnexpectedHostExit' event of the driver to restart the Driver Runtime");
 
                 // Guard against race condition
@@ -792,7 +792,7 @@ namespace ZWaveJS.NET
             Controller = null;
             DestroySocket();
             DestroyServer();
-            StartUpError?.Invoke("Fatal ZWaveJS Server (OR Driver) Error.");
+            ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError,"Fatal ZWaveJS Server (OR Driver) Error.", null);
         }
         
         private void SetAPIVersionCB(JObject JO)
@@ -819,7 +819,7 @@ namespace ZWaveJS.NET
                         RequestedExit = true;
                         DestroySocket();
                         DestroyServer();
-                        StartUpError?.Invoke("Client and Server schema mismatch");
+                        ServerConnectionError?.Invoke(Enums.ErrorCodes.SchemaMisMatch,"Client and Server schema mismatch",null);
                         break;
 
                 }
