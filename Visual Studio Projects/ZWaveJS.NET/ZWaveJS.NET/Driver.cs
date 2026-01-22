@@ -584,6 +584,35 @@ namespace ZWaveJS.NET
 
         private async Task HandleDisconnectAsync(DisconnectionInfo info)
         {
+
+            if (info.Type == DisconnectionType.ByUser)
+            {
+                return; // this is us
+            }
+
+            if (info.Type == DisconnectionType.Lost)
+            {
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.Unknown, "Unexpectedly lost connection to the server.", (retry, timeout) =>
+               {
+                   SettleCallbacksError();
+
+                   if (retry)
+                   {
+                       if (timeout.HasValue && timeout.Value > 0)
+                       {
+                           ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
+                       }
+                       else
+                       {
+                           ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
+                       }
+                       Restart();
+                   }
+               });
+
+                return;
+            }
+
             TimeSpan elapsed = DateTime.UtcNow - ConnectStart;
 
             if (elapsed < ClientWebSocket.ConnectTimeout)
@@ -734,8 +763,11 @@ namespace ZWaveJS.NET
         {
             RequestedExit = true;
             Inited = false;
-            Controller.Nodes = null;
-            Controller = null;
+            if (Controller != null)
+            {
+                Controller.Nodes = null;
+                Controller = null;
+            }
             DestroySocket();
             DestroyServer();
             ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, "Fatal ZWaveJS Server (OR Driver) Error.", null);
