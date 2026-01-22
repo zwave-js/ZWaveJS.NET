@@ -19,6 +19,7 @@ namespace ZWaveJS.NET
         internal bool Inited = false;
         internal ZWaveOptions Options;
         internal const string FWUSAPIKey = "921f8000486fcc2744721cfc747aab2db8fc025b5d487cbf2eba76e88ff6f79a064644bf";
+        internal DateTime ConnectStart;
 
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
@@ -78,10 +79,7 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeInfo();
-                });
+                N.Trigger_NodeInfo();
             });
 
             NodeEventMap.Add("check lifeline health progress", (JO) =>
@@ -92,11 +90,7 @@ namespace ZWaveJS.NET
                 int LastRating = JO.SelectToken("event.lastRating").ToObject<int>();
 
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
-
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_LifelineHealthCheckProgress(Round, Total, LastRating);
-                });
+                N.Trigger_LifelineHealthCheckProgress(Round, Total, LastRating);
             });
 
             NodeEventMap.Add("statistics updated", (JO) =>
@@ -105,10 +99,7 @@ namespace ZWaveJS.NET
                 NodeStatisticsUpdatedArgs NS = JO.SelectToken("event.statistics").ToObject<NodeStatisticsUpdatedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_StatisticsUpdated(NS);
-                });
+                N.Trigger_StatisticsUpdated(NS);
             });
 
             NodeEventMap.Add("firmware update finished", (JO) =>
@@ -117,11 +108,7 @@ namespace ZWaveJS.NET
                 NodeFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").ToObject<NodeFirmwareUpdateResultArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_FirmwareUpdateFinished(Result);
-                });
-
+                N.Trigger_FirmwareUpdateFinished(Result);
             });
 
 
@@ -131,10 +118,7 @@ namespace ZWaveJS.NET
                 NodeFirmwareUpdateProgressArgs Progress = JO.SelectToken("event.progress").ToObject<NodeFirmwareUpdateProgressArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_FirmwareUpdateProgress(Progress);
-                });
+                N.Trigger_FirmwareUpdateProgress(Progress);
             });
 
             NodeEventMap.Add("value updated", (JO) =>
@@ -143,10 +127,8 @@ namespace ZWaveJS.NET
                 ValueUpdatedArgs Args = JO.SelectToken("event.args").ToObject<ValueUpdatedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_ValueUpdated(Args);
-                });
+                N.Trigger_ValueUpdated(Args);
+
             });
 
             NodeEventMap.Add("value added", (JO) =>
@@ -155,10 +137,8 @@ namespace ZWaveJS.NET
                 ValueAddedArgs Args = JO.SelectToken("event.args").ToObject<ValueAddedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_ValueAdded(Args);
-                });
+                N.Trigger_ValueAdded(Args);
+
             });
 
             NodeEventMap.Add("value removed", (JO) =>
@@ -167,10 +147,8 @@ namespace ZWaveJS.NET
                 ValueRemovedArgs Args = JO.SelectToken("event.args").ToObject<ValueRemovedArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_ValueRemoved(Args);
-                });
+                N.Trigger_ValueRemoved(Args);
+
             });
 
             NodeEventMap.Add("value notification", (JO) =>
@@ -179,10 +157,8 @@ namespace ZWaveJS.NET
                 ValueNotificationArgs Args = JO.SelectToken("event.args").ToObject<ValueNotificationArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_ValueNotification(Args);
-                });
+                N.Trigger_ValueNotification(Args);
+
             });
 
             NodeEventMap.Add("notification", (JO) =>
@@ -192,10 +168,8 @@ namespace ZWaveJS.NET
                 JObject IJO = JO.SelectToken("event.args").ToObject<JObject>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_Notification(CCID, IJO);
-                });
+                N.Trigger_Notification(CCID, IJO);
+
             });
 
             NodeEventMap.Add("alive", (JO) =>
@@ -203,10 +177,8 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeAlive();
-                });
+                N.Trigger_NodeAlive();
+
             });
 
             NodeEventMap.Add("dead", (JO) =>
@@ -214,10 +186,8 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeDead();
-                });
+                N.Trigger_NodeDead();
+
             });
 
             NodeEventMap.Add("wake up", (JO) =>
@@ -225,10 +195,8 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeAwake();
-                });
+                N.Trigger_NodeAwake();
+
             });
 
             NodeEventMap.Add("sleep", (JO) =>
@@ -236,10 +204,8 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeAsleep();
-                });
+                N.Trigger_NodeAsleep();
+
             });
 
             NodeEventMap.Add("ready", (JO) =>
@@ -250,10 +216,8 @@ namespace ZWaveJS.NET
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 this.Controller.Nodes.ReplaceInformation(NNI, N);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeReady();
-                });
+                N.Trigger_NodeReady();
+
             });
 
             NodeEventMap.Add("interview started", (JO) =>
@@ -261,10 +225,8 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeInterviewStarted();
-                });
+                N.Trigger_NodeInterviewStarted();
+
             });
 
             NodeEventMap.Add("interview completed", (JO) =>
@@ -272,10 +234,8 @@ namespace ZWaveJS.NET
                 int NID = JO.SelectToken("event.nodeId").ToObject<int>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeInterviewCompleted();
-                });
+                N.Trigger_NodeInterviewCompleted();
+
             });
 
             NodeEventMap.Add("interview failed", (JO) =>
@@ -284,10 +244,8 @@ namespace ZWaveJS.NET
                 NodeInterviewFailedEventArgs FII = JO.SelectToken("event.args").ToObject<NodeInterviewFailedEventArgs>();
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-                _ = Task.Run(() =>
-                {
-                    N.Trigger_NodeInterviewFailed(FII);
-                });
+                N.Trigger_NodeInterviewFailed(FII);
+
             });
 
             NodeEventMap.Add("metadata updated", (JO) =>
@@ -296,10 +254,8 @@ namespace ZWaveJS.NET
                MetadataUpdatedArgs Args = JO.SelectToken("event.args").ToObject<MetadataUpdatedArgs>();
                ZWaveNode N = this.Controller.Nodes.Get(NID);
 
-               _ = Task.Run(() =>
-                {
-                    N.Trigger_MetadataUpdated(Args);
-                });
+               N.Trigger_MetadataUpdated(Args);
+
            });
         }
 
@@ -309,10 +265,8 @@ namespace ZWaveJS.NET
             {
                 ControllerFirmwareUpdateResultArgs Result = JO.SelectToken("event.result").ToObject<ControllerFirmwareUpdateResultArgs>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_FirmwareUpdateFinished(Result);
-                });
+                this.Controller.Trigger_FirmwareUpdateFinished(Result);
+
 
             });
 
@@ -321,10 +275,8 @@ namespace ZWaveJS.NET
             {
                 ControllerFirmwareUpdateProgressArgs Progress = JO.SelectToken("event.progress").ToObject<ControllerFirmwareUpdateProgressArgs>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_FirmwareUpdateProgress(Progress);
-                });
+                this.Controller.Trigger_FirmwareUpdateProgress(Progress);
+
             });
 
             ControllerEventMap.Add("nvm backup progress", (JO) =>
@@ -332,10 +284,8 @@ namespace ZWaveJS.NET
                 int Read = JO.SelectToken("event.bytesRead").ToObject<int>();
                 int Total = JO.SelectToken("event.total").ToObject<int>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_BackupNVMProgress(Read, Total);
-                });
+                this.Controller.Trigger_BackupNVMProgress(Read, Total);
+
             });
 
             ControllerEventMap.Add("nvm convert progress", (JO) =>
@@ -343,10 +293,8 @@ namespace ZWaveJS.NET
                 int Read = JO.SelectToken("event.bytesRead").ToObject<int>();
                 int Total = JO.SelectToken("event.total").ToObject<int>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_ConvertRestoreNVMProgress(Read, Total);
-                });
+                this.Controller.Trigger_ConvertRestoreNVMProgress(Read, Total);
+
             });
 
             ControllerEventMap.Add("nvm restore progress", (JO) =>
@@ -354,62 +302,48 @@ namespace ZWaveJS.NET
                 int Written = JO.SelectToken("event.bytesWritten").ToObject<int>();
                 int Total = JO.SelectToken("event.total").ToObject<int>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_RestoreNVMProgressSub(Written, Total);
-                });
+                this.Controller.Trigger_RestoreNVMProgressSub(Written, Total);
+
             });
 
             ControllerEventMap.Add("statistics updated", (JO) =>
             {
                 ControllerStatisticsUpdatedArgs CS = JO.SelectToken("event.statistics").ToObject<ControllerStatisticsUpdatedArgs>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_StatisticsUpdated(CS);
-                });
+                this.Controller.Trigger_StatisticsUpdated(CS);
+
             });
 
             ControllerEventMap.Add("inclusion aborted", (JO) =>
             {
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_InclusionAborted();
-                });
+                this.Controller.Trigger_InclusionAborted();
+
             });
 
             ControllerEventMap.Add("inclusion started", (JO) =>
             {
                 bool Secure = (JO.SelectToken("event.strategy").ToObject<Enums.InclusionStrategy>() != Enums.InclusionStrategy.Insecure);
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_InclusionStarted(Secure);
-                });
+                this.Controller.Trigger_InclusionStarted(Secure);
+
             });
 
             ControllerEventMap.Add("inclusion stopped", (JO) =>
             {
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_InclusionStopped();
-                });
+                this.Controller.Trigger_InclusionStopped();
+
             });
 
             ControllerEventMap.Add("exclusion started", (JO) =>
             {
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_ExclusionStarted();
-                });
+                this.Controller.Trigger_ExclusionStarted();
+
             });
 
             ControllerEventMap.Add("exclusion stopped", (JO) =>
             {
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_ExclusionStopped();
-                });
+                this.Controller.Trigger_ExclusionStopped();
+
             });
 
             ControllerEventMap.Add("node removed", (JO) =>
@@ -420,11 +354,7 @@ namespace ZWaveJS.NET
                 ZWaveNode N = this.Controller.Nodes.Get(NID);
                 this.Controller.Nodes.RemoveNodeFromCollection(NID);
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_NodeRemoved(N, Reason);
-                });
-
+                this.Controller.Trigger_NodeRemoved(N, Reason);
 
             });
 
@@ -438,10 +368,8 @@ namespace ZWaveJS.NET
 
                 this.Controller.Nodes.AddNodeToCollection(NN);
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_NodeAdded(NN, IR);
-                });
+                this.Controller.Trigger_NodeAdded(NN, IR);
+
 
             });
 
@@ -449,45 +377,41 @@ namespace ZWaveJS.NET
             {
                 int NID = JO.SelectToken("event.node.nodeId").ToObject<int>();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_NodeFound(NID);
-                });
+                this.Controller.Trigger_NodeFound(NID);
+
 
             });
 
             ControllerEventMap.Add("grant security classes", (JO) =>
             {
-                _ = Task.Run(() =>
-                 {
-                     InclusionGrant RIG = JO.SelectToken("event.requested").ToObject<InclusionGrant>();
-                     InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
 
-                     Dictionary<string, object> Request = new Dictionary<string, object>();
-                     Request.Add("messageId", Guid.NewGuid().ToString());
-                     Request.Add("command", Enums.Commands.GrantSecurityClasses);
-                     Request.Add("inclusionGrant", SIG);
+                InclusionGrant RIG = JO.SelectToken("event.requested").ToObject<InclusionGrant>();
+                InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
 
-                     string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                     ClientWebSocket.SendInstant(RequestPL);
-                 });
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", Guid.NewGuid().ToString());
+                Request.Add("command", Enums.Commands.GrantSecurityClasses);
+                Request.Add("inclusionGrant", SIG);
+
+                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+                ClientWebSocket.SendInstant(RequestPL);
+
 
             });
 
             ControllerEventMap.Add("validate dsk and enter pin", (JO) =>
             {
-                _ = Task.Run(() =>
-                {
-                    string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").ToObject<string>());
 
-                    Dictionary<string, object> Request = new Dictionary<string, object>();
-                    Request.Add("messageId", Guid.NewGuid().ToString());
-                    Request.Add("command", Enums.Commands.ValidateDSK);
-                    Request.Add("pin", DSK);
+                string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").ToObject<string>());
 
-                    string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-                    ClientWebSocket.SendInstant(RequestPL);
-                });
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", Guid.NewGuid().ToString());
+                Request.Add("command", Enums.Commands.ValidateDSK);
+                Request.Add("pin", DSK);
+
+                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+                ClientWebSocket.SendInstant(RequestPL);
+
             });
 
             ControllerEventMap.Add("rebuild routes progress", (JO) =>
@@ -505,10 +429,9 @@ namespace ZWaveJS.NET
                 Args.SkippedNodes = Skipped.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.PendingNodes = Pending.Select(x => Convert.ToInt32(x.Key)).ToArray();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_RebuildRoutesProgress(Args);
-                });
+
+                this.Controller.Trigger_RebuildRoutesProgress(Args);
+
             });
 
             ControllerEventMap.Add("rebuild routes done", (JO) =>
@@ -524,10 +447,9 @@ namespace ZWaveJS.NET
                 Args.FailedNodes = Failed.Select(x => Convert.ToInt32(x.Key)).ToArray();
                 Args.SkippedNodes = Skipped.Select(x => Convert.ToInt32(x.Key)).ToArray();
 
-                _ = Task.Run(() =>
-                {
-                    this.Controller.Trigger_RebuildRoutesDone(Args);
-                });
+
+                this.Controller.Trigger_RebuildRoutesDone(Args);
+
 
             });
         }
@@ -538,10 +460,9 @@ namespace ZWaveJS.NET
             {
                 LoggingEventArgs Args = JO.SelectToken("event").ToObject<LoggingEventArgs>();
 
-                _ = Task.Run(() =>
-                {
-                    Trigger_LoggingEvent(Args);
-                });
+
+                Trigger_LoggingEvent(Args);
+
             });
         }
 
@@ -649,11 +570,35 @@ namespace ZWaveJS.NET
                 WebsocketClient_MessageReceived(ClientWebSocket, Message);
             });
 
-            ClientWebSocket.DisconnectionHappened.Subscribe((DisconnectionInfo) =>
+            ClientWebSocket.DisconnectionHappened.Subscribe((info) =>
             {
-                if (!RequestedExit && DisconnectionInfo.Type == DisconnectionType.Error)
-                {
-                    ServerConnectionError?.Invoke(Enums.ErrorCodes.WSConnectionTimout, "Could not connect to the ZWaveJS Websocket (timeout)", (retry, timeout) =>
+                _ = HandleDisconnectAsync(info);
+            });
+
+
+            ClientWebSocket.ReconnectTimeout = null; // Dont attempt to reconnect when quite
+            ClientWebSocket.ErrorReconnectTimeout = null; // disable automatic
+
+        }
+
+
+        private async Task HandleDisconnectAsync(DisconnectionInfo info)
+        {
+            TimeSpan elapsed = DateTime.UtcNow - ConnectStart;
+
+            if (elapsed < ClientWebSocket.ConnectTimeout)
+            {
+                await Task.Delay(1000);
+                ClientWebSocket.Reconnect();
+                return;
+            }
+
+            if (!RequestedExit && info.Type == DisconnectionType.Error)
+            {
+                ServerConnectionError?.Invoke(
+                    Enums.ErrorCodes.WSConnectionTimout,
+                    "Could not connect to the ZWaveJS Websocket (timeout)",
+                    (retry, timeout) =>
                     {
                         if (retry)
                         {
@@ -661,16 +606,17 @@ namespace ZWaveJS.NET
                             {
                                 ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
                             }
+                            else
+                            {
+                                ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
+                            }
+                            ConnectStart = DateTime.UtcNow;
                             ClientWebSocket.Reconnect();
                         }
                     });
-                }
-            });
-
-            ClientWebSocket.ReconnectTimeout = null; // Dont attempt to reconnect when quite
-            ClientWebSocket.ErrorReconnectTimeout = null;
-
+            }
         }
+
 
         // Server Process Exit Unexpected
         private void Server_Exited()
@@ -693,7 +639,10 @@ namespace ZWaveJS.NET
                         {
                             ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
                         }
-
+                        else
+                        {
+                            ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
+                        }
                         Restart();
                     }
                 });
@@ -705,6 +654,7 @@ namespace ZWaveJS.NET
         public void Start()
         {
             RequestedExit = false;
+            ConnectStart = DateTime.UtcNow;
             ClientWebSocket.Start();
         }
 
@@ -791,37 +741,6 @@ namespace ZWaveJS.NET
             ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, "Fatal ZWaveJS Server (OR Driver) Error.", null);
         }
 
-        private void SetAPIVersionCB(JObject JO)
-        {
-            if (JO.Value<bool>("success"))
-            {
-                Guid CBID = Guid.NewGuid();
-                Callbacks.Add(CBID, StartListetningCB);
-
-                Dictionary<string, object> Request = new Dictionary<string, object>();
-                Request.Add("messageId", CBID.ToString());
-                Request.Add("command", Enums.Commands.StartListetning);
-
-                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-
-                ClientWebSocket.SendInstant(RequestPL);
-            }
-            else
-            {
-                string ErrorCode = JO.Value<string>("errorCode");
-                switch (ErrorCode)
-                {
-                    case "schema_incompatible":
-                        RequestedExit = true;
-                        DestroySocket();
-                        DestroyServer();
-                        ServerConnectionError?.Invoke(Enums.ErrorCodes.SchemaMisMatch, "Client and Server schema mismatch", null);
-                        break;
-
-                }
-            }
-
-        }
 
         private void StartListetningCB(JObject JO)
         {
@@ -942,6 +861,38 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        private void SetAPIVersionCB(JObject JO)
+        {
+            if (JO.Value<bool>("success"))
+            {
+                Guid CBID = Guid.NewGuid();
+                Callbacks.Add(CBID, StartListetningCB);
+
+                Dictionary<string, object> Request = new Dictionary<string, object>();
+                Request.Add("messageId", CBID.ToString());
+                Request.Add("command", Enums.Commands.StartListetning);
+
+                string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
+
+                ClientWebSocket.SendInstant(RequestPL);
+            }
+            else
+            {
+                string ErrorCode = JO.Value<string>("errorCode");
+                switch (ErrorCode)
+                {
+                    case "schema_incompatible":
+                        RequestedExit = true;
+                        DestroySocket();
+                        DestroyServer();
+                        ServerConnectionError?.Invoke(Enums.ErrorCodes.SchemaMisMatch, "Client and Server schema mismatch", null);
+                        break;
+
+                }
+            }
+        }
+
+
         // Proces Message
         private void WebsocketClient_MessageReceived(object sender, ResponseMessage Message)
         {
@@ -971,7 +922,7 @@ namespace ZWaveJS.NET
                             {
                                 callback(JO);
                             }
-                            catch {}
+                            catch { }
                         });
                         return;
                     }
@@ -1006,23 +957,44 @@ namespace ZWaveJS.NET
                     switch (_Source)
                     {
                         case "node":
-                            if (NodeEventMap.ContainsKey(_Event))
+                            if (NodeEventMap.TryGetValue(_Event, out var NodeCB))
                             {
-                                NodeEventMap[_Event].Invoke(JO);
+                                _ = Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        NodeCB(JO);
+                                    }
+                                    catch { }
+                                });
                             }
                             break;
 
                         case "controller":
-                            if (ControllerEventMap.ContainsKey(_Event))
+                            if (ControllerEventMap.TryGetValue(_Event, out var ControllerCB))
                             {
-                                ControllerEventMap[_Event].Invoke(JO);
+                                _ = Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        ControllerCB(JO);
+                                    }
+                                    catch { }
+                                });
                             }
                             break;
 
                         case "driver":
-                            if (DriverEventMap.ContainsKey(_Event))
+                            if (DriverEventMap.TryGetValue(_Event, out var DriverCB))
                             {
-                                DriverEventMap[_Event].Invoke(JO);
+                                _ = Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        DriverCB(JO);
+                                    }
+                                    catch { }
+                                });
                             }
                             break;
 

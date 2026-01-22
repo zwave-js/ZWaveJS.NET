@@ -36,6 +36,8 @@
        Where the error code, supports a retry, ```Retry``` will not be ```null```  
        Arguments: **Should Retry**, **New Timeout Value** (if <1, defaults to 15s)
 
+       Effectively, the host application, is now respoabile for reconnection attempts
+
     - All interaction error codes have been updated  
       ```csharp
       ZWDNET-ER-04 : S2 Call backs missing
@@ -48,6 +50,7 @@
 
   - Internal Chnages.
     - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
+    - Previously, the node, controller, and driver callbacks each created their own task after completing their prep work. Now the task is created upfront, and both the prep work and the callback execute inside that single task.
 
 
 
