@@ -48,9 +48,9 @@
       ZWDNET-ER-09 : Use of incorrect override
       ``` 
 
-  - Internal Chnages.
+  - Internal Changes.
     - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
-    - Previously, the node, controller, and driver callbacks each created their own task after completing their prep work. Now the task is created upfront, and both the prep work and the callback execute inside that single task.
+    - Whilst the various methods already return Task instances, task completion is now performed asynchronously to prevent blocking the WebSocket message handler.
 
 
 
