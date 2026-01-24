@@ -17,7 +17,7 @@ namespace ZWaveJS.NET
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;
             this.features = new CFGFeatures();
-            this.preferences = new Preferences();
+            this.preferences = new CFGPreferences();
 
         }
 
@@ -41,27 +41,30 @@ namespace ZWaveJS.NET
         public bool disableOptimisticValueUpdate { get; set; }
         public bool emitValueUpdateAfterSetValue { get; set; }
         public CFGFeatures features { get; set; }
-        public Preferences preferences { get; set; }
+        public CFGPreferences preferences { get; set; }
 
-        public class ZWOptionScales
+
+        public class CFGPreferences
         {
-            public ZWOptionScales()
+            public CFGPreferences()
+            {
+                this.scales = new CFGScales();
+                this.lookupUserIdInNotificationEvents = false;
+            }
+
+            public CFGScales scales { get; set; }
+            public bool lookupUserIdInNotificationEvents { get; set; }
+        }
+
+        public class CFGScales
+        {
+            public CFGScales()
             {
                 this.humidity = 0x00;
                 this.temperature = 0x00;
             }
             public int temperature { get; set; }
             public int humidity { get; set; }
-        }
-
-        public class Preferences
-        {
-            public Preferences()
-            {
-                this.scales = new ZWOptionScales();
-            }
-
-            public ZWOptionScales scales { get; set; }
         }
 
         public class CFGTimeouts
