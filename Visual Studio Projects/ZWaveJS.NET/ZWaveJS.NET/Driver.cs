@@ -56,10 +56,10 @@ namespace ZWaveJS.NET
         public event ServerConnectionErrorEvent ServerConnectionError;
 
         public delegate void LoggingEventDelegate(LoggingEventArgs args);
-        public event LoggingEventDelegate ZWJSS_LoggingEvent;
+        public event LoggingEventDelegate LoggingEvent;
         internal void Trigger_LoggingEvent(LoggingEventArgs args)
         {
-            ZWJSS_LoggingEvent?.Invoke(args);
+            LoggingEvent?.Invoke(args);
         }
 
         private void MapNodeEvents()

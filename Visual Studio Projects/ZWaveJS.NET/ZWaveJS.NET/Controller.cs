@@ -233,7 +233,7 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-                
+
 
                 if (Res.Success)
                 {
@@ -336,12 +336,6 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
-        // Checked as of : 3.5.0
-        public Task<CMDResult> SetMaxLongRangePowerlevel(decimal Limit)
-        {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
 
         // Checked as of : 3.5.0
         public Task<CMDResult> SetMaxLongRangePowerlevel(decimal Limit)
@@ -1007,49 +1001,6 @@ namespace ZWaveJS.NET
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
-        }
-        
-        // Checked as of : 3.5.0
-        private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
-        {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            _driver.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
-            });
-
-            Dictionary<string, object> Request = new Dictionary<string, object>();
-
-            Request.Add("messageId", ID);
-            Request.Add("command", Enums.Commands.UnprovisionSmartStartNode);
-            Request.Add("dskOrNodeId", dskOrNodeId);
-
-            string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-            _driver.ClientWebSocket.SendInstant(RequestPL);
-
-            return Result.Task;
-        }
-        
-        // LOCAL
-        public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
-        {
-            return _UnprovisionSmartStartNode(NodeID);
-        }
-
-        // LOCAL
-        public Task<CMDResult> UnprovisionSmartStartNode(string DSK)
-        {
-            return _UnprovisionSmartStartNode(DSK);
-        }
-        
-        // LOCAL
-        public VirtualNode GetMulticastGroup(int[] Nodes)
-        {
-            VirtualNode VN = new VirtualNode(_driver, Nodes);
-            return VN;
         }
 
         // Checked as of : 3.5.0

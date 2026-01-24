@@ -27,9 +27,8 @@ namespace ZWaveJS.NET
 
         private static Task<CMDResult> Execute(Driver Runtime, string ServerMethod, Dictionary<string, object> Args, string ObjectPath)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = Runtime.GetNewTaskCompletionSource(out ID);
 
             Runtime.Callbacks.Add(ID, (JO) =>
             {
@@ -57,9 +56,8 @@ namespace ZWaveJS.NET
 
         private static Task<CMDResult> Execute(Driver Runtime, string ServerMethod, Dictionary<string, object> Args, Type MappedClass, string ObjectPath)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = Runtime.GetNewTaskCompletionSource(out ID);
 
             Runtime.Callbacks.Add(ID, (JO) =>
             {
@@ -87,9 +85,8 @@ namespace ZWaveJS.NET
 
         private static Task<CMDResult> Execute(Driver Runtime, string ServerMethod, Dictionary<string, object> Args)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = Runtime.GetNewTaskCompletionSource(out ID);
 
             Runtime.Callbacks.Add(ID, (JO) =>
             {
