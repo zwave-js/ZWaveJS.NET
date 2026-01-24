@@ -17,6 +17,7 @@ namespace ZWaveJS.NET
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;
             this.features = new CFGFeatures();
+            this.preferences = new Preferences();
 
         }
 
@@ -40,7 +41,28 @@ namespace ZWaveJS.NET
         public bool disableOptimisticValueUpdate { get; set; }
         public bool emitValueUpdateAfterSetValue { get; set; }
         public CFGFeatures features { get; set; }
+        public Preferences preferences { get; set; }
 
+        public class ZWOptionScales
+        {
+            public ZWOptionScales()
+            {
+                this.humidity = 0x00;
+                this.temperature = 0x00;
+            }
+            public int temperature { get; set; }
+            public int humidity { get; set; }
+        }
+
+        public class Preferences
+        {
+            public Preferences()
+            {
+                this.scales = new ZWOptionScales();
+            }
+
+            public ZWOptionScales scales { get; set; }
+        }
 
         public class CFGTimeouts
         {
@@ -55,15 +77,17 @@ namespace ZWaveJS.NET
             public int? sendToSleep { get; set; }
             public int? serialAPIStarted { get; set; }
         }
-    
+
         public class CFGAttempts
         {
             public int? controller { get; set; }
             public int? sendData { get; set; }
             public int? sendDataJammed { get; set; }
             public int? nodeInterview { get; set; }
+            public int? smartStartInclusion { get; set; }
+            public int? firmwareUpdateOTW { get; set; }
         }
-        
+
         public class CFGLogConfig
         {
             public CFGLogConfig()
@@ -80,19 +104,21 @@ namespace ZWaveJS.NET
             public int[] nodeFilter { get; set; }
             public string filename { get; set; }
         }
-        
+
         public class CFGInterview
         {
             public CFGInterview()
             {
                 this.queryAllUserCodes = false;
                 this.disableOnNodeAdded = false;
+                this.applyRecommendedConfigParamValues = false;
             }
 
             public bool queryAllUserCodes { get; set; }
             public bool disableOnNodeAdded { get; set; }
+            public bool applyRecommendedConfigParamValues { get; set; }
         }
-        
+
         public class CFGStorage
         {
             public CFGStorage()
@@ -106,7 +132,7 @@ namespace ZWaveJS.NET
             public string throttle { get; set; }
             public string deviceConfigExternalDir { get; set; }
         }
-        
+
         public class CFGSecurityKeys
         {
             public string S2_Unauthenticated { get; set; }
@@ -114,7 +140,7 @@ namespace ZWaveJS.NET
             public string S2_AccessControl { get; set; }
             public string S0_Legacy { get; set; }
         }
-        
+
         public class CFGSecurityKeysLR
         {
             public string S2_Authenticated { get; set; }
@@ -128,7 +154,7 @@ namespace ZWaveJS.NET
                 this.softReset = true;
                 this.unresponsiveControllerRecovery = true;
             }
-            
+
             public bool softReset { get; set; }
             public bool unresponsiveControllerRecovery { get; set; }
         }
@@ -143,13 +169,13 @@ namespace ZWaveJS.NET
 
             if (this.securityKeysLongRange.S2_Authenticated == null)
                 return true;
-            
+
             return false;
         }
 
         internal bool MissingKeys(bool IncludeS2, bool IncludeS0)
         {
-            if(this.securityKeys == null)
+            if (this.securityKeys == null)
                 return true;
 
             if (this.securityKeys.S0_Legacy == null && IncludeS0)
@@ -198,5 +224,5 @@ namespace ZWaveJS.NET
 
         }
     }
-    
+
 }

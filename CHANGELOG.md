@@ -61,6 +61,12 @@
     - Various optimisations to the code base for easiyer maintenance.
     - Reverted to using the actively maintained Websocket.Client library. Previously, we were relying on an outdated source‑based code copy
 
+  - New Features.
+    - Exposed further Zwave Options
+        - ```preferences```
+        - ```attempts.smartStartInclusion```
+        - ```attempts.firmwareUpdateOTW```
+
 
 
 
