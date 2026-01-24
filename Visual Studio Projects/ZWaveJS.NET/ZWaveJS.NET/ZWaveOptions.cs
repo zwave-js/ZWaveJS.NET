@@ -168,7 +168,7 @@ namespace ZWaveJS.NET
 
         }
 
-        internal bool CheckKeyLengthLR()
+        private bool CheckKeyLengthLR()
         {
             if (this.securityKeysLongRange != null && this.securityKeysLongRange.S2_AccessControl != null && this.securityKeysLongRange.S2_AccessControl.Length != 32)
                 return false;
@@ -194,7 +194,7 @@ namespace ZWaveJS.NET
             if (this.securityKeys != null && this.securityKeys.S2_Unauthenticated != null && this.securityKeys.S2_Unauthenticated.Length != 32)
                 return false;
 
-            return true;
+            return CheckKeyLengthLR();
 
         }
     }
