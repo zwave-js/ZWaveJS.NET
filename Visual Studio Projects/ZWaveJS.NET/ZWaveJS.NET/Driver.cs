@@ -21,6 +21,14 @@ namespace ZWaveJS.NET
         internal const string FWUSAPIKey = "921f8000486fcc2744721cfc747aab2db8fc025b5d487cbf2eba76e88ff6f79a064644bf";
         internal DateTime ConnectStart;
 
+        internal TaskCompletionSource<CMDResult> GetNewTaskCompletionSource(out Guid ID)
+        {
+            ID = Guid.NewGuid();
+            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+
+            return Result;
+        }
+
         private Dictionary<string, Action<JObject>> NodeEventMap;
         private Dictionary<string, Action<JObject>> ControllerEventMap;
         private Dictionary<string, Action<JObject>> DriverEventMap;
@@ -28,34 +36,17 @@ namespace ZWaveJS.NET
         private string SerialPort;
         private bool RequestedExit = false;
         private JsonSerializer _jsonSerializer;
-
-
         private Uri WSAddress;
         private bool Host = true;
         private Server _server;
 
-        private string _ZWaveJSDriverVersion;
-        public string ZWJSS_DriverVersion
-        {
-            get
-            {
-                return _ZWaveJSDriverVersion;
-            }
-        }
-
-        private string _ZWaveJSServerVersion;
-        public string ZWJSS_ServerVersion
-        {
-            get
-            {
-                return _ZWaveJSServerVersion;
-            }
-        }
-
+        public string ZWaveJSDriverVersion {get; internal set;}
+        public  string ZWaveJSServerVersion {get; internal set;}
         public int ServerCommunicationPort { get; private set; }
 
         public Controller Controller { get; internal set; }
         public Utils Utils { get; internal set; }
+
         public ConfigManager ConfigManager { get; internal set; }
 
         public delegate void DriverReadyEvent();
@@ -799,11 +790,10 @@ namespace ZWaveJS.NET
             }
         }
 
-        public Task<CMDResult> ZWJSS_StartListeningLogs()
+        public Task<CMDResult> StartListeningLogs()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = GetNewTaskCompletionSource(out ID);
 
             Callbacks.Add(ID, (JO) =>
             {
@@ -822,11 +812,10 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-        public Task<CMDResult> ZWJSS_StopListeningLogs()
+        public Task<CMDResult> StopListeningLogs()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = GetNewTaskCompletionSource(out ID);
 
             Callbacks.Add(ID, (JO) =>
             {
@@ -847,9 +836,8 @@ namespace ZWaveJS.NET
 
         public Task<CMDResult> HardReset()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = GetNewTaskCompletionSource(out ID);
 
             Callbacks.Add(ID, (JO) =>
             {
@@ -872,9 +860,8 @@ namespace ZWaveJS.NET
 
         public Task<CMDResult> SoftReset()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = GetNewTaskCompletionSource(out ID);
 
             Callbacks.Add(ID, (JO) =>
             {
@@ -963,8 +950,8 @@ namespace ZWaveJS.NET
 
                 if (Type == "version")
                 {
-                    _ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
-                    _ZWaveJSServerVersion = JO.Value<string>("serverVersion");
+                    ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
+                    ZWaveJSServerVersion = JO.Value<string>("serverVersion");
 
                     Guid CBID = Guid.NewGuid();
                     Callbacks.Add(CBID, SetAPIVersionCB);

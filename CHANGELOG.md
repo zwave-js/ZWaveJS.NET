@@ -16,7 +16,7 @@
       - ```public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001)```
       - ```public Driver(Uri Server, int SchemaVersion = 0)```
 
-     - Re-engineered error/connection handling.  
+    - Re-engineered error/connection handling.  
        All Driver/Server error handling, is now handled through the **ServerConnectionError** event.  
        This event has the following signature:
 
@@ -48,9 +48,15 @@
       ZWDNET-ER-09 : Use of incorrect override
       ``` 
 
+    - The following methods have been renamed
+      - ```ZWJSS_SetRawConfigParameterValue``` -> ```SetRawConfigParameterValue```
+      - ```ZWJSS_StartListeningLogs``` -> ```StartListeningLogs```
+      - ```ZWJSS_StopListeningLogs``` -> ```StopListeningLogs```
+
   - Internal Changes.
     - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
     - Whilst the various methods already return Task instances, task completion is now performed asynchronously to prevent blocking the WebSocket message handler.
+    - Various optimisations to the code base for easiyer maintenance.
 
 
 

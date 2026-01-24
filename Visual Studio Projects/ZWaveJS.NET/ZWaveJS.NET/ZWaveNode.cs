@@ -158,9 +158,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> Ping()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -177,7 +176,6 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.Ping);
             Request.Add("nodeId", this.id);
 
-
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
@@ -187,9 +185,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> Interview()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -213,9 +210,8 @@ namespace ZWaveJS.NET
         {
             LifelineHealthCheckProgressSub = OnProgress;
 
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -244,9 +240,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> AbortFirmwareUpdate()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -281,9 +276,8 @@ namespace ZWaveJS.NET
                 }
             }
 
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -310,9 +304,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> RefreshInfo(RefreshInfoOptions Options = null)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -336,9 +329,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetValue(ValueID ValueID)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -366,9 +358,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -401,9 +392,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> PollValue(ValueID ValueID)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -428,11 +418,10 @@ namespace ZWaveJS.NET
         }
 
         // Checked as of : 3.5.0 - Variant 1: Normal parameter, defined in a config file
-        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value)
+        public Task<CMDResult> SetRawConfigParameterValue(int Parameter, int Value)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -454,11 +443,10 @@ namespace ZWaveJS.NET
         }
 
         // Checked as of : 3.5.0 - Variant 2: Normal parameter, not defined in a config file
-        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Value, int ValueSize, Enums.ConfigValueFormat ValueFormat)
+        public Task<CMDResult> SetRawConfigParameterValue(int Parameter, int Value, int ValueSize, Enums.ConfigValueFormat ValueFormat)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -482,11 +470,10 @@ namespace ZWaveJS.NET
         }
 
         // Checked as of : 3.5.0 - Variant 3: Partial parameter, must be defined in a config file
-        public Task<CMDResult> ZWJSS_SetRawConfigParameterValue(int Parameter, int Bitmask, int Value)
+        public Task<CMDResult> SetRawConfigParameterValue(int Parameter, int Bitmask, int Value)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -511,9 +498,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> RefreshValues()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -535,9 +521,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> RefreshCCValues(int CommandClass)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -560,9 +545,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetDefinedValueIDs()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -589,9 +573,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetValueMetadata(ValueID VID)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -620,9 +603,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -649,9 +631,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -682,9 +663,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetEndpointCount()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -710,9 +690,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetHighestSecurityClass()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -741,9 +720,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> HasSecurityClass(Enums.SecurityClass Class)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -771,9 +749,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> WaitForWakeup()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -796,9 +773,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> ManuallyIdleNotificationValue(ValueID VID)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -822,9 +798,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> ManuallyIdleNotificationValue(int notificationType, int prevValue, int? endpointIndex = null)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -927,9 +902,8 @@ namespace ZWaveJS.NET
         public bool keepAwake { get; internal set; }
         public Task<CMDResult>  SetKeepAwake(bool Option)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -958,9 +932,8 @@ namespace ZWaveJS.NET
         public string name { get; internal set; }
         public Task<CMDResult> SetName(string Name, bool UpdateCC = true)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -990,9 +963,8 @@ namespace ZWaveJS.NET
         public string location { get; internal set; }
         public Task<CMDResult> SetLocation(string Location, bool UpdateCC = true)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
