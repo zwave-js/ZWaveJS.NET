@@ -3,6 +3,8 @@
 namespace ZWaveJS.NET
 {
 
+
+
     public class ZWaveOptions
     {
         public ZWaveOptions()
@@ -18,6 +20,7 @@ namespace ZWaveJS.NET
             this.emitValueUpdateAfterSetValue = false;
             this.features = new CFGFeatures();
             this.preferences = new CFGPreferences();
+            this.inclusionUserCallbacks = new InclusionUserCallbacks();
 
         }
 
@@ -26,9 +29,11 @@ namespace ZWaveJS.NET
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
 
-        public static ZWaveOptions FromSerialized(string JSON)
+        public static ZWaveOptions FromSerialized(string JSON,InclusionUserCallbacks S2Callbacks)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ZWaveOptions>(JSON);
+            ZWaveOptions Op = Newtonsoft.Json.JsonConvert.DeserializeObject<ZWaveOptions>(JSON);
+            Op.inclusionUserCallbacks = S2Callbacks;
+            return Op;
         }
 
         public CFGTimeouts timeouts { get; set; }
@@ -42,8 +47,9 @@ namespace ZWaveJS.NET
         public bool emitValueUpdateAfterSetValue { get; set; }
         public CFGFeatures features { get; set; }
         public CFGPreferences preferences { get; set; }
-
-
+        [Newtonsoft.Json.JsonIgnore]
+        public InclusionUserCallbacks inclusionUserCallbacks { get; set; }
+        
         public class CFGPreferences
         {
             public CFGPreferences()

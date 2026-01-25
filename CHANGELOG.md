@@ -13,9 +13,16 @@
       - net10.0
       - netstandard2.1
 
+    - Moved the S2 callbacks to the ```ZWaveOptions``` class
+      This falls inline with the Driver API Settings object, So  ```InclusionOptions``` no longer has these properties.  
+      Additionally, running the library in Client mode, now requires the Driver construct take an argument of the callbacks object.  
+      this also applies to ```ZWaveOptions.FromSerialized```   
+      
+      A null check is executed during any inclusion that require these callbacks.
+
     - Driver class init signature changes
       - ```public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001)```
-      - ```public Driver(Uri Server, int SchemaVersion = 0)```
+      - ```public Driver(Uri Server, InclusionUserCallbacks S2Callbacks, int SchemaVersion = 0)```
 
     - Re-engineered error/connection handling.  
        All Driver/Server error handling, is now handled through the **ServerConnectionError** event.  

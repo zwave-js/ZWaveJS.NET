@@ -16,11 +16,9 @@ namespace ZWaveJS.NET
 
         internal WebsocketClient ClientWebSocket;
         internal Dictionary<Guid, Action<JObject>> Callbacks;
-        internal bool Inited = false;
         internal ZWaveOptions Options;
         internal const string FWUSAPIKey = "921f8000486fcc2744721cfc747aab2db8fc025b5d487cbf2eba76e88ff6f79a064644bf";
-        internal DateTime ConnectStart;
-
+        internal InclusionUserCallbacks S2Callbacks;
         internal TaskCompletionSource<CMDResult> GetNewTaskCompletionSource(out Guid ID)
         {
             ID = Guid.NewGuid();
@@ -39,9 +37,12 @@ namespace ZWaveJS.NET
         private Uri WSAddress;
         private bool Host = true;
         private Server _server;
+        private DateTime ConnectStart;
+        private bool Inited = false;
 
-        public string ZWaveJSDriverVersion {get; internal set;}
-        public  string ZWaveJSServerVersion {get; internal set;}
+
+        public string ZWaveJSDriverVersion { get; internal set; }
+        public string ZWaveJSServerVersion { get; internal set; }
         public int ServerCommunicationPort { get; private set; }
 
         public Controller Controller { get; internal set; }
@@ -307,7 +308,7 @@ namespace ZWaveJS.NET
 
             ControllerEventMap.Add("inclusion aborted", (JO) =>
             {
-                this.Controller.Trigger_InclusionAborted();
+                S2Callbacks?.abort?.Invoke();
 
             });
 
@@ -377,7 +378,11 @@ namespace ZWaveJS.NET
             {
 
                 InclusionGrant RIG = JO.SelectToken("event.requested").ToObject<InclusionGrant>();
-                InclusionGrant SIG = this.Controller.Trigger_GrantSecurityClasses(RIG);
+                InclusionGrant SIG = S2Callbacks?.grantSecurityClasses?.Invoke(RIG);
+
+                if (SIG == null)
+                    return;
+
 
                 Dictionary<string, object> Request = new Dictionary<string, object>();
                 Request.Add("messageId", Guid.NewGuid().ToString());
@@ -393,7 +398,10 @@ namespace ZWaveJS.NET
             ControllerEventMap.Add("validate dsk and enter pin", (JO) =>
             {
 
-                string DSK = this.Controller.Trigger_ValidateDSK(JO.SelectToken("event.dsk").ToObject<string>());
+                string DSK = S2Callbacks?.validateDSKAndEnterPIN?.Invoke(JO.SelectToken("event.dsk").ToObject<string>());
+
+                if (DSK == null)
+                    return;
 
                 Dictionary<string, object> Request = new Dictionary<string, object>();
                 Request.Add("messageId", Guid.NewGuid().ToString());
@@ -470,7 +478,7 @@ namespace ZWaveJS.NET
         }
 
         // Client Mode
-        public Driver(Uri Server, int SchemaVersion = 0)
+        public Driver(Uri Server, InclusionUserCallbacks S2Callbacks, int SchemaVersion = 0)
         {
             Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -492,6 +500,7 @@ namespace ZWaveJS.NET
             Callbacks = new Dictionary<Guid, Action<JObject>>();
             MapEvents();
 
+            this.S2Callbacks = S2Callbacks;
             this.WSAddress = Server;
             this.Host = false;
 
@@ -526,6 +535,7 @@ namespace ZWaveJS.NET
 
             this.SerialPort = SerialPort;
             this.Options = Options;
+            this.S2Callbacks = Options.inclusionUserCallbacks;
             this.ServerCommunicationPort = ServerCommunicationPort;
             this.WSAddress = new Uri("ws://localhost:" + ServerCommunicationPort);
             this.Host = true;

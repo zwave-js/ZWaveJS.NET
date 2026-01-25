@@ -8,6 +8,17 @@ using static ZWaveJS.NET.Enums;
 
 namespace ZWaveJS.NET
 {
+    public delegate string ValidateDSKAndEnterPIN(string dsk);
+    public delegate InclusionGrant GrantSecurityClasses(InclusionGrant requested);
+    public delegate void Abort();
+
+    public class InclusionUserCallbacks
+    {
+        public ValidateDSKAndEnterPIN validateDSKAndEnterPIN { get; set; }
+        public GrantSecurityClasses grantSecurityClasses { get; set; }
+        public Abort abort { get; set; }
+    }
+
     public class QRProvisioningInformation
     {
         internal QRProvisioningInformation() { }
@@ -65,8 +76,8 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public string integrity { get; internal set; }
     }
-    
-    
+
+
 
     public class FirmwareUpdateDeviceID
     {
@@ -134,7 +145,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public bool success { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public Enums.ControllerFirmwareUpdateStatus status { get; internal  set; }
+        public Enums.ControllerFirmwareUpdateStatus status { get; internal set; }
     }
 
 
@@ -164,7 +175,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public int currentFile { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public  int totalFiles { get; internal set; }
+        public int totalFiles { get; internal set; }
     }
 
     public class SmartStartProvisioningEntry
@@ -173,11 +184,11 @@ namespace ZWaveJS.NET
 
         public SmartStartProvisioningEntry(QRProvisioningInformation ProvisioningInformation, Protocols protocol = Protocols.ZWave, ProvisioningEntryStatus status = ProvisioningEntryStatus.Active)
         {
-            if(!ProvisioningInformation.supportedProtocols.Contains(protocol))
+            if (!ProvisioningInformation.supportedProtocols.Contains(protocol))
             {
                 throw new NotSupportedException("The provided protocol is not supported by this device.");
             }
-           
+
             this.dsk = ProvisioningInformation.dsk;
             this.securityClasses = ProvisioningInformation.securityClasses;
             this.requestedSecurityClasses = ProvisioningInformation.securityClasses;
@@ -205,7 +216,7 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public Protocols[] supportedProtocols { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public SecurityClass[] securityClasses { get;  set; }
+        public SecurityClass[] securityClasses { get; set; }
         [Newtonsoft.Json.JsonProperty]
         public SecurityClass[] requestedSecurityClasses { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -221,7 +232,7 @@ namespace ZWaveJS.NET
     public class AssociationAddress
     {
         public int nodeId { get; set; }
-        public int? endpoint { get;  set; }
+        public int? endpoint { get; set; }
     }
 
     public class RebuildRouteStats
@@ -263,7 +274,7 @@ namespace ZWaveJS.NET
         public Enums.SecurityClass[] securityClasses { get; set; }
         public bool clientSideAuth { get; set; }
     }
-    
+
     public class ValueMetadata
     {
         internal ValueMetadata() { }
@@ -307,7 +318,7 @@ namespace ZWaveJS.NET
         internal DeviceClass() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public DeviceClassType basic { get; internal  set; }
+        public DeviceClassType basic { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public DeviceClassType generic { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -333,15 +344,15 @@ namespace ZWaveJS.NET
         internal DeviceConfig() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public string filename { get;internal set; }
+        public string filename { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public bool isEmbedded { get;internal set; }
+        public bool isEmbedded { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public string manufacturer { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public string label { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public string description { get; internal  set; }
+        public string description { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public Device[] devices { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -382,7 +393,7 @@ namespace ZWaveJS.NET
         public int productId { get; internal set; }
     }
 
-   public class SetValueAPIOptions
+    public class SetValueAPIOptions
     {
         public string transitionDuration { get; set; }
         public int volume { get; set; }
@@ -407,7 +418,7 @@ namespace ZWaveJS.NET
         internal LifelineHealthCheckSummary() { }
 
         [Newtonsoft.Json.JsonProperty]
-        public  LifelineHealthCheckResult[] results { get; internal set; }
+        public LifelineHealthCheckResult[] results { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public int rating { get; internal set; }
     }
@@ -444,10 +455,6 @@ namespace ZWaveJS.NET
         public Enums.SecurityBootstrapFailure lowSecurityReason { get; internal set; }
     }
 
-    public delegate string ValidateDSKAndEnterPIN(string dsk);
-    public delegate InclusionGrant GrantSecurityClasses(InclusionGrant requested);
-    public delegate void Abort();
-
     public class ExclusionOptions
     {
         public Enums.ExclusionStrategy strategy { get; set; }
@@ -457,14 +464,6 @@ namespace ZWaveJS.NET
     {
         public Enums.InclusionStrategy strategy { get; set; }
         public bool forceSecurity { get; set; }
-        public InclusionUserCallbacks userCallbacks { get;  set; }
-    }
-
-    public class InclusionUserCallbacks
-    {
-        public ValidateDSKAndEnterPIN validateDSKAndEnterPIN { get; set; }
-        public GrantSecurityClasses grantSecurityClasses { get; set; }
-        public Abort abort { get; set; }
     }
 
     public class LoggingEventArgs
@@ -575,7 +574,7 @@ namespace ZWaveJS.NET
         }
 
         internal FirmwareUpdate() { }
-        
+
         [Newtonsoft.Json.JsonProperty(PropertyName = "file")]
         public byte[] data { get; internal set; }
         public string filename { get; internal set; }

@@ -59,25 +59,7 @@ namespace ZWaveJS.NET
             this.isRebuildingRoutes = false;
             RebuildRoutesDone?.Invoke(Args);
         }
-
-        private Abort AbortSub;
-        internal void Trigger_InclusionAborted()
-        {
-            AbortSub?.Invoke();
-        }
-
-        private ValidateDSKAndEnterPIN ValidateDSKAndEnterPINSub;
-        internal string Trigger_ValidateDSK(string DSK)
-        {
-            return ValidateDSKAndEnterPINSub?.Invoke(DSK);
-        }
-
-        private GrantSecurityClasses GrantSecurityClassesSub;
-        internal InclusionGrant Trigger_GrantSecurityClasses(InclusionGrant Requested)
-        {
-            return GrantSecurityClassesSub?.Invoke(Requested);
-        }
-
+        
         public delegate void InclusionStartedEvent(bool Secure);
         public event InclusionStartedEvent InclusionStarted;
         internal void Trigger_InclusionStarted(bool Secure)
@@ -140,31 +122,14 @@ namespace ZWaveJS.NET
         {
             FirmwareUpdateProgress?.Invoke(Args);
         }
-
-        private void ResetInclusionCallbacks()
-        {
-            ValidateDSKAndEnterPINSub = null;
-            GrantSecurityClassesSub = null;
-            AbortSub = null;
-        }
-
-        private void ExtractInclusionCallbacks(InclusionOptions options)
-        {
-            if (options.strategy == Enums.InclusionStrategy.Default || options.strategy == Enums.InclusionStrategy.Security_S2)
-            {
-                ValidateDSKAndEnterPINSub = options.userCallbacks?.validateDSKAndEnterPIN;
-                GrantSecurityClassesSub = options.userCallbacks?.grantSecurityClasses;
-                AbortSub = options.userCallbacks?.abort;
-            }
-        }
-
+        
         private CMDResult ValidateStrategy(Enums.InclusionStrategy strategy)
         {
             bool requiresCallbacks =
                 strategy == Enums.InclusionStrategy.Default ||
                 strategy == Enums.InclusionStrategy.Security_S2;
 
-            if (requiresCallbacks && (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null))
+            if (requiresCallbacks && (_driver.S2Callbacks?.validateDSKAndEnterPIN == null || _driver.S2Callbacks?.grantSecurityClasses == null || _driver.S2Callbacks?.abort == null))
             {
                 return new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security requires userCallbacks [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
             }
@@ -722,9 +687,6 @@ namespace ZWaveJS.NET
             Guid ID;
             TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            ResetInclusionCallbacks();
-            ExtractInclusionCallbacks(Options);
-
             CMDResult Error = ValidateStrategy(Options.strategy) ?? ValidateKeys(Options.strategy) ?? ValidateKeyLength();
             if (Error != null)
             {
@@ -869,9 +831,6 @@ namespace ZWaveJS.NET
         {
             Guid ID;
             TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
-
-            ResetInclusionCallbacks();
-            ExtractInclusionCallbacks(Options);
 
             CMDResult Error = ValidateStrategy(Options.strategy) ?? ValidateKeys(Options.strategy) ?? ValidateKeyLength();
             if (Error != null)
