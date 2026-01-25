@@ -7,10 +7,14 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <Image
-                Source="zwavejs_dark.png"
-                HeightRequest="185"
-                Aspect="AspectFit"/>
+            <Image HeightRequest="185"
+                    Aspect="AspectFit">
+                <Image.Source>
+                    <AppThemeBinding
+                        Light="zwavejs_light.png"
+                        Dark="zwavejs_dark.png"/>
+                </Image.Source>
+            </Image>
 
             <Label
                 Text="ZWaveJS.NET"
@@ -23,7 +27,7 @@
                 SemanticProperties.HeadingLevel="Level2"/>
 
             <Grid HorizontalOptions="Center"
-                    RowSpacing="10">
+                  RowSpacing="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

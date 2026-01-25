@@ -13,7 +13,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-             <Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -89,6 +93,42 @@
                 Grid.Column="1"
                 Grid.Row="7"
                 Text="{Binding Controller.deviceConfig.label, Source={x:Static local:App.Driver}}"/>
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="8"
+                Text="Firmware Version : "/>
+            <Label
+                Grid.Column="1"
+                Grid.Row="8"
+                Text="{Binding Controller.firmwareVersion, Source={x:Static local:App.Driver}}"/>
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="9"
+                Text="ZWave SDK Version : "/>
+            <Label
+                Grid.Column="1"
+                Grid.Row="9"
+                Text="{Binding Controller.sdkVersion, Source={x:Static local:App.Driver}}"/>
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="10"
+                Text="Supports Long Range : "/>
+            <Label
+                Grid.Column="1"
+                Grid.Row="10"
+                Text="{Binding Controller.supportsLongRange, Source={x:Static local:App.Driver}}"/>
+
+            <Label
+                Grid.Column="0"
+                Grid.Row="11"
+                Text="Home ID : "/>
+            <Label
+                Grid.Column="1"
+                Grid.Row="11"
+                Text="{Binding Controller.HomeIDAsHex, Source={x:Static local:App.Driver}}"/>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>

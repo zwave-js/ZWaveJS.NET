@@ -1007,6 +1007,8 @@ namespace ZWaveJS.NET
 
         public NodesCollection Nodes { get; internal set; }
 
+        public string HomeIDAsHex => $"0x{homeId.ToString("X2").ToUpper()}";
+
         [Newtonsoft.Json.JsonProperty]
         public string libraryVersion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
@@ -1051,5 +1053,8 @@ namespace ZWaveJS.NET
         public Enums.RFRegion? rfRegion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public bool supportsLongRange { get; internal set; }
-    }
+        [Newtonsoft.Json.JsonProperty]
+        public string firmwareVersion {get;internal set;}
+        [Newtonsoft.Json.JsonProperty]
+        public string sdkVersion {get;internal set;}    }
 }

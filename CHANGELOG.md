@@ -77,6 +77,9 @@
         - ```attempts.firmwareUpdateOTW```
     - Added ```Driver.IsHostedMode``` property
     - Added ```Driver.ServerSchemaVersion``` property
+    - Added ```Controller.sdkVersion``` property
+    - Added ```Controller.firmwareVersion``` property
+    - Added ```Controller.HomeIDAsHex``` property
 
 
 

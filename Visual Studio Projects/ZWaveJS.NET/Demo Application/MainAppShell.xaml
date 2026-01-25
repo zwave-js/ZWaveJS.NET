@@ -10,22 +10,24 @@
     <ShellContent
         Title="Zwave Runtime Information"
         ContentTemplate="{DataTemplate local:Information}"
-        Route="Information" />
-
-    <ShellContent
-        Title="ZWave Nodes"
-        ContentTemplate="{DataTemplate local:Information}"
-        Route="Information" />
+        Route="Information"/>
 
     <ShellContent
         Title="Controller Firmware"
         ContentTemplate="{DataTemplate local:Information}"
-        Route="Information" />
+        Route="Information"/>
+
+    <ShellContent
+        Title="ZWave Nodes"
+        ContentTemplate="{DataTemplate local:Information}"
+        Route="Information"/>
+
+
 
     <ShellContent
         Title="Network Rebuild"
         ContentTemplate="{DataTemplate local:Information}"
-        Route="Information" />
+        Route="Information"/>
 
 
 </Shell>
