@@ -5,96 +5,154 @@
              xmlns:local="clr-namespace:Demo_Application"
              Title="Nodes">
     <VerticalStackLayout>
-        <ScrollView Padding="10">
-            <CollectionView ItemsSource="{Binding Controller.Nodes.Array, Source={x:Static local:App.Driver}}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
 
-                        <StackLayout Orientation="Horizontal"
-                                     Padding="40"
-                                     HorizontalOptions="Fill">
+        <StackLayout Orientation="Horizontal"
+                     Padding="40,40,40,0"
+                     HorizontalOptions="Fill">
 
-                            <Frame
-                                Margin="5"
-                                WidthRequest="100"
-                                HeightRequest="78"
-                                BackgroundColor="{StaticResource PrimaryDark}"
-                                HorizontalOptions="Start">
-                                <Label FontSize="28"
-                                       TextColor="White"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       Text="{Binding id, StringFormat='#{0}'}"/>
-                            </Frame>
+            <Frame
+                Margin="5"
+                WidthRequest="100"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Node"/>
+            </Frame>
 
-                            <Frame
-                                Margin="5"
-                                HeightRequest="78"
-                                HorizontalOptions="FillAndExpand"
-                                BackgroundColor="{StaticResource PrimaryDark}">
-                                <Label FontSize="22"
-                                       TextColor="White"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       Text="{Binding id, StringFormat='#{0}'}"/>
-                            </Frame>
+            <Frame
+                Margin="5"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Info"/>
+            </Frame>
 
-                            <Frame
-                                Margin="5"
-                                WidthRequest="110"
-                                HeightRequest="78"
-                                BackgroundColor="{StaticResource Tertiary}"
-                                HorizontalOptions="Start">
-                                <Label FontSize="14"
-                                       TextColor="White"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center"
-                                       Text="SLEEP"/>
-                            </Frame>
+            <Frame
+                Margin="5"
+                WidthRequest="110"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Status"/>
+            </Frame>
 
-                            <Frame
-                                Margin="5"
-                                WidthRequest="110"
-                                HeightRequest="78"
-                                BackgroundColor="{StaticResource Gray600}"
-                                HorizontalOptions="Start">
-                                <Label FontSize="14"
-                                       TextColor="White"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center"
-                                       Text="NOT READY"/>
-                            </Frame>
+            <Frame
+                Margin="5"
+                WidthRequest="110"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Ready?"/>
+            </Frame>
 
-                            <Frame
-                                Margin="5"
-                                WidthRequest="140"
-                                HeightRequest="78"
-                                BackgroundColor="{StaticResource Gray600}"
-                                HorizontalOptions="Start">
-                                <Label FontSize="14"
-                                       TextColor="White"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center"
-                                       Text="NOT INTERVIEWED"/>
-                            </Frame>
+            <Frame
+                Margin="5"
+                WidthRequest="140"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Intvw State"/>
+            </Frame>
 
+        </StackLayout>
 
+        <CollectionView ItemsSource="{Binding Controller.Nodes.Array, Source={x:Static local:App.Driver}}">
+            <CollectionView.ItemTemplate>
 
+                <DataTemplate>
 
-                        </StackLayout>
+                    <StackLayout Orientation="Horizontal"
+                                 Padding="40,0,40,40"
+                                 HorizontalOptions="Fill">
 
+                        <Frame
+                            Margin="5"
+                            WidthRequest="100"
+                            HeightRequest="78"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="28"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Text="{Binding id, StringFormat='#{0}'}"/>
+                        </Frame>
 
+                        <Frame
+                            Margin="5"
+                            HeightRequest="78"
+                            HorizontalOptions="FillAndExpand"
+                            BackgroundColor="{StaticResource PrimaryDark}">
+                            <Label FontSize="22"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Text="{Binding id, StringFormat='#{0}'}"/>
+                        </Frame>
 
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
+                        <Frame
+                            Margin="5"
+                            WidthRequest="110"
+                            HeightRequest="78"
+                            BackgroundColor="{StaticResource Tertiary}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   Text="{Binding status}"/>
+                        </Frame>
 
+                        <Frame
+                            Margin="5"
+                            WidthRequest="110"
+                            HeightRequest="78"
+                            BackgroundColor="{StaticResource Gray600}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   Text="NOT READY"/>
+                        </Frame>
+
+                        <Frame
+                            Margin="5"
+                            WidthRequest="140"
+                            HeightRequest="78"
+                            BackgroundColor="{StaticResource Gray600}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   Text="{Binding interviewStage}"/>
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>
