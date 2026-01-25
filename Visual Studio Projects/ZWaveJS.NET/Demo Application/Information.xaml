@@ -27,7 +27,7 @@
             <Label
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
-                FontSize="30"
+                FontSize="24"
                 Text="Runtime Information"/>
 
             <Label
@@ -69,7 +69,7 @@
             <Label
                 Grid.Row="5"
                 Grid.ColumnSpan="2"
-                FontSize="30"
+                FontSize="24"
                 Text="Hardware Information"/>
 
             <Label
