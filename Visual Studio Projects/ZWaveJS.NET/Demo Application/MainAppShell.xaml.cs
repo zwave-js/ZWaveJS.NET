@@ -5,5 +5,6 @@ public partial class MainAppShell : Shell
 	public MainAppShell()
 	{
 		InitializeComponent();
+	
 	}
 }

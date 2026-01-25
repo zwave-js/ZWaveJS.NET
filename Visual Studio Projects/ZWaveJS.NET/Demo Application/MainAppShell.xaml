@@ -15,19 +15,19 @@
     <ShellContent
         Title="Controller Firmware"
         ContentTemplate="{DataTemplate local:Information}"
-        Route="Information"/>
+        Route="ControllerFirmware"/>
 
     <ShellContent
         Title="ZWave Nodes"
-        ContentTemplate="{DataTemplate local:Information}"
-        Route="Information"/>
+        ContentTemplate="{DataTemplate local:Nodes}"
+        Route="Nodes"/>
 
 
 
     <ShellContent
         Title="Network Rebuild"
         ContentTemplate="{DataTemplate local:Information}"
-        Route="Information"/>
+        Route="NetWorkRebuild"/>
 
 
 </Shell>

@@ -54,7 +54,8 @@
       ZWDNET-ER-07 : Invalid Key Length
       ZWDNET-ER-08 : Missing API key (Commercial use)
       ZWDNET-ER-09 : Use of incorrect override
-      ``` 
+      ```
+    - The ```Controller.Nodes.AsArray()``` method has been replaced with a property of ```Controller.Nodes.Array```
 
     - The following methods/events have been renamed
       - ```ZWJSS_SetRawConfigParameterValue``` -> ```SetRawConfigParameterValue```
