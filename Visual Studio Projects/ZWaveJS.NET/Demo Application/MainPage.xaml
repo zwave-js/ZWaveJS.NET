@@ -8,13 +8,8 @@
             Padding="30,0"
             Spacing="25">
             <Image HeightRequest="185"
-                    Aspect="AspectFit">
-                <Image.Source>
-                    <AppThemeBinding
-                        Light="zwavejs_light.png"
-                        Dark="zwavejs_dark.png"/>
-                </Image.Source>
-            </Image>
+                   Aspect="AspectFit"
+                   Source="{AppThemeBinding Light=zwavejs_dark.png, Dark=zwavejs_light.png}"/>
 
             <Label
                 Text="ZWaveJS.NET"
