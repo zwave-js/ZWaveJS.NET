@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Demo_Application.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <Image
+                Source="zwavejs_dark.png"
+                HeightRequest="185"
+                Aspect="AspectFit"/>
+
+            <Label
+                Text="ZWaveJS.NET"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1"/>
+
+            <Label
+                Text="Welcome to the ZWaveJS.NET Demo Application"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2"/>
+
+            <Grid HorizontalOptions="Center"
+                    RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Library Mode"
+                       Margin="0,0,10,0"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="0"
+                       Grid.Column="0"/>
+
+                <Picker x:Name="PK_Mode"
+                        Title="Select one"
+                        Margin="10,0,0,0"
+                        WidthRequest="200"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Fill"
+                        Grid.Row="0"
+                        Grid.Column="1">
+                    <Picker.Items>
+                        <x:String>Host</x:String>
+                        <x:String>Client</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Label Text="Serial Port Or Server"
+                       Margin="0,0,10,0"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="1"
+                       Grid.Column="0"/>
+
+                <Entry Margin="10,0,0,0"
+                       x:Name="TX_Target"
+                       WidthRequest="200"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Fill"
+                       Grid.Row="1"
+                       Grid.Column="1"/>
+            </Grid>
+
+
+            <Button
+                Text="Connect"
+                Clicked="ConnectClick"
+                WidthRequest="300"
+                HorizontalOptions="Center"/>
+
+            <ActivityIndicator
+                x:Name="AC_Wait"
+                IsRunning="False"
+                IsVisible="False"
+                Color="DodgerBlue"
+                WidthRequest="80"
+                HeightRequest="80"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

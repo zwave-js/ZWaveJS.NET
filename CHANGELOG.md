@@ -69,10 +69,14 @@
     - Reverted to using the actively maintained Websocket.Client library. Previously, we were relying on an outdated source‑based code copy
 
   - New Features.
+    - Added the ability to set the PSI root folder via ```Server.PSIRoot```, this is to address some OSX quirks, with App Bundles.  
+      it should only be the folder path, and not the executable name.
     - Exposed further Zwave Options
         - ```preferences```
         - ```attempts.smartStartInclusion```
         - ```attempts.firmwareUpdateOTW```
+    - Added ```Driver.IsHostedMode``` property
+    - Added ```Driver.ServerSchemaVersiondMode``` property
 
 
 

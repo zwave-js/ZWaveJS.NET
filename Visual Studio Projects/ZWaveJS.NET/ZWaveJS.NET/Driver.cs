@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Websocket.Client;
+using System.Runtime.CompilerServices;
 
 namespace ZWaveJS.NET
 {
@@ -39,11 +40,13 @@ namespace ZWaveJS.NET
         private Server _server;
         private DateTime ConnectStart;
         private bool Inited = false;
-
+        
 
         public string ZWaveJSDriverVersion { get; internal set; }
         public string ZWaveJSServerVersion { get; internal set; }
+        public int ServerSchemaVersion { get; internal set; }
         public int ServerCommunicationPort { get; private set; }
+        public bool IsHostedMode {get {return Host;}}
 
         public Controller Controller { get; internal set; }
         public Utils Utils { get; internal set; }
@@ -962,6 +965,7 @@ namespace ZWaveJS.NET
                 {
                     ZWaveJSDriverVersion = JO.Value<string>("driverVersion");
                     ZWaveJSServerVersion = JO.Value<string>("serverVersion");
+                    ServerSchemaVersion = JO.Value<int>("maxSchemaVersion");
 
                     Guid CBID = Guid.NewGuid();
                     Callbacks.Add(CBID, SetAPIVersionCB);

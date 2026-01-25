@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Sockets;
 using Newtonsoft.Json;
 
 namespace ZWaveJS.NET
 {
-    internal class Server
+    public class Server
     {
-
-        
 
         private Process ServerProcess;
 
@@ -18,6 +15,7 @@ namespace ZWaveJS.NET
 
         internal delegate void ProcessdExitedEvent();
         internal event ProcessdExitedEvent Exited;
+        public static string PSIRoot;
 
         internal void Terminate()
         {
@@ -41,12 +39,20 @@ namespace ZWaveJS.NET
                 File.Delete(ProcessName);
             }
 
-            if (!File.Exists("server.psi"))
+            string PSIPath =  "server.psi";
+            string ProcessPath = ProcessName;
+            if(!string.IsNullOrEmpty(PSIRoot))
+            {
+                PSIPath = Path.Join(PSIRoot,PSIPath);
+                ProcessPath = Path.Join(PSIRoot,ProcessName);
+            }
+
+            if (!File.Exists(PSIPath))
             {
                 throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");
             }
 
-            File.Copy("server.psi",ProcessName, true);
+            File.Copy(PSIPath,ProcessPath, true);
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
             JSS.NullValueHandling = NullValueHandling.Ignore;
@@ -61,7 +67,7 @@ namespace ZWaveJS.NET
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
             PSI.EnvironmentVariables.Add("NODE_ENV", "production");
 
-            PSI.FileName = ProcessName;
+            PSI.FileName = ProcessPath;
             PSI.UseShellExecute = false;
 #if !DEBUG
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
