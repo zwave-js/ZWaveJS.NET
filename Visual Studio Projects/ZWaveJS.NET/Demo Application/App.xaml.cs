@@ -33,8 +33,13 @@ public partial class App : Application
 		{
 			case true:
 				ZWaveOptions Options = new ZWaveOptions();
+
+				Options.inclusionUserCallbacks.abort += HandleAbort;
+				Options.inclusionUserCallbacks.validateDSKAndEnterPIN += HandleDSK;
+				Options.inclusionUserCallbacks.grantSecurityClasses += HandleGrant;
 				Options.features.softReset = false;
 				Options.storage.cacheDir = Path.Join(DocumentsPath,"zwave-js-cache");
+
 				_Driver = new Driver(PoretOrURI.ToString(), Options);
 				_Driver.DriverReady += HandleReady;
 				_Driver.ServerConnectionError += HandleError;
@@ -52,6 +57,21 @@ public partial class App : Application
 
 	}
 
+	private void HandleAbort()
+	{
+		
+	}
+
+	private  string HandleDSK(string DSK)
+	{
+		return DSK;
+	}
+
+	private InclusionGrant HandleGrant(InclusionGrant Requested)
+	{
+		return Requested;
+	}
+
 	private async void HandleError(string ErrorCode, string Message, Action<bool, int?> Retry)
 	{
 		if (Retry == null)
@@ -62,7 +82,6 @@ public partial class App : Application
 				Quit();
 
 			});
-
 		}
 		else
 		{
@@ -86,7 +105,6 @@ public partial class App : Application
 	{
 		_ = MainThread.InvokeOnMainThreadAsync(async () =>
 			{
-
 				Window window = Application.Current.Windows[0];
 				window.Page = new MainAppShell();
 			});

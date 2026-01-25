@@ -89,10 +89,6 @@
                 Grid.Column="1"
                 Grid.Row="7"
                 Text="{Binding Controller.deviceConfig.label, Source={x:Static local:App.Driver}}"/>
-
-
         </Grid>
-
-
     </VerticalStackLayout>
 </ContentPage>
