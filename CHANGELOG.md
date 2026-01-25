@@ -76,7 +76,7 @@
         - ```attempts.smartStartInclusion```
         - ```attempts.firmwareUpdateOTW```
     - Added ```Driver.IsHostedMode``` property
-    - Added ```Driver.ServerSchemaVersiondMode``` property
+    - Added ```Driver.ServerSchemaVersion``` property
 
 
 
