@@ -4,16 +4,23 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static ZWaveJS.NET.Enums;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ZWaveJS.NET
 {
-    public class Controller
+    public class Controller : INotifyPropertyChanged
     {
         private Driver _driver;
         internal Controller(Driver driver)
         {
             _driver = driver;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public delegate void BackupNVMProgress(int BytesRead, int Total);
@@ -42,6 +49,7 @@ namespace ZWaveJS.NET
         internal void Trigger_StatisticsUpdated(ControllerStatisticsUpdatedArgs Args)
         {
             this.statistics = Args;
+            OnPropertyChanged(nameof(statistics));
             StatisticsUpdated?.Invoke(Args);
         }
 
@@ -57,6 +65,7 @@ namespace ZWaveJS.NET
         internal void Trigger_RebuildRoutesDone(RebuildRoutesDoneArgs Args)
         {
             this.isRebuildingRoutes = false;
+            OnPropertyChanged(nameof(isRebuildingRoutes));
             RebuildRoutesDone?.Invoke(Args);
         }
         
@@ -782,6 +791,7 @@ namespace ZWaveJS.NET
                  if (Res.Success && Res.ResultPayloadAs<bool>())
                  {
                      this.isRebuildingRoutes = true;
+                     OnPropertyChanged(nameof(isRebuildingRoutes));
                  }
                  Result.SetResult(Res);
              });
@@ -810,6 +820,7 @@ namespace ZWaveJS.NET
                  if (Res.Success && Res.ResultPayloadAs<bool>())
                  {
                      this.isRebuildingRoutes = false;
+                     OnPropertyChanged(nameof(isRebuildingRoutes));
                  }
 
                  Result.SetResult(Res);

@@ -4,18 +4,24 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using System.ComponentModel;
 using static ZWaveJS.NET.Enums;
 
 namespace ZWaveJS.NET
 {
-    public class ZWaveNode
+    public class ZWaveNode : INotifyPropertyChanged
     {
         private Driver _driver;
         internal ZWaveNode(Driver driver = null)
         {
             _driver = driver;
         }
-        
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public delegate void LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating);
         private LifelineHealthCheckProgress LifelineHealthCheckProgressSub;
         internal void Trigger_LifelineHealthCheckProgress(int Round, int TotalRounds, int LastRating)
@@ -28,6 +34,7 @@ namespace ZWaveJS.NET
         internal void Trigger_StatisticsUpdated(NodeStatisticsUpdatedArgs Args)
         {
             this.statistics = Args;
+            OnPropertyChanged(nameof(statistics));
             StatisticsUpdated?.Invoke(this, Args);
         }
 
@@ -86,7 +93,7 @@ namespace ZWaveJS.NET
         {
             Notification?.Invoke(this, CCID, Args);
         }
-        
+
         public delegate void NodeInfoEvent(ZWaveNode Node);
         public event NodeInfoEvent NodeInfo;
         internal void Trigger_NodeInfo()
@@ -99,6 +106,7 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeAlive()
         {
             this.status = Enums.NodeStatus.Alive;
+            OnPropertyChanged(nameof(status));
             NodeAlive?.Invoke(this);
         }
 
@@ -107,6 +115,7 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeDead()
         {
             this.status = Enums.NodeStatus.Dead;
+            OnPropertyChanged(nameof(status));
             NodeDead?.Invoke(this);
         }
 
@@ -115,6 +124,7 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeAwake()
         {
             this.status = Enums.NodeStatus.Awake;
+            OnPropertyChanged(nameof(status));
             NodeAwake?.Invoke(this);
         }
 
@@ -123,6 +133,7 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeAsleep()
         {
             this.status = Enums.NodeStatus.Asleep;
+            OnPropertyChanged(nameof(status));
             NodeAsleep?.Invoke(this);
         }
 
@@ -131,6 +142,7 @@ namespace ZWaveJS.NET
         internal void Trigger_NodeReady()
         {
             this.ready = true;
+            OnPropertyChanged(nameof(ready));
             NodeReady?.Invoke(this);
         }
 
@@ -138,6 +150,7 @@ namespace ZWaveJS.NET
         public event NodeInterviewStartedEvent NodeInterviewStarted;
         internal void Trigger_NodeInterviewStarted()
         {
+
             NodeInterviewStarted?.Invoke(this);
         }
 
@@ -154,7 +167,7 @@ namespace ZWaveJS.NET
         {
             NodeInterviewFailed?.Invoke(this, Args);
         }
-        
+
         // Checked as of : 3.5.0
         public Task<CMDResult> Ping()
         {
@@ -167,7 +180,7 @@ namespace ZWaveJS.NET
                 {
                     Res.SetPayload(JO.SelectToken("result.responded").ToObject<bool>());
                 }
-                
+
                 Result.SetResult(Res);
             });
 
@@ -204,7 +217,7 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
+
         // Checked as of : 3.5.0
         public Task<CMDResult> CheckLifelineHealth(int Rounds, LifelineHealthCheckProgress OnProgress = null)
         {
@@ -220,7 +233,7 @@ namespace ZWaveJS.NET
                     LifelineHealthCheckSummary LLHCS = JO.SelectToken("result.summary").ToObject<LifelineHealthCheckSummary>();
                     Res.SetPayload(LLHCS);
                 }
-                
+
                 Result.SetResult(Res);
             });
 
@@ -252,7 +265,7 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.AbortFirmwareUpdate);
             Request.Add("nodeId", this.id);
-          
+
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
@@ -264,9 +277,9 @@ namespace ZWaveJS.NET
         public Task<CMDResult> UpdateFirmware(FirmwareUpdate[] Updates)
         {
 
-            foreach(FirmwareUpdate FWU in Updates)
+            foreach (FirmwareUpdate FWU in Updates)
             {
-                if(FWU.firmwareTarget == null)
+                if (FWU.firmwareTarget == null)
                 {
                     TaskCompletionSource<CMDResult> Fail = new TaskCompletionSource<CMDResult>();
                     CMDResult Res = new CMDResult(Enums.ErrorCodes.WrongOverride, "Please use the override that includes 'firmwareTarget'", false);
@@ -285,16 +298,16 @@ namespace ZWaveJS.NET
                 {
                     Res.SetPayload(JO.SelectToken("result.result").ToObject<NodeFirmwareUpdateResultArgs>());
                 }
-                
+
                 Result.SetResult(Res);
             });
-            
+
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.UpdateFirmware);
             Request.Add("nodeId", this.id);
             Request.Add("updates", Updates);
-            
+
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
@@ -317,7 +330,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.RefreshInfo);
             Request.Add("nodeId", this.id);
 
-            if(Options != null)
+            if (Options != null)
                 Request.Add("options", Options);
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
@@ -494,7 +507,7 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
+
         // Checked as of : 3.5.0
         public Task<CMDResult> RefreshValues()
         {
@@ -611,7 +624,7 @@ namespace ZWaveJS.NET
                 if (Res.Success)
                 {
                     Res.SetPayload(JO.SelectToken("result.supported").ToObject<bool>());
-                    
+
                 }
                 Result.SetResult(Res);
             });
@@ -658,7 +671,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-       
+
 
         // Checked as of : 3.5.0
         public Task<CMDResult> GetEndpointCount()
@@ -703,7 +716,7 @@ namespace ZWaveJS.NET
                 }
                 Result.SetResult(Res);
 
-               
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -731,7 +744,7 @@ namespace ZWaveJS.NET
                     Res.SetPayload(JO.SelectToken("result.hasSecurityClass").ToObject<bool>());
                 }
                 Result.SetResult(Res);
-              
+
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -825,7 +838,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-         // LOCAL
+        // LOCAL
         public Endpoint GetEndpoint(int Index)
         {
             Endpoint EP = this.endpoints.FirstOrDefault((E) => E.index.Equals(Index));
@@ -897,10 +910,10 @@ namespace ZWaveJS.NET
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
         public int id { get; internal set; }
-        
+
         [Newtonsoft.Json.JsonProperty]
         public bool keepAwake { get; internal set; }
-        public Task<CMDResult>  SetKeepAwake(bool Option)
+        public Task<CMDResult> SetKeepAwake(bool Option)
         {
             Guid ID;
             TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);

@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Demo_Application.Nodes"
              xmlns:local="clr-namespace:Demo_Application"
+             xmlns:zwjs="clr-namespace:ZWaveJS.NET;assembly=ZWaveJS.NET"
+             x:DataType="local:NodesViewModel"
              Title="Nodes">
     <VerticalStackLayout>
 
@@ -72,10 +74,10 @@
 
         </StackLayout>
 
-        <CollectionView ItemsSource="{Binding Controller.Nodes.Array, Source={x:Static local:App.Driver}}">
+        <CollectionView ItemsSource="{Binding NodeCollection}">
             <CollectionView.ItemTemplate>
 
-                <DataTemplate>
+                <DataTemplate x:DataType="{zwjs:ZWaveNode}">
 
                     <StackLayout Orientation="Horizontal"
                                  Padding="40,0,40,40"
@@ -133,7 +135,7 @@
                                    VerticalOptions="Center"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center"
-                                   Text="NOT READY"/>
+                                   Text="{Binding ready}"/>
                         </Frame>
 
                         <Frame
