@@ -6,6 +6,15 @@
              xmlns:zwjs="clr-namespace:ZWaveJS.NET;assembly=ZWaveJS.NET"
              x:DataType="local:NodesViewModel"
              Title="Nodes">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InterviewStatusConverter x:Key="InterviewStatusConverter"/>
+            <local:StatusConverter x:Key="StatusConverter" />
+            <local:ReadyConverter x:Key="ReadyConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <VerticalStackLayout>
 
         <StackLayout Orientation="Horizontal"
@@ -105,14 +114,14 @@
                                    TextColor="White"
                                    HorizontalOptions="Center"
                                    VerticalOptions="Center"
-                                   Text="{Binding id, StringFormat='#{0}'}"/>
+                                   Text="Info Here"/>
                         </Frame>
 
                         <Frame
                             Margin="5"
                             WidthRequest="110"
                             HeightRequest="78"
-                            BackgroundColor="{StaticResource Tertiary}"
+                            BackgroundColor="{Binding status, Converter={StaticResource StatusConverter}}"
                             HorizontalOptions="Start">
                             <Label FontSize="14"
                                    TextColor="White"
@@ -127,7 +136,7 @@
                             Margin="5"
                             WidthRequest="110"
                             HeightRequest="78"
-                            BackgroundColor="{StaticResource Gray600}"
+                            BackgroundColor="{Binding ready, Converter={StaticResource ReadyConverter}}"
                             HorizontalOptions="Start">
                             <Label FontSize="14"
                                    TextColor="White"
@@ -142,7 +151,7 @@
                             Margin="5"
                             WidthRequest="140"
                             HeightRequest="78"
-                            BackgroundColor="{StaticResource Gray600}"
+                            BackgroundColor="{Binding interviewStage, Converter={StaticResource InterviewStatusConverter}}"
                             HorizontalOptions="Start">
                             <Label FontSize="14"
                                    TextColor="White"

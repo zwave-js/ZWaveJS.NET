@@ -146,11 +146,23 @@ namespace ZWaveJS.NET
             NodeReady?.Invoke(this);
         }
 
+        public delegate void NodeInterviewStageCompletedEvent(ZWaveNode Node, string Stage);
+        public event NodeInterviewStageCompletedEvent InterviewStageCompleted;
+        internal void Trigger_InterviewStageCompleted(string Stage)
+        {
+
+            interviewStage = Stage;
+            OnPropertyChanged(nameof(interviewStage));
+            InterviewStageCompleted?.Invoke(this,Stage);
+        }
+
         public delegate void NodeInterviewStartedEvent(ZWaveNode Node);
         public event NodeInterviewStartedEvent NodeInterviewStarted;
         internal void Trigger_NodeInterviewStarted()
         {
 
+            interviewStage = "ProtocolInfo";
+            OnPropertyChanged(nameof(interviewStage));
             NodeInterviewStarted?.Invoke(this);
         }
 
@@ -158,6 +170,8 @@ namespace ZWaveJS.NET
         public event NodeInterviewCompletedEvent NodeInterviewCompleted;
         internal void Trigger_NodeInterviewCompleted()
         {
+            interviewStage = "Complete";
+            OnPropertyChanged(nameof(interviewStage));
             NodeInterviewCompleted?.Invoke(this);
         }
 

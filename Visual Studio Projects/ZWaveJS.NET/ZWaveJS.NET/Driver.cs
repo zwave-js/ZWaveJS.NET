@@ -40,13 +40,13 @@ namespace ZWaveJS.NET
         private Server _server;
         private DateTime ConnectStart;
         private bool Inited = false;
-        
+
 
         public string ZWaveJSDriverVersion { get; internal set; }
         public string ZWaveJSServerVersion { get; internal set; }
         public int ServerSchemaVersion { get; internal set; }
         public int ServerCommunicationPort { get; private set; }
-        public bool IsHostedMode {get {return Host;}}
+        public bool IsHostedMode { get { return Host; } }
 
         public Controller Controller { get; internal set; }
         public Utils Utils { get; internal set; }
@@ -68,6 +68,15 @@ namespace ZWaveJS.NET
 
         private void MapNodeEvents()
         {
+
+            NodeEventMap.Add("interview stage completed", (JO) =>
+            {
+                int NID = JO.SelectToken("event.nodeId").ToObject<int>();
+                string Stage = JO.SelectToken("event.stageName").ToObject<string>();
+                ZWaveNode N = this.Controller.Nodes.Get(NID);
+
+                N.Trigger_InterviewStageCompleted(Stage);
+            });
 
             NodeEventMap.Add("node info received", (JO) =>
             {
