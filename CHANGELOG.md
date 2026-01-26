@@ -81,7 +81,7 @@
     - Added ```Controller.sdkVersion``` property
     - Added ```Controller.firmwareVersion``` property
     - Added ```Controller.HomeIDAsHex``` property
-    - Implemented ```PropertyChanged``` support for the below.  
+    - Implemented ```INotifyPropertyChanged``` support for the below.  
     this improves support for MVVM and allows UI bindings to update automatically.
         - ```ZWaveNode.statistics```
         - ```ZWaveNode.status```
