@@ -7,11 +7,24 @@
              x:DataType="local:NodesViewModel"
              Title="Nodes">
 
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Include Node"
+                Order="Secondary"
+                Priority="0"/>
+        <ToolbarItem Text="Exclude Node"
+                Order="Secondary"
+                Priority="1"/>
+    </ContentPage.ToolbarItems>
+
+
+
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:InterviewStatusConverter x:Key="InterviewStatusConverter"/>
-            <local:StatusConverter x:Key="StatusConverter" />
-            <local:ReadyConverter x:Key="ReadyConverter" />
+            <local:StatusConverter x:Key="StatusConverter"/>
+            <local:ReadyConverter x:Key="ReadyConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
