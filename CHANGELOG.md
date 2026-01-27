@@ -90,6 +90,7 @@
         - ```ZWaveNode.interviewStage```
         - ```Controller.statistics```
         - ```Controller.isRebuildingRoutes```  
+        - ```Controller.Nodes.Collection```  
         
 - v4.0.0
 

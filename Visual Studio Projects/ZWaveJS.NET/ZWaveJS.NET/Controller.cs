@@ -68,7 +68,7 @@ namespace ZWaveJS.NET
             OnPropertyChanged(nameof(isRebuildingRoutes));
             RebuildRoutesDone?.Invoke(Args);
         }
-        
+
         public delegate void InclusionStartedEvent(bool Secure);
         public event InclusionStartedEvent InclusionStarted;
         internal void Trigger_InclusionStarted(bool Secure)
@@ -101,6 +101,7 @@ namespace ZWaveJS.NET
         public event NodeRemovedEvent NodeRemoved;
         internal void Trigger_NodeRemoved(ZWaveNode Node, Enums.RemoveNodeReason Reason)
         {
+
             NodeRemoved?.Invoke(Node, Reason);
         }
 
@@ -131,7 +132,7 @@ namespace ZWaveJS.NET
         {
             FirmwareUpdateProgress?.Invoke(Args);
         }
-        
+
         private CMDResult ValidateStrategy(Enums.InclusionStrategy strategy)
         {
             bool requiresCallbacks =
@@ -1065,7 +1066,8 @@ namespace ZWaveJS.NET
         [Newtonsoft.Json.JsonProperty]
         public bool supportsLongRange { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public string firmwareVersion {get;internal set;}
+        public string firmwareVersion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
-        public string sdkVersion {get;internal set;}    }
+        public string sdkVersion { get; internal set; }
+    }
 }

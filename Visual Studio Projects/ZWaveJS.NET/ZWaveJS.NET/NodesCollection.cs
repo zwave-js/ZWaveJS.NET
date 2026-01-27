@@ -1,13 +1,20 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace ZWaveJS.NET
 {
-    public class NodesCollection
+    public class NodesCollection : INotifyPropertyChanged
     {
         internal NodesCollection()
         {
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         internal List<ZWaveNode> Nodes { get; set; }
@@ -20,6 +27,7 @@ namespace ZWaveJS.NET
         internal void AddNodeToCollection(ZWaveNode Node)
         {
             Nodes.Add(Node);
+            OnPropertyChanged(nameof(Collection));
         }
 
         internal void ReplaceInformation(ZWaveNode Source, ZWaveNode Target)
@@ -37,6 +45,7 @@ namespace ZWaveJS.NET
             if (N != null)
             {
                 Nodes.Remove(N);
+                OnPropertyChanged(nameof(Collection));
             }
         }
 
@@ -45,7 +54,7 @@ namespace ZWaveJS.NET
             return Nodes.FirstOrDefault((N) => N.id.Equals(Node));
         }
 
-        public ZWaveNode[] Collection =>  Nodes.ToArray();
-       
+        public ZWaveNode[] Collection => Nodes.ToArray();
+
     }
 }
