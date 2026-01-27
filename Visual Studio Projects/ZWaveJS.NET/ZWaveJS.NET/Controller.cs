@@ -1018,7 +1018,7 @@ namespace ZWaveJS.NET
 
         public NodesCollection Nodes { get; internal set; }
 
-        public string HomeIDAsHex => $"0x{homeId.ToString("X2").ToUpper()}";
+        public string HomeIdAsHex => $"0x{homeId.ToString("X2").ToUpper()}";
 
         [Newtonsoft.Json.JsonProperty]
         public string libraryVersion { get; internal set; }

@@ -55,7 +55,7 @@
       ZWDNET-ER-08 : Missing API key (Commercial use)
       ZWDNET-ER-09 : Use of incorrect override
       ```
-    - The ```Controller.Nodes.AsArray()``` method has been replaced with a property of ```Controller.Nodes.Array```
+    - The ```Controller.Nodes.AsArray()``` method has been replaced with a property of ```Controller.Nodes.Collection```
 
     - The following methods/events have been renamed
       - ```ZWJSS_SetRawConfigParameterValue``` -> ```SetRawConfigParameterValue```
@@ -80,7 +80,7 @@
     - Added ```Driver.ServerSchemaVersion``` property
     - Added ```Controller.sdkVersion``` property
     - Added ```Controller.firmwareVersion``` property
-    - Added ```Controller.HomeIDAsHex``` property
+    - Added ```Controller.HomeIdAsHex``` property
     - Added ```ZWaveNode.InterviewStageCompleted``` event
     - Implemented ```INotifyPropertyChanged``` support for the below.  
     this improves support for MVVM and allows UI bindings to update automatically.

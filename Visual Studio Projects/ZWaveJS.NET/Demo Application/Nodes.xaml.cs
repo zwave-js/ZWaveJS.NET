@@ -19,7 +19,7 @@ public class NodesViewModel : ObservableObject
 {
 	public NodesViewModel()
 	{
-		this.NodeCollection = new ObservableCollection<ZWaveNode>(App._Instance._Driver.Controller.Nodes.Array);
+		this.NodeCollection = new ObservableCollection<ZWaveNode>(App._Instance._Driver.Controller.Nodes.Collection);
 	}
 	public ObservableCollection<ZWaveNode> NodeCollection { get; }
 }

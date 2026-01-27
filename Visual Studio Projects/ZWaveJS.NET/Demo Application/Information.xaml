@@ -128,7 +128,7 @@
             <Label
                 Grid.Column="1"
                 Grid.Row="11"
-                Text="{Binding Controller.HomeIDAsHex, Source={x:Static local:App.Driver}}"/>
+                Text="{Binding Controller.HomeIdAsHex, Source={x:Static local:App.Driver}}"/>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>

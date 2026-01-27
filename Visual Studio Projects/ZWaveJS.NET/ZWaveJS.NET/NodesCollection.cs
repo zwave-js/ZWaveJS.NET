@@ -45,7 +45,7 @@ namespace ZWaveJS.NET
             return Nodes.FirstOrDefault((N) => N.id.Equals(Node));
         }
 
-        public ZWaveNode[] Array =>  Nodes.ToArray();
+        public ZWaveNode[] Collection =>  Nodes.ToArray();
        
     }
 }
