@@ -13,15 +13,30 @@ public partial class Nodes : ContentPage
 		BindingContext = new NodesViewModel();
 
 	}
+
+    private void StartInclude(object sender, EventArgs e)
+	{
+		InclusionOptions O = new InclusionOptions();
+		O.strategy = Enums.InclusionStrategy.Insecure;
+		App._Instance._Driver.Controller.BeginInclusion(O);
+	}
+
+	private void StartExclude(object sender, EventArgs e)
+	{
+		ExclusionOptions O = new ExclusionOptions();
+		O.strategy = Enums.ExclusionStrategy.ExcludeOnly;
+		App._Instance._Driver.Controller.BeginExclusion(O);
+	}
 }
 
 public class NodesViewModel : ObservableObject
 {
 	public NodesViewModel()
 	{
-		this.NodeCollection = new ObservableCollection<ZWaveNode>(App._Instance._Driver.Controller.Nodes.Collection);
+		Nodes = App._Instance._Driver.Controller.Nodes;
 	}
-	public ObservableCollection<ZWaveNode> NodeCollection { get; }
+
+	public NodesCollection Nodes { get; }
 }
 
 public class ReadyConverter : IValueConverter

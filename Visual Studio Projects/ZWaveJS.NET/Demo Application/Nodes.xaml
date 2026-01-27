@@ -11,9 +11,11 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Include Node"
                 Order="Secondary"
+                Clicked="StartInclude"
                 Priority="0"/>
         <ToolbarItem Text="Exclude Node"
                 Order="Secondary"
+                Clicked="StartExclude"
                 Priority="1"/>
     </ContentPage.ToolbarItems>
 
@@ -96,13 +98,13 @@
 
         </StackLayout>
 
-        <CollectionView ItemsSource="{Binding NodeCollection}">
+        <CollectionView ItemsSource="{Binding Nodes.Collection}">
             <CollectionView.ItemTemplate>
 
                 <DataTemplate x:DataType="{zwjs:ZWaveNode}">
 
                     <StackLayout Orientation="Horizontal"
-                                 Padding="40,0,40,40"
+                                 Padding="40,0,40,2"
                                  HorizontalOptions="Fill">
 
                         <Frame
