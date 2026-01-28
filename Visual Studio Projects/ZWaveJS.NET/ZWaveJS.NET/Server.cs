@@ -28,31 +28,31 @@ namespace ZWaveJS.NET
 
         internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
-            
+
             string ProcessName = string.Format("server.{0}.psi", WSPort);
 
             Process[] Zombies = Process.GetProcessesByName(ProcessName);
-            foreach(Process Zombie in Zombies)
+            foreach (Process Zombie in Zombies)
             {
                 Zombie.Kill();
                 Zombie.WaitForExit();
                 File.Delete(ProcessName);
             }
 
-            string PSIPath =  "server.psi";
+            string PSIPath = "server.psi";
             string ProcessPath = ProcessName;
-            if(!string.IsNullOrEmpty(PSIRoot))
+            if (!string.IsNullOrEmpty(PSIRoot))
             {
-                PSIPath = Path.Join(PSIRoot,PSIPath);
-                ProcessPath = Path.Join(PSIRoot,ProcessName);
+                PSIPath = Path.Join(PSIRoot, PSIPath);
+                ProcessPath = Path.Join(PSIRoot, ProcessName);
             }
 
             if (!File.Exists(PSIPath))
             {
-                throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");
+                throw new FileNotFoundException("No Platform Support Image (server.psi) found");
             }
 
-            File.Copy(PSIPath,ProcessPath, true);
+            File.Copy(PSIPath, ProcessPath, true);
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
             JSS.NullValueHandling = NullValueHandling.Ignore;
@@ -77,7 +77,7 @@ namespace ZWaveJS.NET
             ServerProcess.EnableRaisingEvents = true;
             ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;
             ServerProcess.Exited += ServerProcess_Exited;
-            
+
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
             ServerProcess.BeginErrorReadLine();

@@ -561,7 +561,17 @@ namespace ZWaveJS.NET
         {
             if (this.Host)
             {
-                _server.Start(SerialPort, Options, ServerCommunicationPort);
+                try
+                {
+                    _server.Start(SerialPort, Options, ServerCommunicationPort);
+                }
+                catch (Exception Error)
+                {
+                    // its the only reason for an error this early
+                    ServerConnectionError?.Invoke(Enums.ErrorCodes.NoPSIFound, Error.Message, null);
+                    return;
+                }
+
                 _server.Exited += Server_Exited;
                 _server.FatalError += Server_FatalError;
             }

@@ -111,6 +111,7 @@
             public const string WSConnectionTimout = "ZWDNET-ER-01";
             public const string SchemaMisMatch = "ZWDNET-ER-02";
             public const string StartUpError = "ZWDNET-ER-03";
+            public const string NoPSIFound = "ZWDNET-ER-10";
             
             public const string MissingS2Callbacks = "ZWDNET-ER-04";
             public const string InvalidStrategy = "ZWDNET-ER-05";

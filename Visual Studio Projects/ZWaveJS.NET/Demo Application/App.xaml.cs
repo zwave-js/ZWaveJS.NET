@@ -28,7 +28,8 @@ public partial class App : Application
 	internal void StartDriver(bool Host, string PoretOrURI)
 	{
 		string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-		Server.PSIRoot = DocumentsPath;
+		string EVFolder = "ZWaveJS.NET";
+		Server.PSIRoot = Path.Join(DocumentsPath, EVFolder);
 		switch (Host)
 		{
 			case true:
@@ -38,7 +39,7 @@ public partial class App : Application
 				Options.inclusionUserCallbacks.validateDSKAndEnterPIN += HandleDSK;
 				Options.inclusionUserCallbacks.grantSecurityClasses += HandleGrant;
 				Options.features.softReset = false;
-				Options.storage.cacheDir = Path.Join(DocumentsPath,"zwave-js-cache");
+				Options.storage.cacheDir = Path.Join(DocumentsPath, EVFolder, "zwave-js-cache");
 
 				_Driver = new Driver(PoretOrURI.ToString(), Options);
 				_Driver.DriverReady += HandleReady;
@@ -59,10 +60,10 @@ public partial class App : Application
 
 	private void HandleAbort()
 	{
-		
+
 	}
 
-	private  string HandleDSK(string DSK)
+	private string HandleDSK(string DSK)
 	{
 		return DSK;
 	}
