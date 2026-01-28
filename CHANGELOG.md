@@ -69,6 +69,8 @@
     - Previously, the node, controller, and driver callbacks each created their own task after completing their prep work. Now the task is created upfront, and both the prep work and the callback execute inside that single task
     - Various optimisations to the code base for easiyer maintenance.
     - Reverted to using the actively maintained Websocket.Client library. Previously, we were relying on an outdated source‑based code copy
+    - A large portion of the Websocket startup, has been moved and is now located inside the ```Driver.Start()``` method,   
+      This allows better (controlled) error handling. It was previously inside the Driver ctor.
 
   - New Features.
     - Added the ability to set the PSI root folder via ```Server.PSIRoot```, this is to address some OSX quirks, with App Bundles.  
