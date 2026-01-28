@@ -101,7 +101,7 @@
         <CollectionView ItemsSource="{Binding Nodes.Collection}">
             <CollectionView.ItemTemplate>
 
-                <DataTemplate x:DataType="{zwjs:ZWaveNode}">
+                <DataTemplate x:DataType="zwjs:ZWaveNode">
 
                     <StackLayout Orientation="Horizontal"
                                  Padding="40,0,40,2"
