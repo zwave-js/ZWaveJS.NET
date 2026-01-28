@@ -516,7 +516,7 @@ namespace ZWaveJS.NET
             this.WSAddress = Server;
             this.Host = false;
 
-            InternalPrep();
+
         }
 
         // Host Mode
@@ -553,7 +553,7 @@ namespace ZWaveJS.NET
             this.Host = true;
             this._server = new Server();
 
-            InternalPrep();
+
         }
 
         // Prep
@@ -561,17 +561,8 @@ namespace ZWaveJS.NET
         {
             if (this.Host)
             {
-                try
-                {
-                    _server.Start(SerialPort, Options, ServerCommunicationPort);
-                }
-                catch (Exception Error)
-                {
-                    // its the only reason for an error this early
-                    ServerConnectionError?.Invoke(Enums.ErrorCodes.NoPSIFound, Error.Message, null);
-                    return;
-                }
 
+                _server.Start(SerialPort, Options, ServerCommunicationPort);
                 _server.Exited += Server_Exited;
                 _server.FatalError += Server_FatalError;
             }
@@ -705,6 +696,21 @@ namespace ZWaveJS.NET
         // Start Driver
         public void Start()
         {
+            if (ServerConnectionError == null)
+            {
+                throw new NullReferenceException("The consuming applciation, must subscribe to the Driver.ServerConnectionError event.");
+            }
+
+            try
+            {
+                InternalPrep();
+            }
+            catch (Exception Error)
+            {
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.NoPSIFound, Error.Message, null);
+                return;
+            }
+
             RequestedExit = false;
             ConnectStart = DateTime.UtcNow;
             ClientWebSocket.Start();
