@@ -33,13 +33,23 @@ public partial class App : Application
 		switch (Host)
 		{
 			case true:
-				ZWaveOptions Options = new ZWaveOptions();
 
-				Options.inclusionUserCallbacks.abort += HandleAbort;
-				Options.inclusionUserCallbacks.validateDSKAndEnterPIN += HandleDSK;
-				Options.inclusionUserCallbacks.grantSecurityClasses += HandleGrant;
-				Options.features.softReset = false;
+				ZWaveOptions Options = new ZWaveOptions();
 				Options.storage.cacheDir = Path.Join(DocumentsPath, EVFolder, "zwave-js-cache");
+				Options.features.softReset = false;
+				Options.logConfig = new ZWaveOptions.CFGLogConfig
+				{
+					enabled = true,
+					logToFile = true,
+					filename = Path.Join(DocumentsPath, EVFolder, "zwave-js-cache", "zwave-js.log")
+				};
+				Options.inclusionUserCallbacks = new InclusionUserCallbacks
+				{
+					abort = HandleAbort,
+					validateDSKAndEnterPIN = HandleDSK,
+					grantSecurityClasses = HandleGrant
+
+				};
 
 				_Driver = new Driver(PoretOrURI.ToString(), Options);
 				_Driver.DriverReady += HandleReady;

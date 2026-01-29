@@ -39,7 +39,6 @@
         ZWDNET-ER-01 : Connection Timeout (Supports Retry)
         ZWDNET-ER-02 : Schema Mismatch
         ZWDNET-ER-03 : Fatal Error During Server Start up
-        ZWDNET-ER-10 : No Platform Support Image Found (server.psi)
        ```
 
        Where the error code, supports a retry, ```Retry``` will not be ```null```  

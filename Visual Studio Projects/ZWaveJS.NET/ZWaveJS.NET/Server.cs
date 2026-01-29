@@ -49,7 +49,7 @@ namespace ZWaveJS.NET
 
             if (!File.Exists(PSIPath))
             {
-                throw new FileNotFoundException("No Platform Support Image (server.psi) found");
+                throw new Exception("No Platform Support Image (server.psi) found");
             }
 
             File.Copy(PSIPath, ProcessPath, true);

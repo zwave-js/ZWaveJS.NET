@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Websocket.Client;
 using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace ZWaveJS.NET
 {
@@ -522,14 +523,6 @@ namespace ZWaveJS.NET
         // Host Mode
         public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001)
         {
-
-            if (UsedPorts.Contains(ServerCommunicationPort))
-            {
-                throw new Exception(string.Format("Web Socket Port: {0} already in use by a driver instance.", ServerCommunicationPort));
-            }
-
-            UsedPorts.Add(ServerCommunicationPort);
-
             Newtonsoft.Json.JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
@@ -553,48 +546,7 @@ namespace ZWaveJS.NET
             this.Host = true;
             this._server = new Server();
 
-
         }
-
-        // Prep
-        private void InternalPrep()
-        {
-            if (this.Host)
-            {
-
-                _server.Start(SerialPort, Options, ServerCommunicationPort);
-                _server.Exited += Server_Exited;
-                _server.FatalError += Server_FatalError;
-            }
-
-            var Factory = new Func<ClientWebSocket>(() => new ClientWebSocket
-            {
-                Options = {
-                    KeepAliveInterval = TimeSpan.FromSeconds(5),
-                    RemoteCertificateValidationCallback = (sender, cert, chain, errors) => true
-                }
-            });
-
-            ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress, Factory);
-            ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
-
-
-            ClientWebSocket.MessageReceived.Subscribe((Message) =>
-            {
-                WebsocketClient_MessageReceived(ClientWebSocket, Message);
-            });
-
-            ClientWebSocket.DisconnectionHappened.Subscribe((info) =>
-            {
-                _ = HandleDisconnectAsync(info);
-            });
-
-
-            ClientWebSocket.ReconnectTimeout = null; // Dont attempt to reconnect when quite
-            ClientWebSocket.ErrorReconnectTimeout = null; // disable automatic
-
-        }
-
 
         private async Task HandleDisconnectAsync(DisconnectionInfo info)
         {
@@ -693,6 +645,52 @@ namespace ZWaveJS.NET
             }
         }
 
+        // Prep
+        private void InternalPrep()
+        {
+            if (UsedPorts.Contains(ServerCommunicationPort))
+            {
+                throw new Exception(string.Format("Web Socket Port: {0} already in use by a driver instance.", ServerCommunicationPort));
+            }
+
+            if (this.Host)
+            {
+
+                _server.Start(SerialPort, Options, ServerCommunicationPort);
+                _server.Exited += Server_Exited;
+                _server.FatalError += Server_FatalError;
+            }
+
+            UsedPorts.Add(ServerCommunicationPort);
+
+            var Factory = new Func<ClientWebSocket>(() => new ClientWebSocket
+            {
+                Options = {
+                    KeepAliveInterval = TimeSpan.FromSeconds(5),
+                    RemoteCertificateValidationCallback = (sender, cert, chain, errors) => true
+                }
+            });
+
+            ClientWebSocket = new Websocket.Client.WebsocketClient(this.WSAddress, Factory);
+            ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
+
+
+            ClientWebSocket.MessageReceived.Subscribe((Message) =>
+            {
+                WebsocketClient_MessageReceived(ClientWebSocket, Message);
+            });
+
+            ClientWebSocket.DisconnectionHappened.Subscribe((info) =>
+            {
+                _ = HandleDisconnectAsync(info);
+            });
+
+
+            ClientWebSocket.ReconnectTimeout = null; // Dont attempt to reconnect when quite
+            ClientWebSocket.ErrorReconnectTimeout = null; // disable automatic
+
+        }
+
         // Start Driver
         public void Start()
         {
@@ -707,7 +705,7 @@ namespace ZWaveJS.NET
             }
             catch (Exception Error)
             {
-                ServerConnectionError?.Invoke(Enums.ErrorCodes.NoPSIFound, Error.Message, null);
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, Error.Message, null);
                 return;
             }
 
@@ -799,9 +797,8 @@ namespace ZWaveJS.NET
             }
             DestroySocket();
             DestroyServer();
-            ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, "Fatal ZWaveJS Server (OR Driver) Error.", null);
+            ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, "ZWaveJS Server (OR Driver) Error. Enable driver logging to find out more.", null);
         }
-
 
         private void StartListetningCB(JObject JO)
         {
