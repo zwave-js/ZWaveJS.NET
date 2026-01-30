@@ -41,7 +41,7 @@ public partial class App : Application
 				{
 					enabled = true,
 					logToFile = true,
-					filename = Path.Join(DocumentsPath, EVFolder, "zwave-js-cache", "zwave-js.log")
+					filename = Path.Join(DocumentsPath, EVFolder, "zwave-js.log")
 				};
 				Options.inclusionUserCallbacks = new InclusionUserCallbacks
 				{
