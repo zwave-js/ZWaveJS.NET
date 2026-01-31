@@ -660,7 +660,6 @@ namespace ZWaveJS.NET
         // Prep
         private void InternalPrep()
         {
-            DebugLog("Connect Flow", $"Calling InternalPrep From:{Environment.NewLine}{Environment.StackTrace}");
             if (UsedPorts.Contains(ServerCommunicationPort))
             {
                 throw new Exception(string.Format("Web Socket Port: {0} already in use by a driver instance.", ServerCommunicationPort));
