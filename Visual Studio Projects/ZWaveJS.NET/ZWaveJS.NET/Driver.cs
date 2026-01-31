@@ -70,7 +70,7 @@ namespace ZWaveJS.NET
         {
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                System.Diagnostics.Debug.WriteLine($"<--- ZWaveJS.NET Debug:${Type} --->");
+                System.Diagnostics.Debug.WriteLine($"<--- ZWaveJS.NET Debug:{Type} --->");
                 System.Diagnostics.Debug.WriteLine(Message);
             }
         }
@@ -570,38 +570,38 @@ namespace ZWaveJS.NET
 
             if (info.Type == DisconnectionType.Lost)
             {
-                ServerConnectionError?.Invoke(Enums.ErrorCodes.Unknown, "Unexpectedly lost connection to the server.", (retry, timeout) =>
-               {
-                   SettleCallbacksError();
+                string Err = "Unexpectedly lost connection to the server.";
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.Unknown, Err, (retry, timeout) =>
+                {
+                    SettleCallbacksError(Err);
 
-                   if (retry)
-                   {
-                       if (timeout.HasValue && timeout.Value > 0)
-                       {
-                           ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
-                       }
-                       else
-                       {
-                           ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
-                       }
-                       Restart();
-                   }
-               });
+                    if (retry)
+                    {
+                        if (timeout.HasValue && timeout.Value > 0)
+                        {
+                            ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(timeout.Value);
+                        }
+                        else
+                        {
+                            ClientWebSocket.ConnectTimeout = TimeSpan.FromSeconds(15);
+                        }
+                        Restart();
+                    }
+                });
 
                 return;
             }
 
-            TimeSpan elapsed = DateTime.UtcNow - ConnectStart;
-
-            if (elapsed < ClientWebSocket.ConnectTimeout)
+            if (info.Type == DisconnectionType.Error && !RequestedExit)
             {
-                await Task.Delay(1000);
-                ClientWebSocket.Reconnect();
-                return;
-            }
+                TimeSpan elapsed = DateTime.UtcNow - ConnectStart;
+                if (elapsed < ClientWebSocket.ConnectTimeout)
+                {
+                    await Task.Delay(1000);
+                    ClientWebSocket.Reconnect();
+                    return;
+                }
 
-            if (!RequestedExit && info.Type == DisconnectionType.Error)
-            {
                 ServerConnectionError?.Invoke(
                     Enums.ErrorCodes.WSConnectionTimout,
                     "Could not connect to the ZWaveJS Websocket (timeout)",
@@ -622,6 +622,7 @@ namespace ZWaveJS.NET
                         }
                     });
             }
+
         }
 
 
@@ -636,9 +637,10 @@ namespace ZWaveJS.NET
 
                 DestroySocket();
 
-                ServerConnectionError?.Invoke(Enums.ErrorCodes.Unknown, "The Server process unexpectedly terminted.", (retry, timeout) =>
+                string Err = "The Server process unexpectedly terminted.";
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.Unknown, Err, (retry, timeout) =>
                 {
-                    SettleCallbacksError();
+                    SettleCallbacksError(Err);
 
                     if (retry)
                     {
@@ -772,7 +774,7 @@ namespace ZWaveJS.NET
             Start();
         }
 
-        private void SettleCallbacksError()
+        private void SettleCallbacksError(string Mesaage)
         {
             // Signal waiting callbacks
             Guid[] Keys = Callbacks.Keys.ToArray();
@@ -781,7 +783,7 @@ namespace ZWaveJS.NET
                 JObject JO = new JObject();
                 JO.Add("success", false);
                 JO.Add("zwaveErrorCode", Enums.ErrorCodes.Unknown);
-                JO.Add("zwaveErrorMessage", "The Server process unexpectedly terminted. It is unknown if the command was successfull, assuming false. Subscribe to the 'ServerConnectionError' event of the driver to restart the Driver Runtime");
+                JO.Add("zwaveErrorMessage", Mesaage);
 
                 // Guard against race condition
                 try
@@ -797,7 +799,7 @@ namespace ZWaveJS.NET
             }
         }
 
-        private void Server_FatalError()
+        private void Server_FatalError(int Code, string Message)
         {
             RequestedExit = true;
             Inited = false;
@@ -808,7 +810,7 @@ namespace ZWaveJS.NET
             }
             DestroySocket();
             DestroyServer();
-            ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, "ZWaveJS Server (OR Driver) Error. Enable driver logging to find out more.", null);
+            ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, Message, null);
         }
 
         private void StartListetningCB(JObject JO)

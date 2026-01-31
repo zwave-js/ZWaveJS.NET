@@ -38,8 +38,10 @@
         ZWDNET-ER-00 : Unknown Error  (Supports Retry)
         ZWDNET-ER-01 : Connection Timeout (Supports Retry)
         ZWDNET-ER-02 : Schema Mismatch
-        ZWDNET-ER-03 : Fatal Error During Server Start up
+        ZWDNET-ER-03 : Error During Server Start up
        ```
+       ```ZWDNET-ER-03``` Could originate due to a library fault (example: missing PSI), or a ZWave JS reported error (the error will be included)
+
 
        Where the error code, supports a retry, ```Retry``` will not be ```null```  
        Arguments: **Should Retry**, **New Timeout Value** (if <1, defaults to 15s)

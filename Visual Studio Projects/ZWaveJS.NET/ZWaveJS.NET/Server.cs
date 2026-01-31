@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ZWaveJS.NET
 {
@@ -10,7 +11,7 @@ namespace ZWaveJS.NET
 
         private Process ServerProcess;
 
-        internal delegate void FatalErrorEvent();
+        internal delegate void FatalErrorEvent(int Code, string Message);
         internal event FatalErrorEvent FatalError;
 
         internal delegate void ProcessdExitedEvent();
@@ -19,11 +20,16 @@ namespace ZWaveJS.NET
 
         internal void Terminate()
         {
-            if (ServerProcess != null && !ServerProcess.HasExited)
+            try
             {
-                ServerProcess.StandardInput.WriteLine("KILL");
-                ServerProcess.Dispose();
+                if (ServerProcess != null && !ServerProcess.HasExited)
+                {
+                    ServerProcess.StandardInput.WriteLine("KILL");
+                    ServerProcess.Dispose();
+                }
             }
+            catch(Exception Error){}
+
         }
 
         internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
@@ -91,16 +97,8 @@ namespace ZWaveJS.NET
 
         private void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            int Code;
-            if (int.TryParse(e.Data, out Code))
-            {
-                switch (Code)
-                {
-                    case 1:
-                        FatalError?.Invoke();
-                        break;
-                }
-            }
+            JObject JO = JObject.Parse(e.Data);
+            FatalError?.Invoke(JO.Value<int>("code"), JO.Value<string>("message"));
         }
     }
 }

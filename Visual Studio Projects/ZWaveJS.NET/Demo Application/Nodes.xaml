@@ -10,13 +10,13 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Include Node"
-                Order="Secondary"
-                Clicked="StartInclude"
-                Priority="0"/>
+                     Order="Secondary"
+                     Clicked="StartInclude"
+                     Priority="0"/>
         <ToolbarItem Text="Exclude Node"
-                Order="Secondary"
-                Clicked="StartExclude"
-                Priority="1"/>
+                     Order="Secondary"
+                     Clicked="StartExclude"
+                     Priority="1"/>
     </ContentPage.ToolbarItems>
 
 
@@ -125,11 +125,25 @@
                             HeightRequest="78"
                             HorizontalOptions="FillAndExpand"
                             BackgroundColor="{StaticResource PrimaryDark}">
-                            <Label FontSize="22"
-                                   TextColor="White"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   Text="Info Here"/>
+                            <Grid RowSpacing="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="20" />
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Column="0" Grid.Row="0" Text="Manufacture" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding deviceConfig.manufacturer}" FontAttributes="Italic" />
+
+                                <Label Grid.Column="0" Grid.Row="1" Text="Device" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding deviceConfig.description}" FontAttributes="Italic" />
+                               
+                                   
+                            </Grid>
+
                         </Frame>
 
                         <Frame

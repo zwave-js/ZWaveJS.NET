@@ -28,13 +28,14 @@ const server = new ZwavejsServer(driver, { port: wsPort, host: 'localhost', reco
 server.on('listening', () => {
 	ServerStarted = true;
 });
-driver.on('error', (e) => { });
+driver.on('error', (e) => { 
+	process.stderr.write(`${JSON.stringify(e)}\n`); 
+});
 
 driver.on('driver ready', () => {
 	if (!ServerStarted) {
 		server.start();
 	}
-
 });
 
 driver
@@ -44,7 +45,7 @@ driver
 		process.stdin.on('data', HandleInput);
 	})
 	.catch((e) => {
-		process.stderr.write('1\n');
+		process.stderr.write(`${JSON.stringify(e)}\n`);
 	});
 
 const HandleInput = async (Data) => {
