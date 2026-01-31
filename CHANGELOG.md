@@ -1,10 +1,10 @@
 - v5.0.0
 
-  - Versions
+  - **Versions**
     - ZWave JS Driver Version: 15.20.0
     - ZWave JS Server Version: 3.5.0 (Schema Version 44)
 
-  - Breaking Changes
+  - **Breaking Changes**
     - Dropped frameworks, the following frameworks are now as follows:
       - net6.0
       - net7.0
@@ -65,13 +65,13 @@
       - ```ZWJSS_StopListeningLogs``` -> ```StopListeningLogs```
       - ```ZWJSS_LoggingEvent``` -> ```LoggingEvent```
 
-  - Fixes
+  - **Fixes**
     - Correctly handle the mechanisms behind ```Driver.SoftReset()``` and ```Driver.HardReset()```.  
 Internally, the library is now restarted in response to a non-public internal ```driver ready``` signal.  
 Note: This intentionally re-triggers the public ```DriverReady``` event, allowing consumers to re-attach to events throughout the library.
     - Dont start the PSI socket server on ```driver ready``` if already started.
 
-  - Internal Changes.
+  - **Internal Changes**
     - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
     - Previously, the node, controller, and driver callbacks each created their own task after completing their prep work. Now the task is created upfront, and both the prep work and the callback execute inside that single task
     - Various optimisations to the code base for easiyer maintenance.
@@ -79,7 +79,7 @@ Note: This intentionally re-triggers the public ```DriverReady``` event, allowin
     - A large portion of the Websocket startup, has been moved and is now located inside the ```Driver.Start()``` method,   
       This allows better (controlled) error handling. It was previously inside the Driver ctor.
 
-  - New Features.
+  - **New Features**
     - Added the ability to set the PSI root folder via ```Server.PSIRoot```, this is to address some OSX quirks, with App Bundles.  
       it should only be the folder path, and not the executable name.
     - Exposed further Zwave Options
