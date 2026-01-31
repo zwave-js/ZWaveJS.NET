@@ -14,18 +14,49 @@ public partial class Nodes : ContentPage
 
 	}
 
-    private void StartInclude(object sender, EventArgs e)
+    private async void StartInclude(object sender, EventArgs e)
 	{
 		InclusionOptions O = new InclusionOptions();
 		O.strategy = Enums.InclusionStrategy.Insecure;
-		App._Instance._Driver.Controller.BeginInclusion(O);
+		
+		ZWaveJS.NET.CMDResult Res = await App._Instance._Driver.Controller.BeginInclusion(O);
+		if (Res.Success && Res.ResultPayloadAs<bool>())
+		{
+			_ = MainThread.InvokeOnMainThreadAsync(async () =>
+		   {
+			   await DisplayAlertAsync("Inclusion Start", "Place your device in to Inclusion Mode", "OK");
+		   });
+		}
+		else
+		{
+			_ = MainThread.InvokeOnMainThreadAsync(async () =>
+		   {
+			   await DisplayAlertAsync(Res.ErrorCode,Res.Message, "OK");
+		   });
+		}
 	}
 
-	private void StartExclude(object sender, EventArgs e)
+	private async void StartExclude(object sender, EventArgs e)
 	{
 		ExclusionOptions O = new ExclusionOptions();
 		O.strategy = Enums.ExclusionStrategy.ExcludeOnly;
-		App._Instance._Driver.Controller.BeginExclusion(O);
+		
+
+		ZWaveJS.NET.CMDResult Res = await App._Instance._Driver.Controller.BeginExclusion(O);
+		if (Res.Success && Res.ResultPayloadAs<bool>())
+		{
+			_ = MainThread.InvokeOnMainThreadAsync(async () =>
+		   {
+			   await DisplayAlertAsync("Exclusion Start", "Place your device in to Exclusion Mode", "OK");
+		   });
+		}
+		else
+		{
+			_ = MainThread.InvokeOnMainThreadAsync(async () =>
+		   {
+			   await DisplayAlertAsync(Res.ErrorCode,Res.Message, "OK");
+		   });
+		}
 	}
 }
 
