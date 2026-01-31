@@ -63,6 +63,12 @@
       - ```ZWJSS_StopListeningLogs``` -> ```StopListeningLogs```
       - ```ZWJSS_LoggingEvent``` -> ```LoggingEvent```
 
+  - Fixes
+    - Correctly handle the mechanisms behind ```Driver.SoftReset()``` and ```Driver.HardReset()```.  
+Internally, the library is now restarted in response to a non-public internal ```driver ready``` signal.  
+Note: This intentionally re-triggers the public ```DriverReady``` event, allowing consumers to re-attach to events throughout the library.
+    - Dont start the PSI socket server on ```driver ready``` if already started.
+
   - Internal Changes.
     - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
     - Previously, the node, controller, and driver callbacks each created their own task after completing their prep work. Now the task is created upfront, and both the prep work and the callback execute inside that single task

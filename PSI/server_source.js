@@ -24,14 +24,17 @@ if (driverOptions.securityKeysLongRange) {
 }
 
 const driver = new Driver(serialPort, driverOptions);
-const server = new ZwavejsServer(driver, { port: wsPort, host: 'localhost', reconnect: false, 'disable-dns-sd' : true });
+const server = new ZwavejsServer(driver, { port: wsPort, host: 'localhost', reconnect: false, 'disable-dns-sd': true });
 server.on('listening', () => {
 	ServerStarted = true;
 });
-driver.on('error', (e) => {});
+driver.on('error', (e) => { });
 
 driver.on('driver ready', () => {
-	server.start();
+	if (!ServerStarted) {
+		server.start();
+	}
+
 });
 
 driver

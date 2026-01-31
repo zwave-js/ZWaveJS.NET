@@ -29,7 +29,7 @@
 
         public enum SetValueStatus
         {
-           
+
             NoDeviceSupport = 0x00,
             Working = 0x01,
             Fail = 0x02,
@@ -111,7 +111,7 @@
             public const string WSConnectionTimout = "ZWDNET-ER-01";
             public const string SchemaMisMatch = "ZWDNET-ER-02";
             public const string StartUpError = "ZWDNET-ER-03";
-            
+
             public const string MissingS2Callbacks = "ZWDNET-ER-04";
             public const string InvalidStrategy = "ZWDNET-ER-05";
             public const string MissingKeys = "ZWDNET-ER-06";
@@ -212,7 +212,7 @@
 
         public enum SecurityClass
         {
-            
+
             S2_Unauthenticated,
             S2_Authenticated,
             S2_AccessControl,
@@ -250,7 +250,7 @@
             SmartStartFailed,
         }
 
-       public enum ExclusionStrategy
+        public enum ExclusionStrategy
         {
             ExcludeOnly,
             DisableProvisioningEntry,

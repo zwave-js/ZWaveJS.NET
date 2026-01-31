@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Websocket.Client;
-using System.Runtime.CompilerServices;
-using System.IO;
+using System.Collections;
 
 namespace ZWaveJS.NET
 {
@@ -65,6 +64,15 @@ namespace ZWaveJS.NET
         internal void Trigger_LoggingEvent(LoggingEventArgs args)
         {
             LoggingEvent?.Invoke(args);
+        }
+
+        private void DebugLog(string Type, string Message)
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debug.WriteLine($"<--- ZWaveJS.NET Debug:${Type} --->");
+                System.Diagnostics.Debug.WriteLine(Message);
+            }
         }
 
         private void MapNodeEvents()
@@ -272,7 +280,6 @@ namespace ZWaveJS.NET
 
                 this.Controller.Trigger_FirmwareUpdateFinished(Result);
 
-
             });
 
 
@@ -468,11 +475,14 @@ namespace ZWaveJS.NET
 
         private void MapServerEvents()
         {
+            DriverEventMap.Add("driver ready", (JO) =>
+            {
+                Restart();
+            });
+
             DriverEventMap.Add("logging", (JO) =>
             {
                 LoggingEventArgs Args = JO.SelectToken("event").ToObject<LoggingEventArgs>();
-
-
                 Trigger_LoggingEvent(Args);
 
             });
@@ -550,6 +560,8 @@ namespace ZWaveJS.NET
 
         private async Task HandleDisconnectAsync(DisconnectionInfo info)
         {
+
+            DebugLog("Websocket Disconnect Event", Newtonsoft.Json.JsonConvert.SerializeObject(info, Formatting.Indented));
 
             if (info.Type == DisconnectionType.ByUser)
             {
@@ -648,6 +660,7 @@ namespace ZWaveJS.NET
         // Prep
         private void InternalPrep()
         {
+            DebugLog("Connect Flow", $"Calling InternalPrep From:{Environment.NewLine}{Environment.StackTrace}");
             if (UsedPorts.Contains(ServerCommunicationPort))
             {
                 throw new Exception(string.Format("Web Socket Port: {0} already in use by a driver instance.", ServerCommunicationPort));
@@ -696,7 +709,7 @@ namespace ZWaveJS.NET
         {
             if (ServerConnectionError == null)
             {
-                throw new NullReferenceException("The consuming applciation, must subscribe to the Driver.ServerConnectionError event.");
+                throw new NullReferenceException("The consuming application, must subscribe to the Driver.ServerConnectionError event.");
             }
 
             try
@@ -757,7 +770,6 @@ namespace ZWaveJS.NET
             Destroy();
 
             await Task.Delay(5000);
-            InternalPrep();
             Start();
         }
 
@@ -879,7 +891,6 @@ namespace ZWaveJS.NET
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
 
-                Restart();
             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
@@ -953,7 +964,14 @@ namespace ZWaveJS.NET
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                System.Diagnostics.Debug.WriteLine(Message.Text);
+                System.Diagnostics.Debug.WriteLine("<--- ZWaveJS.NET Debug : WS Message --->");
+                var msg = new
+                {
+                    Text = Newtonsoft.Json.Linq.JObject.Parse(Message.Text),
+                    MessageType = Message.MessageType
+                };
+                System.Diagnostics.Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(msg, Formatting.Indented));
+
             }
 
             if (Message.MessageType == WebSocketMessageType.Text)

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Demo_Application"
+             x:DataType="local:ConnectViewModel"
              x:Class="Demo_Application.MainPage">
 
     <ScrollView>
@@ -44,26 +46,48 @@
                         Title="Select one"
                         Margin="10,0,0,0"
                         WidthRequest="200"
+                        SelectedItem="{Binding Mode}"
                         VerticalOptions="Center"
                         HorizontalOptions="Fill"
                         Grid.Row="0"
                         Grid.Column="1">
                     <Picker.Items>
+                        <x:String>Select one</x:String>
                         <x:String>Host</x:String>
                         <x:String>Client</x:String>
                     </Picker.Items>
                 </Picker>
 
-                <Label Text="Serial Port Or Server"
+                <Label Text="Serial Port"
                        Margin="0,0,10,0"
+                       IsVisible="{Binding IsHost}"
                        VerticalOptions="Center"
                        HorizontalOptions="End"
                        Grid.Row="1"
                        Grid.Column="0"/>
+                <Picker x:Name="PK_Port"
+                        Title="Select one"
+                        IsVisible="{Binding IsHost}"
+                        Margin="10,0,0,0"
+                        WidthRequest="200"
+                        ItemsSource="{Binding Ports}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Fill"
+                        Grid.Row="1"
+                        Grid.Column="1">
+                </Picker>
 
+                 <Label Text="Server (WS)"
+                       Margin="0,0,10,0"
+                       IsVisible="{Binding IsClient}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="1"
+                       Grid.Column="0"/>
                 <Entry Margin="10,0,0,0"
                        x:Name="TX_Target"
                        WidthRequest="200"
+                       IsVisible="{Binding IsClient}"
                        VerticalOptions="Center"
                        HorizontalOptions="Fill"
                        Grid.Row="1"

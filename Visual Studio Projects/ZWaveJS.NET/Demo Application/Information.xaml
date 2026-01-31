@@ -4,8 +4,24 @@
              x:Class="Demo_Application.Information"
              xmlns:local="clr-namespace:Demo_Application"
              Title="Information">
+
+
+
+ <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Soft Reset Controller"
+                Order="Secondary"
+                Clicked="SoftReset"
+                Priority="0"/>
+        <ToolbarItem Text="Hard Reset Controller"
+                Order="Secondary"
+                Clicked="HardReset"
+                Priority="1"/>
+    </ContentPage.ToolbarItems>
+
+
     <VerticalStackLayout>
 
+        
         <Grid Padding="40"
               RowSpacing="10">
             <Grid.ColumnDefinitions>
