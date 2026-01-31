@@ -13,15 +13,12 @@ public partial class App : Application
 	{
 		InitializeComponent();
 		_Instance = this;
+
 	}
 
 	private void Quit()
 	{
-#if MACCATALYST
-		UIKit.UIApplication.SharedApplication.PerformSelector(new ObjCRuntime.Selector("terminate:"), null, 0);
-#elif WINDOWS
-			System.Diagnostics.Process.GetCurrentProcess().Kill();
-#endif
+		Environment.Exit(0);
 	}
 
 

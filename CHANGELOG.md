@@ -93,6 +93,9 @@
         - ```Controller.statistics```
         - ```Controller.isRebuildingRoutes```  
         - ```Controller.Nodes.Collection```  
+
+    - Added a new  ```Lib``` class.  
+      This is home to some helper methods, the first is ```SerialPorts()``` to get a list of ports on the host system.
         
 - v4.0.0
 
