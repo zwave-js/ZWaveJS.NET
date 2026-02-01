@@ -150,12 +150,12 @@ private  void DriverReady()
    
 }
 
-private static void ValueUpdated(ZWaveNode Node, ValueUpdatedArgs Args)
+private void ValueUpdated(ZWaveNode Node, ValueUpdatedArgs Args)
 {
    // Do something with Args
 }
 
-private static void NodeAdded(ZWaveNode Node, InclusionResultArgs Args)
+private void NodeAdded(ZWaveNode Node, InclusionResultArgs Args)
 {
     // Do something with the Node.
     Node.ValueUpdated += ValueUpdated;
