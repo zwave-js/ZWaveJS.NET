@@ -123,7 +123,7 @@ private  void DriverReady()
     _Driver.Controller.Nodes.Get(3).ValueUpdated += ValueUpdated;
 
     // Or All of them
-    ZWaveJS.NET.ZWaveNode[] Nodes = _Driver.Controller.Nodes.Collection;
+    ZWaveNode[] Nodes = _Driver.Controller.Nodes.Collection;
     foreach(ZWaveNode Node in Nodes)
     {
         Node.ValueUpdated += ValueUpdated;
