@@ -17,7 +17,7 @@ public partial class Nodes : ContentPage
     private async void StartInclude(object sender, EventArgs e)
 	{
 		InclusionOptions O = new InclusionOptions();
-		O.strategy = Enums.InclusionStrategy.Insecure;
+		O.strategy = Enums.InclusionStrategy.Default;
 		
 		ZWaveJS.NET.CMDResult Res = await App._Instance._Driver.Controller.BeginInclusion(O);
 		if (Res.Success && Res.ResultPayloadAs<bool>())

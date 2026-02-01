@@ -859,72 +859,104 @@ namespace ZWaveJS.NET
             return EP;
         }
 
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public Endpoint[] endpoints { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool isControllerNode { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public Enums.NodeStatus status { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool ready { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool isListening { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool isRouting { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool isSecure { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int manufacturerId { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int productId { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int productType { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string firmwareVersion { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string zwavePlusVersion { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public DeviceConfig deviceConfig { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public object isFrequentListening { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public long maxDataRate { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public long[] supportedDataRates { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int protocolVersion { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool supportsBeaming { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool supportsSecurity { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int zwavePlusNodeType { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int zwavePlusRoleType { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public DeviceClass deviceClass { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string interviewStage { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string deviceDatabaseUrl { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int interviewAttempts { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string label { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public int nodeType { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public CommandClass[] commandClasses { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public NodeStatistics statistics { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public DateTime? lastSeen { get; internal set; }
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public Protocols protocol { get; internal set; }
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "nodeId")]
         public int id { get; internal set; }
 
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public bool keepAwake { get; internal set; }
         public Task<CMDResult> SetKeepAwake(bool Option)
@@ -955,6 +987,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string name { get; internal set; }
         public Task<CMDResult> SetName(string Name, bool UpdateCC = true)
@@ -986,6 +1019,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
+        [UpdateableNodeProperty]
         [Newtonsoft.Json.JsonProperty]
         public string location { get; internal set; }
         public Task<CMDResult> SetLocation(string Location, bool UpdateCC = true)

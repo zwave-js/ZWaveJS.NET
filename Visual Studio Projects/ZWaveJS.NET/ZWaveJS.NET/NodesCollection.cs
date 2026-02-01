@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.ComponentModel;
+using System;
 
 namespace ZWaveJS.NET
 {
@@ -10,6 +11,10 @@ namespace ZWaveJS.NET
         internal NodesCollection()
         {
         }
+
+        private static readonly IEnumerable<PropertyInfo> UpdatebaleNodeProbs = typeof(ZWaveNode)
+                .GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(UpdateableNodePropertyAttribute)));
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -30,14 +35,19 @@ namespace ZWaveJS.NET
             OnPropertyChanged(nameof(Collection));
         }
 
-        internal void ReplaceInformation(ZWaveNode Source, ZWaveNode Target)
+        internal void ReplaceInformation(ZWaveNode source, ZWaveNode target)
         {
-            PropertyInfo[] infos = typeof(ZWaveNode).GetProperties();
-            foreach (PropertyInfo info in infos)
+            foreach (var prop in UpdatebaleNodeProbs)
             {
-                info.SetValue(Target, info.GetValue(Source, null), null);
+                if (prop.CanRead && prop.CanWrite)
+                {
+                    var value = prop.GetValue(source);
+                    prop.SetValue(target, value);
+                }
             }
+            OnPropertyChanged(nameof(Collection));
         }
+
 
         internal void RemoveNodeFromCollection(int Node)
         {

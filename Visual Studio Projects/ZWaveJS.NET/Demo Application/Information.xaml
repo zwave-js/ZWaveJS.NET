@@ -16,6 +16,10 @@
                 Order="Secondary"
                 Clicked="HardReset"
                 Priority="1"/>
+        <ToolbarItem Text="Backup NVM"
+                Order="Secondary"
+                Clicked="HardReset"
+                Priority="1"/>
     </ContentPage.ToolbarItems>
 
 

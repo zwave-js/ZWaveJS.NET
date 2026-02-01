@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using Microsoft.Extensions.DependencyInjection;
 using ZWaveJS.NET;
 
 namespace Demo_Application;
@@ -51,6 +53,7 @@ public partial class App : Application
 				_Driver = new Driver(PoretOrURI.ToString(), Options);
 				_Driver.DriverReady += HandleReady;
 				_Driver.ServerConnectionError += HandleError;
+				_Driver.ZWaveSJError += HandleZWError;
 				break;
 
 			default:
@@ -78,6 +81,20 @@ public partial class App : Application
 	private InclusionGrant HandleGrant(InclusionGrant Requested)
 	{
 		return Requested;
+	}
+
+	private async void HandleZWError(int ErrorCode, string Message)
+	{
+		_ = MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				SnackbarOptions Ops = new SnackbarOptions();
+				Ops.BackgroundColor = Color.FromRgb(255, 128, 128);
+				Ops.TextColor = Color.FromRgb(255,255,255);
+				Ops.CornerRadius = new CornerRadius(10,10,10,10);
+				ISnackbar snackbar = Snackbar.Make($"ZWave JS Error ({ErrorCode}): {Message}",null,"OK",TimeSpan.FromSeconds(30),Ops);
+				_ = snackbar.Show();
+
+			});
 	}
 
 	private async void HandleError(string ErrorCode, string Message, Action<bool, int?> Retry)
@@ -120,6 +137,12 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new AppShell());
+
+		Window W = new Window(new AppShell());
+		W.IsMaximizable = false;
+
+		W.Width = 1024;
+		W.Height = 768;
+		return W;
 	}
 }

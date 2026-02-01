@@ -107,17 +107,17 @@
 
         internal class ErrorCodes
         {
-            public const string Unknown = "ZWDNET-ER-00";
-            public const string WSConnectionTimout = "ZWDNET-ER-01";
-            public const string SchemaMisMatch = "ZWDNET-ER-02";
-            public const string StartUpError = "ZWDNET-ER-03";
+            public const string Unknown = "ERR.00";
+            public const string WSConnectionTimout = "ERR.01";
+            public const string SchemaMisMatch = "ERR.02";
+            public const string StartUpError = "ERR.03";
 
-            public const string MissingS2Callbacks = "ZWDNET-ER-04";
-            public const string InvalidStrategy = "ZWDNET-ER-05";
-            public const string MissingKeys = "ZWDNET-ER-06";
-            public const string InvalidkeyLength = "ZWDNET-ER-07";
-            public const string CommercialAPIKey = "ZWDNET-ER-08";
-            public const string WrongOverride = "ZWDNET-ER-09";
+            public const string MissingS2Callbacks = "ERR.04";
+            public const string InvalidStrategy = "ERR.05";
+            public const string MissingKeys = "ERR.06";
+            public const string InvalidkeyLength = "ERR.07";
+            public const string CommercialAPIKey = "ERR.08";
+            public const string WrongOverride = "ERR.09";
         }
 
         internal class Commands

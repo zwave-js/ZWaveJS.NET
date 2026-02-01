@@ -25,37 +25,44 @@
       - ```public Driver(Uri Server, InclusionUserCallbacks S2Callbacks, int SchemaVersion = 0)```
 
     - Re-engineered error/connection handling.  
-       All Driver/Server error handling, is now handled through the **ServerConnectionError** event.  
-       This event has the following signature:
+       All Driver/Server error handling, is now handled through 2 events:   
+        - **ServerConnectionError** :   
+        Can trigger during start up, or if the server connection is lost. This event has the following signature:
 
-       ```csharp
-       ServerConnectionError(string ErrorCode, string Message, Action<bool, int?> Retry)
-       ```
+          ```csharp
+          ServerConnectionError(string ErrorCode, string Message, Action<bool, int?> Retry)
+          ```
 
-       The possible error codes via this event are as follows:
+          The possible error codes via this event are as follows:
 
-       ```csharp
-        ZWDNET-ER-00 : Unknown Error  (Supports Retry)
-        ZWDNET-ER-01 : Connection Timeout (Supports Retry)
-        ZWDNET-ER-02 : Schema Mismatch
-        ZWDNET-ER-03 : Error During Server Start up
-       ```
-       ```ZWDNET-ER-03``` Could originate due to a library fault (example: missing PSI), or a ZWave JS reported error (the error will be included)
+          ```csharp
+            ERR.00 : Unknown Error  (Supports Retry)
+            ERR.01 : Connection Timeout (Supports Retry)
+            ERR.02 : Schema Mismatch
+            ERR.03 : Error During Server Start up
+          ```
+          ```ERR.03``` For an example, could originate due to a library fault (example: missing PSI), or a ZWave JS reported error (the error will be included)
 
 
-       Where the error code, supports a retry, ```Retry``` will not be ```null```  
-       Arguments: **Should Retry**, **New Timeout Value** (if <1, defaults to 15s)
+          Where the error code, supports a retry, ```Retry``` will not be ```null```  
+          Arguments: **Should Retry**, **New Timeout Value** (if <1, defaults to 15s)
 
-       Effectively, the host application, is now respoabile for reconnection attempts
+          Effectively, the host application, is now respoabile for reconnection attempts
 
-    - All interaction error codes have been updated  
+        - **ZWaveSJError** : Any error emited by the Driver, after a successfull start up:
+
+          ```csharp
+            ZWaveJSError(int ErrorCode, string Message)
+            ```
+
+    - All interaction error codes have been updated.  
       ```csharp
-      ZWDNET-ER-04 : S2 Call backs missing
-      ZWDNET-ER-05 : Invalid Strategy
-      ZWDNET-ER-06 : Missing Security Keys
-      ZWDNET-ER-07 : Invalid Key Length
-      ZWDNET-ER-08 : Missing API key (Commercial use)
-      ZWDNET-ER-09 : Use of incorrect override
+      ERR.04 : S2 Call backs missing
+      ERR.05 : Invalid Strategy
+      ERR.06 : Missing Security Keys
+      ERR.07 : Invalid Key Length
+      ERR.08 : Missing API key (Commercial use)
+      ERR.09 : Use of incorrect override
       ```
     - The ```Controller.Nodes.AsArray()``` method has been replaced with a property of ```Controller.Nodes.Collection```
 

@@ -19,6 +19,18 @@ namespace ZWaveJS.NET
         public Abort abort { get; set; }
     }
 
+    [AttributeUsage(AttributeTargets.Property)]
+    public sealed class UpdateableNodePropertyAttribute : Attribute
+    {
+        public bool Complex { get; }
+
+        public UpdateableNodePropertyAttribute(bool complex = false)
+        {
+            Complex = complex;
+        }
+    }
+
+
     public class QRProvisioningInformation
     {
         internal QRProvisioningInformation() { }

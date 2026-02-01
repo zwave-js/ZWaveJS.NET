@@ -59,6 +59,9 @@ namespace ZWaveJS.NET
         public delegate void ServerConnectionErrorEvent(string ErrorCode, string Message, Action<bool, int?> Retry);
         public event ServerConnectionErrorEvent ServerConnectionError;
 
+        public delegate void ZWaveJSErrorEvent(int ErrorCode, string Message);
+        public event ZWaveJSErrorEvent ZWaveSJError;
+
         public delegate void LoggingEventDelegate(LoggingEventArgs args);
         public event LoggingEventDelegate LoggingEvent;
         internal void Trigger_LoggingEvent(LoggingEventArgs args)
@@ -672,7 +675,7 @@ namespace ZWaveJS.NET
 
                 _server.Start(SerialPort, Options, ServerCommunicationPort);
                 _server.Exited += Server_Exited;
-                _server.FatalError += Server_FatalError;
+                _server.ZWaveSJError += ZWaveJS_Error;
             }
 
             UsedPorts.Add(ServerCommunicationPort);
@@ -799,18 +802,27 @@ namespace ZWaveJS.NET
             }
         }
 
-        private void Server_FatalError(int Code, string Message)
+        private void ZWaveJS_Error(int Code, string Message, bool Start)
         {
-            RequestedExit = true;
-            Inited = false;
-            if (Controller != null)
+            if (Start)
             {
-                Controller.Nodes = null;
-                Controller = null;
+                RequestedExit = true;
+                Inited = false;
+                if (Controller != null)
+                {
+                    Controller.Nodes = null;
+                    Controller = null;
+                }
+                DestroySocket();
+                DestroyServer();
+                ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, Message, null);
             }
-            DestroySocket();
-            DestroyServer();
-            ServerConnectionError?.Invoke(Enums.ErrorCodes.StartUpError, Message, null);
+            else
+            {
+                ZWaveSJError?.Invoke(Code, Message);
+            }
+
+
         }
 
         private void StartListetningCB(JObject JO)

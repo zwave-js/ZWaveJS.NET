@@ -19,13 +19,19 @@
                 SemanticProperties.HeadingLevel="Level1"/>
 
             <Label
-                Text="Welcome to the ZWaveJS.NET Demo Application"
-                Style="{StaticResource SubHeadline}"
+                Text="Welcome to the ZWaveJS.NET Demo Application.&#10;A reference application for the .NET Wrapper."
+                FontSize="20"
+                HorizontalTextAlignment="Center"
                 SemanticProperties.HeadingLevel="Level2"/>
 
             <Grid HorizontalOptions="Center"
-                  RowSpacing="10">
+                  RowSpacing="10"
+                  WidthRequest="400">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -58,6 +64,7 @@
                     </Picker.Items>
                 </Picker>
 
+                <!-- Host -->
                 <Label Text="Serial Port"
                        Margin="0,0,10,0"
                        IsVisible="{Binding IsHost}"
@@ -74,10 +81,70 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Fill"
                         Grid.Row="1"
-                        Grid.Column="1">
-                </Picker>
+                        Grid.Column="1"/>
+                <Label Text="S0 Key"
+                       Margin="0,0,10,0"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="2"
+                       Grid.Column="0"/>
+                <Entry Margin="10,0,0,0"
+                       x:Name="TX_S0Key"
+                       WidthRequest="200"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Fill"
+                       Grid.Row="2"
+                       Grid.Column="1"/>
+                <Label Text="S2 Key (Access Control)"
+                       Margin="0,0,10,0"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="3"
+                       Grid.Column="0"/>
+                <Entry Margin="10,0,0,0"
+                       x:Name="TX_S2Key_AC"
+                       WidthRequest="200"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Fill"
+                       Grid.Row="3"
+                       Grid.Column="1"/>
+                <Label Text="S2 Key (Authenticated)"
+                       Margin="0,0,10,0"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="4"
+                       Grid.Column="0"/>
+                <Entry Margin="10,0,0,0"
+                       x:Name="TX_S2Key_AUTH"
+                       WidthRequest="200"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Fill"
+                       Grid.Row="4"
+                       Grid.Column="1"/>
+                <Label Text="S2 Key (Unauthenticated)"
+                       Margin="0,0,10,0"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Grid.Row="5"
+                       Grid.Column="0"/>
+                <Entry Margin="10,0,0,0"
+                       x:Name="TX_S2Key_UAUTH"
+                       WidthRequest="200"
+                       IsVisible="{Binding IsHost}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Fill"
+                       Grid.Row="5"
+                       Grid.Column="1"/>
 
-                 <Label Text="Server (WS)"
+                <!-- Client -->
+                <Label Text="Server (WS)"
                        Margin="0,0,10,0"
                        IsVisible="{Binding IsClient}"
                        VerticalOptions="Center"

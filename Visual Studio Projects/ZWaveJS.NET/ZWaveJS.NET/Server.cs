@@ -11,8 +11,8 @@ namespace ZWaveJS.NET
 
         private Process ServerProcess;
 
-        internal delegate void FatalErrorEvent(int Code, string Message);
-        internal event FatalErrorEvent FatalError;
+        internal delegate void ZwaveJSErrorEvent(int Code, string Message, bool Start);
+        internal event ZwaveJSErrorEvent ZWaveSJError;
 
         internal delegate void ProcessdExitedEvent();
         internal event ProcessdExitedEvent Exited;
@@ -98,7 +98,7 @@ namespace ZWaveJS.NET
         private void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             JObject JO = JObject.Parse(e.Data);
-            FatalError?.Invoke(JO.Value<int>("code"), JO.Value<string>("message"));
+            ZWaveSJError?.Invoke(JO.Value<int>("code"), JO.Value<string>("message"),JO.Value<bool>("start"));
         }
     }
 }
