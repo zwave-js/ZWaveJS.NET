@@ -60,7 +60,7 @@ namespace ZWaveJS.NET
         public event ServerConnectionErrorEvent ServerConnectionError;
 
         public delegate void ZWaveJSErrorEvent(int ErrorCode, string Message);
-        public event ZWaveJSErrorEvent ZWaveSJError;
+        public event ZWaveJSErrorEvent ZWaveJSError;
 
         public delegate void LoggingEventDelegate(LoggingEventArgs args);
         public event LoggingEventDelegate LoggingEvent;
@@ -819,7 +819,7 @@ namespace ZWaveJS.NET
             }
             else
             {
-                ZWaveSJError?.Invoke(Code, Message);
+                ZWaveJSError?.Invoke(Code, Message);
             }
 
 

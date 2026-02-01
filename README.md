@@ -9,14 +9,15 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/zwave-js/zwavejs.net)
 
 
-ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the zwave-js Driver in .NET, allowing its full runtime to be used directly in .NET applications.  
+ZWaveJS.NET is a class library developed for the .NET framework family, that opens up the Zwave JS Driver in .NET, allowing its full runtime to be used directly in .NET applications.  
 
 ## Supported Targets
- - NET 6.0 
- - NET 7.0
- - NET 8.0
- - NET 9.0
- - NET Standard 2.1  
+- NET6.0
+- NET7.0
+- NET8.0
+- NET9.0
+- NET10.0
+- netstandard2.1
 
 The library strictly follows the structure of the zwave-js API. 
 
@@ -67,31 +68,49 @@ All releases will be published to nuget, so search for **ZWaveJS.NET** and insta
 
 ## Brief Example
 ```c#
-static ZWaveJS.NET.Driver _Driver;
+using ZWaveJS.NET;
+
+static Driver _Driver;
 static void Main(string[] args)
 {
     // Set S0, S2 encryption keys, enable logging, adjust network timeouts so on and so forth.
-     ZWaveJS.NET.ZWaveOptions Options = new  ZWaveJS.NET.ZWaveOptions();
+     ZWaveOptions Options = new  ZWaveOptions();
 
     // Create Driver Instance
     _Driver = new Driver("COM7", Options);
 
-    // Subscribe to driver ready
-    _Driver.DriverReady += _Driver_DriverReady;
+    // Subscribe to driver ready, error, and connection events
+    _Driver.DriverReady += DriverReady;
+    _Driver.ServerConnectionError += HandleConnectionErrors;
+	_Driver.ZWaveJSError += HandleZWErrors;
    
     _Driver.Start();
 }
 
-private static void _Driver_DriverReady()
+private void HandleZWErrors(int ErrorCode, string Message)
+{
+    // Do something with the error
+}
+
+private void HandleConnectionErrors(string ErrorCode, string Message, Action<bool, int?> Retry)
+{
+    // Do something with the error, and restart if supported, setting a new timeout
+    if(Retry != null)
+    {
+        Retry(true,15)
+    }
+}
+
+private  void DriverReady()
 {
     // Update a value
-    ZWaveJS.NET.ValueID VID = new ZWaveJS.NET.ValueID();
+    ValueID VID = new ValueID();
     VID.commandClass = 135;
     VID.property = "value";
     VID.endpoint = 0;
 
     // Support for set Value Options
-    ZWaveJS.NET.SetValueAPIOptions SVO = new  ZWaveJS.NET.SetValueAPIOptions();
+    SetValueAPIOptions SVO = new  SetValueAPIOptions();
     SVO.transitionDuration = "2s";
     SVO.volume = 30;
 
@@ -99,25 +118,25 @@ private static void _Driver_DriverReady()
     _Driver.Controller.Nodes.Get(4).SetValue(VID, 200, SVO).ContinueWith((res) => {
         if (res.Result.Success)
 	    {
-            Console.WriteLine("Value Updated");
+            SetValueResult SVR = res.Result.ResultPayloadAs<SetValueResult>();
         }
     });
 
     // Subscribe to value updates on a node
-    _Driver.Controller.Nodes.Get(3).ValueUpdated += Program_ValueUpdated;
+    _Driver.Controller.Nodes.Get(3).ValueUpdated += ValueUpdated;
 
     // Or All of them
-    ZWaveJS.NET.ZWaveNode[] Nodes = _Driver.Controller.Nodes.AsArray();
-    foreach(ZWaveJS.NET.ZWaveNode Node in Nodes)
+    ZWaveJS.NET.ZWaveNode[] Nodes = _Driver.Controller.Nodes.Collection;
+    foreach(ZWaveNode Node in Nodes)
     {
-        Node.ValueUpdated += Program_ValueUpdated;
+        Node.ValueUpdated += ValueUpdated;
     }
 
      // Other Node methods
     _Driver.Controller.Nodes.Get(4).GetDefinedValueIDs().ContinueWith((res) => {
         if(res.Result.Success)
         {
-            // Do something with Value ID's (res.Result.ResultPayload)
+            ValueID[] ValueIDs = res.Result.ResultPayloadAs<ValueID[]>();
         }
 	    else
 	    {
@@ -126,19 +145,20 @@ private static void _Driver_DriverReady()
     });
 
     // Subscribe to new nodes being added to the network
-    _Driver.Controller.NodeAdded += Controller_NodeAdded;
+    _Driver.Controller.NodeAdded += NodeAdded;
 
    
 }
 
-private static void Program_ValueUpdated(ZWaveNode Node, ValueUpdatedArgs Args)
+private static void ValueUpdated(ZWaveNode Node, ValueUpdatedArgs Args)
 {
    // Do something with Args
 }
 
-private void Controller_NodeAdded(ZWaveNode Node, InclusionResultArgs Args)
+private static void NodeAdded(ZWaveNode Node, InclusionResultArgs Args)
 {
-    // Add the new node to the UI
+    // Do something with the Node.
+    Node.ValueUpdated += ValueUpdated;
 }
 ```
 

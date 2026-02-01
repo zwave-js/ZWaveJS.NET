@@ -53,7 +53,7 @@ public partial class App : Application
 				_Driver = new Driver(PoretOrURI.ToString(), Options);
 				_Driver.DriverReady += HandleReady;
 				_Driver.ServerConnectionError += HandleError;
-				_Driver.ZWaveSJError += HandleZWError;
+				_Driver.ZWaveJSError += HandleZWError;
 				break;
 
 			default:

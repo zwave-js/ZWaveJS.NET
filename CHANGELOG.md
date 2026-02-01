@@ -49,7 +49,7 @@
 
           Effectively, the host application, is now respoabile for reconnection attempts
 
-        - **ZWaveSJError** :   
+        - **ZWaveJSError** :   
         Any error emited by the Driver.  It is important to note: this could also be a precusor to ```ServerConnectionError```
 
           ```csharp
