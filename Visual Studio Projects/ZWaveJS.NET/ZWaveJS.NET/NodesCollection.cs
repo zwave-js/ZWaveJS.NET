@@ -37,11 +37,11 @@ namespace ZWaveJS.NET
 
         internal void ReplaceInformation(ZWaveNode source, ZWaveNode target)
         {
-            foreach (var prop in UpdatebaleNodeProbs)
+            foreach (PropertyInfo prop in UpdatebaleNodeProbs)
             {
                 if (prop.CanRead && prop.CanWrite)
                 {
-                    var value = prop.GetValue(source);
+                    object value = prop.GetValue(source);
                     prop.SetValue(target, value);
                 }
             }
