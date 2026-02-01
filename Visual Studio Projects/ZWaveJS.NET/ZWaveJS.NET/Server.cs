@@ -1,53 +1,64 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Sockets;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ZWaveJS.NET
 {
-    internal class Server
+    public class Server
     {
-
-        
 
         private Process ServerProcess;
 
-        internal delegate void FatalErrorEvent();
-        internal event FatalErrorEvent FatalError;
+        internal delegate void ZwaveJSErrorEvent(int Code, string Message, bool Start);
+        internal event ZwaveJSErrorEvent ZWaveSJError;
 
         internal delegate void ProcessdExitedEvent();
         internal event ProcessdExitedEvent Exited;
+        public static string PSIRoot;
 
         internal void Terminate()
         {
-            if (ServerProcess != null && !ServerProcess.HasExited)
+            try
             {
-                ServerProcess.StandardInput.WriteLine("KILL");
-                ServerProcess.Dispose();
+                if (ServerProcess != null && !ServerProcess.HasExited)
+                {
+                    ServerProcess.StandardInput.WriteLine("KILL");
+                    ServerProcess.Dispose();
+                }
             }
+            catch(Exception Error){}
+
         }
 
         internal void Start(string SerialPort, ZWaveOptions Config, int WSPort)
         {
 
-
             string ProcessName = string.Format("server.{0}.psi", WSPort);
 
             Process[] Zombies = Process.GetProcessesByName(ProcessName);
-            foreach(Process Zombie in Zombies)
+            foreach (Process Zombie in Zombies)
             {
                 Zombie.Kill();
                 Zombie.WaitForExit();
                 File.Delete(ProcessName);
             }
 
-            if (!File.Exists("server.psi"))
+            string PSIPath = "server.psi";
+            string ProcessPath = ProcessName;
+            if (!string.IsNullOrEmpty(PSIRoot))
             {
-                throw new FileNotFoundException("No Platform Snapshot Image (server.psi) found");
+                PSIPath = Path.Join(PSIRoot, PSIPath);
+                ProcessPath = Path.Join(PSIRoot, ProcessName);
             }
 
-            File.Copy("server.psi",ProcessName, true);
+            if (!File.Exists(PSIPath))
+            {
+                throw new Exception("No Platform Support Image (server.psi) found");
+            }
+
+            File.Copy(PSIPath, ProcessPath, true);
 
             JsonSerializerSettings JSS = new JsonSerializerSettings();
             JSS.NullValueHandling = NullValueHandling.Ignore;
@@ -62,7 +73,7 @@ namespace ZWaveJS.NET
             PSI.EnvironmentVariables.Add("WS_PORT", WSPort.ToString());
             PSI.EnvironmentVariables.Add("NODE_ENV", "production");
 
-            PSI.FileName = ProcessName;
+            PSI.FileName = ProcessPath;
             PSI.UseShellExecute = false;
 #if !DEBUG
             PSI.WindowStyle = ProcessWindowStyle.Hidden;
@@ -72,7 +83,7 @@ namespace ZWaveJS.NET
             ServerProcess.EnableRaisingEvents = true;
             ServerProcess.ErrorDataReceived += ServerProcess_ErrorDataReceived;
             ServerProcess.Exited += ServerProcess_Exited;
-            
+
             ServerProcess.StartInfo = PSI;
             ServerProcess.Start();
             ServerProcess.BeginErrorReadLine();
@@ -80,22 +91,14 @@ namespace ZWaveJS.NET
 
         private void ServerProcess_Exited(object sender, EventArgs e)
         {
-            // Exited?.Invoke(); I think this will be indirectly handled by the socket client now
+            Exited?.Invoke();
             ServerProcess.Dispose();
         }
 
         private void ServerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            int Code;
-            if (int.TryParse(e.Data, out Code))
-            {
-                switch (Code)
-                {
-                    case 1:
-                        FatalError?.Invoke();
-                        break;
-                }
-            }
+            JObject JO = JObject.Parse(e.Data);
+            ZWaveSJError?.Invoke(JO.Value<int>("code"), JO.Value<string>("message"),JO.Value<bool>("start"));
         }
     }
 }

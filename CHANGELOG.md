@@ -1,3 +1,121 @@
+- v5.0.0
+
+  - **Versions**
+    - ZWave JS Driver Version: 15.20.0
+    - ZWave JS Server Version: 3.5.0 (Schema Version 44)
+
+  - **Breaking Changes**
+    - Dropped frameworks, the following frameworks are now as follows:
+      - net6.0
+      - net7.0
+      - net8.0
+      - net9.0
+      - net10.0
+      - netstandard2.1
+
+    - Moved the S2 callbacks to the ```ZWaveOptions``` class
+      This falls inline with the Driver API Settings object, So  ```InclusionOptions``` no longer has these properties.  
+      Additionally, running the library in Client mode, now requires the Driver construct take an argument of the callbacks object.  
+      this also applies to ```ZWaveOptions.FromSerialized```   
+      
+      A null check is executed during any inclusion that require these callbacks.
+
+    - Driver class init signature changes
+      - ```public Driver(string SerialPort, ZWaveOptions Options, int ServerCommunicationPort = 50001)```
+      - ```public Driver(Uri Server, InclusionUserCallbacks S2Callbacks, int SchemaVersion = 0)```
+
+    - Re-engineered error/connection handling.  
+       All Driver/Server error handling, is now handled through 2 events:   
+        - **ServerConnectionError** :   
+        This error is triggered, when the Libary is not able to connect to the Driver Runtime, or loses connection:
+
+          ```csharp
+          ServerConnectionError(string ErrorCode, string Message, Action<bool, int?> Retry)
+          ```
+
+          The possible error codes via this event are as follows:
+
+          ```csharp
+            ERR.00 : Unknown Error  (Supports Retry)
+            ERR.01 : Connection Timeout (Supports Retry)
+            ERR.02 : Schema Mismatch
+            ERR.03 : Error During Server Start up
+          ```
+          ```ERR.03``` For an example, could be due to a missing PSI, or a ZWave JS reported error during it's ```start``` promise
+
+
+          Where the error code, supports a retry, ```Retry``` will not be ```null```  
+          Arguments: **Should Retry**, **New Timeout Value** (if <1, defaults to 15s)
+
+          Effectively, the host application, is now respoabile for reconnection attempts
+
+        - **ZWaveJSError** :   
+        Any error emited by the Driver.  It is important to note: this could also be a precusor to ```ServerConnectionError```
+
+          ```csharp
+            ZWaveJSError(int ErrorCode, string Message)
+            ```
+
+    - All interaction error codes have been updated.  
+      These are the response error codes for the ```CMDResult```, if the command failed.
+      ```csharp
+      ERR.04 : S2 Call backs missing
+      ERR.05 : Invalid Strategy
+      ERR.06 : Missing Security Keys
+      ERR.07 : Invalid Key Length
+      ERR.08 : Missing API key (Commercial use)
+      ERR.09 : Use of incorrect override
+      ```
+      Keep in mind, Zwave JS can produce an error response (and code) also.
+
+    - The ```Controller.Nodes.AsArray()``` method has been replaced with a property of ```Controller.Nodes.Collection```
+
+    - The following methods/events have been renamed
+      - ```ZWJSS_SetRawConfigParameterValue``` -> ```SetRawConfigParameterValue```
+      - ```ZWJSS_StartListeningLogs``` -> ```StartListeningLogs```
+      - ```ZWJSS_StopListeningLogs``` -> ```StopListeningLogs```
+      - ```ZWJSS_LoggingEvent``` -> ```LoggingEvent```
+
+  - **Fixes**
+    - Correctly handle the mechanisms behind ```Driver.SoftReset()``` and ```Driver.HardReset()```.  
+Internally, the library is now restarted in response to a non-public internal ```driver ready``` signal.  
+Note: This intentionally re-triggers the public ```DriverReady``` event, allowing consumers to re-attach to events throughout the library.
+    - Dont start the PSI socket server on ```driver ready``` if already started.
+
+  - **Internal Changes**
+    - All responses to method calls are now dispatched asynchronously on the thread pool, so user code triggered by these responses cannot block the WebSocket message handler.
+    - Previously, the node, controller, and driver callbacks each created their own task after completing their prep work. Now the task is created upfront, and both the prep work and the callback execute inside that single task
+    - Various optimisations to the code base for easiyer maintenance.
+    - Reverted to using the actively maintained Websocket.Client library. Previously, we were relying on an outdated source‑based code copy
+    - A large portion of the Websocket startup, has been moved and is now located inside the ```Driver.Start()``` method,   
+      This allows better (controlled) error handling. It was previously inside the Driver ctor.
+
+  - **New Features**
+    - Added the ability to set the PSI root folder via ```Server.PSIRoot```, this is to address some OSX quirks, with App Bundles.  
+      it should only be the folder path, and not the executable name.
+    - Exposed further Zwave Options
+        - ```preferences```
+        - ```attempts.smartStartInclusion```
+        - ```attempts.firmwareUpdateOTW```
+    - Added ```Driver.IsHostedMode``` property
+    - Added ```Driver.ServerSchemaVersion``` property
+    - Added ```Controller.sdkVersion``` property
+    - Added ```Controller.firmwareVersion``` property
+    - Added ```Controller.HomeIdAsHex``` property
+    - Added ```ZWaveNode.InterviewStageCompleted``` event
+    - Implemented ```INotifyPropertyChanged``` support for the below.  
+    this improves support for MVVM and allows UI bindings to update automatically.
+        - ```ZWaveNode.statistics```
+        - ```ZWaveNode.status```
+        - ```ZWaveNode.ready```
+        - ```ZWaveNode.interviewStage```
+        - ```Controller.statistics```
+        - ```Controller.isRebuildingRoutes```  
+        - ```Controller.Nodes.Collection```  
+    - Added a new  ```Lib``` class.  
+      This is home to some helper methods, the first is ```SerialPorts()``` to get a list of ports on the host system.
+
+
 - v4.0.0
 
   - Versions

@@ -3,6 +3,8 @@
 namespace ZWaveJS.NET
 {
 
+
+
     public class ZWaveOptions
     {
         public ZWaveOptions()
@@ -17,6 +19,8 @@ namespace ZWaveJS.NET
             this.disableOptimisticValueUpdate = false;
             this.emitValueUpdateAfterSetValue = false;
             this.features = new CFGFeatures();
+            this.preferences = new CFGPreferences();
+            this.inclusionUserCallbacks = new InclusionUserCallbacks();
 
         }
 
@@ -25,9 +29,11 @@ namespace ZWaveJS.NET
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
         }
 
-        public static ZWaveOptions FromSerialized(string JSON)
+        public static ZWaveOptions FromSerialized(string JSON,InclusionUserCallbacks S2Callbacks)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ZWaveOptions>(JSON);
+            ZWaveOptions Op = Newtonsoft.Json.JsonConvert.DeserializeObject<ZWaveOptions>(JSON);
+            Op.inclusionUserCallbacks = S2Callbacks;
+            return Op;
         }
 
         public CFGTimeouts timeouts { get; set; }
@@ -40,7 +46,32 @@ namespace ZWaveJS.NET
         public bool disableOptimisticValueUpdate { get; set; }
         public bool emitValueUpdateAfterSetValue { get; set; }
         public CFGFeatures features { get; set; }
+        public CFGPreferences preferences { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public InclusionUserCallbacks inclusionUserCallbacks { get; set; }
+        
+        public class CFGPreferences
+        {
+            public CFGPreferences()
+            {
+                this.scales = new CFGScales();
+                this.lookupUserIdInNotificationEvents = false;
+            }
 
+            public CFGScales scales { get; set; }
+            public bool lookupUserIdInNotificationEvents { get; set; }
+        }
+
+        public class CFGScales
+        {
+            public CFGScales()
+            {
+                this.humidity = 0x00;
+                this.temperature = 0x00;
+            }
+            public int temperature { get; set; }
+            public int humidity { get; set; }
+        }
 
         public class CFGTimeouts
         {
@@ -55,15 +86,17 @@ namespace ZWaveJS.NET
             public int? sendToSleep { get; set; }
             public int? serialAPIStarted { get; set; }
         }
-    
+
         public class CFGAttempts
         {
             public int? controller { get; set; }
             public int? sendData { get; set; }
             public int? sendDataJammed { get; set; }
             public int? nodeInterview { get; set; }
+            public int? smartStartInclusion { get; set; }
+            public int? firmwareUpdateOTW { get; set; }
         }
-        
+
         public class CFGLogConfig
         {
             public CFGLogConfig()
@@ -80,19 +113,21 @@ namespace ZWaveJS.NET
             public int[] nodeFilter { get; set; }
             public string filename { get; set; }
         }
-        
+
         public class CFGInterview
         {
             public CFGInterview()
             {
                 this.queryAllUserCodes = false;
                 this.disableOnNodeAdded = false;
+                this.applyRecommendedConfigParamValues = false;
             }
 
             public bool queryAllUserCodes { get; set; }
             public bool disableOnNodeAdded { get; set; }
+            public bool applyRecommendedConfigParamValues { get; set; }
         }
-        
+
         public class CFGStorage
         {
             public CFGStorage()
@@ -106,7 +141,7 @@ namespace ZWaveJS.NET
             public string throttle { get; set; }
             public string deviceConfigExternalDir { get; set; }
         }
-        
+
         public class CFGSecurityKeys
         {
             public string S2_Unauthenticated { get; set; }
@@ -114,7 +149,7 @@ namespace ZWaveJS.NET
             public string S2_AccessControl { get; set; }
             public string S0_Legacy { get; set; }
         }
-        
+
         public class CFGSecurityKeysLR
         {
             public string S2_Authenticated { get; set; }
@@ -128,7 +163,7 @@ namespace ZWaveJS.NET
                 this.softReset = true;
                 this.unresponsiveControllerRecovery = true;
             }
-            
+
             public bool softReset { get; set; }
             public bool unresponsiveControllerRecovery { get; set; }
         }
@@ -143,13 +178,13 @@ namespace ZWaveJS.NET
 
             if (this.securityKeysLongRange.S2_Authenticated == null)
                 return true;
-            
+
             return false;
         }
 
         internal bool MissingKeys(bool IncludeS2, bool IncludeS0)
         {
-            if(this.securityKeys == null)
+            if (this.securityKeys == null)
                 return true;
 
             if (this.securityKeys.S0_Legacy == null && IncludeS0)
@@ -168,7 +203,7 @@ namespace ZWaveJS.NET
 
         }
 
-        internal bool CheckKeyLengthLR()
+        private bool CheckKeyLengthLR()
         {
             if (this.securityKeysLongRange != null && this.securityKeysLongRange.S2_AccessControl != null && this.securityKeysLongRange.S2_AccessControl.Length != 32)
                 return false;
@@ -194,9 +229,9 @@ namespace ZWaveJS.NET
             if (this.securityKeys != null && this.securityKeys.S2_Unauthenticated != null && this.securityKeys.S2_Unauthenticated.Length != 32)
                 return false;
 
-            return true;
+            return CheckKeyLengthLR();
 
         }
     }
-    
+
 }

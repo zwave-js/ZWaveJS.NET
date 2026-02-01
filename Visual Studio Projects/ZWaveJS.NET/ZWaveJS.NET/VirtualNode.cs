@@ -17,9 +17,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetEndpointCount()
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -45,9 +44,9 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> SetValue(ValueID ValueID, object Value, SetValueAPIOptions Options = null)
         {
-            Guid ID = Guid.NewGuid();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -79,9 +78,9 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetDefinedValueIDs()
         {
-            Guid ID = Guid.NewGuid();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -108,9 +107,9 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> SupportsCCAPI(int CommandClass)
         {
-            Guid ID = Guid.NewGuid();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -137,9 +136,9 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> InvokeCCAPI(int CommandClass, string Method, params object[] Params)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
+            
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);

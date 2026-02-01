@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static ZWaveJS.NET.Enums;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ZWaveJS.NET
 {
-    public class Controller
+    public class Controller : INotifyPropertyChanged
     {
         private Driver _driver;
         internal Controller(Driver driver)
@@ -16,8 +17,14 @@ namespace ZWaveJS.NET
             _driver = driver;
         }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public delegate void BackupNVMProgress(int BytesRead, int Total);
-        private  BackupNVMProgress BackupNVMProgressSub;
+        private BackupNVMProgress BackupNVMProgressSub;
         internal void Trigger_BackupNVMProgress(int BytesRead, int Total)
         {
             BackupNVMProgressSub?.Invoke(BytesRead, Total);
@@ -42,6 +49,7 @@ namespace ZWaveJS.NET
         internal void Trigger_StatisticsUpdated(ControllerStatisticsUpdatedArgs Args)
         {
             this.statistics = Args;
+            OnPropertyChanged(nameof(statistics));
             StatisticsUpdated?.Invoke(Args);
         }
 
@@ -49,7 +57,7 @@ namespace ZWaveJS.NET
         public event RebuildRoutesProgressEvent RebuildRoutesProgress;
         internal void Trigger_RebuildRoutesProgress(RebuildRoutesProgressArgs Args)
         {
-             RebuildRoutesProgress?.Invoke(Args);
+            RebuildRoutesProgress?.Invoke(Args);
         }
 
         public delegate void RebuildRoutesDoneEvent(RebuildRoutesDoneArgs Args);
@@ -57,25 +65,8 @@ namespace ZWaveJS.NET
         internal void Trigger_RebuildRoutesDone(RebuildRoutesDoneArgs Args)
         {
             this.isRebuildingRoutes = false;
+            OnPropertyChanged(nameof(isRebuildingRoutes));
             RebuildRoutesDone?.Invoke(Args);
-        }
-
-        private Abort AbortSub;
-        internal void Trigger_InclusionAborted()
-        {
-            AbortSub?.Invoke();
-        }
-
-        private ValidateDSKAndEnterPIN ValidateDSKAndEnterPINSub;
-        internal string Trigger_ValidateDSK(string DSK)
-        {
-            return ValidateDSKAndEnterPINSub?.Invoke(DSK);
-        }
-
-        private GrantSecurityClasses GrantSecurityClassesSub;
-        internal InclusionGrant Trigger_GrantSecurityClasses(InclusionGrant Requested)
-        {
-            return GrantSecurityClassesSub?.Invoke(Requested);
         }
 
         public delegate void InclusionStartedEvent(bool Secure);
@@ -110,6 +101,7 @@ namespace ZWaveJS.NET
         public event NodeRemovedEvent NodeRemoved;
         internal void Trigger_NodeRemoved(ZWaveNode Node, Enums.RemoveNodeReason Reason)
         {
+
             NodeRemoved?.Invoke(Node, Reason);
         }
 
@@ -133,7 +125,7 @@ namespace ZWaveJS.NET
         {
             FirmwareUpdateFinished?.Invoke(Args);
         }
-        
+
         public delegate void FirmwareUpdateProgressEvent(ControllerFirmwareUpdateProgressArgs Args);
         public event FirmwareUpdateProgressEvent FirmwareUpdateProgress;
         internal void Trigger_FirmwareUpdateProgress(ControllerFirmwareUpdateProgressArgs Args)
@@ -141,11 +133,70 @@ namespace ZWaveJS.NET
             FirmwareUpdateProgress?.Invoke(Args);
         }
 
+        private CMDResult ValidateStrategy(Enums.InclusionStrategy strategy)
+        {
+            bool requiresCallbacks =
+                strategy == Enums.InclusionStrategy.Default ||
+                strategy == Enums.InclusionStrategy.Security_S2;
+
+            if (requiresCallbacks && (_driver.S2Callbacks?.validateDSKAndEnterPIN == null || _driver.S2Callbacks?.grantSecurityClasses == null || _driver.S2Callbacks?.abort == null))
+            {
+                return new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security requires userCallbacks [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
+            }
+            return null;
+        }
+
+        private CMDResult ValidateLRKeys()
+        {
+            if (_driver.Options == null)
+                return null;
+
+            return _driver.Options.MissingLRKeys() ? new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options (LongRange)", false) : null;
+        }
+
+
+        private CMDResult ValidateKeys(Enums.InclusionStrategy strategy)
+        {
+            if (_driver.Options == null)
+                return null;
+
+            return strategy switch
+            {
+                Enums.InclusionStrategy.Default =>
+                    _driver.Options.MissingKeys(true, true)
+                        ? new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options (SO, S2)", false)
+                        : null,
+
+                Enums.InclusionStrategy.Security_S2 =>
+                    _driver.Options.MissingKeys(true, false)
+                        ? new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options (S2)", false)
+                        : null,
+
+                Enums.InclusionStrategy.Security_S0 =>
+                    _driver.Options.MissingKeys(false, true)
+                        ? new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options (SO)", false)
+                        : null,
+
+                _ => null
+            };
+        }
+
+        private CMDResult ValidateKeyLength()
+        {
+            if (_driver.Options != null && !_driver.Options.CheckKeyLength())
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
+                return Res;
+            }
+            return null;
+        }
+
+
         // Checked as of : 3.5.0
         public Task<CMDResult> GetAvailableFirmwareUpdates(int NodeID, bool IncludePrereleases, UsageEnvironment Environment, string APIKey = null)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             if (Environment == UsageEnvironment.Commercial && string.IsNullOrEmpty(APIKey))
             {
@@ -157,7 +208,7 @@ namespace ZWaveJS.NET
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
-                
+
 
                 if (Res.Success)
                 {
@@ -184,8 +235,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> FirmwareUpdateOTA(int NodeID, FirmwareUpdateInfo Update)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -213,8 +264,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetRFRegion()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -227,11 +278,11 @@ namespace ZWaveJS.NET
                 Result.SetResult(Res);
 
             });
-            
+
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.GetRFRegion);
-            
+
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
@@ -241,15 +292,15 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> SetRFRegion(Enums.RFRegion Region)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
                 Result.SetResult(Res);
             });
-            
+
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.SetRFRegion);
@@ -260,12 +311,12 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
+
         // Checked as of : 3.5.0
         public Task<CMDResult> SetMaxLongRangePowerlevel(decimal Limit)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -288,8 +339,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetMaxLongRangePowerlevel()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -318,8 +369,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetPowerLevel()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -348,8 +399,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> SetPowerLevel(decimal PowerLevel, decimal Measured0dBm)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -370,7 +421,7 @@ namespace ZWaveJS.NET
             return Result.Task;
         }
 
-      
+
 
         // Checked as of : 3.5.0
         public Task<CMDResult> FirmwareUpdateOTW(FirmwareUpdate Update)
@@ -384,8 +435,8 @@ namespace ZWaveJS.NET
                 return Fail.Task;
             }
 
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -406,7 +457,7 @@ namespace ZWaveJS.NET
             Request.Add("command", Enums.Commands.FirmwareUpdateOTW);
             Request.Add("file", Update.data);
             Request.Add("filename", Update.filename);
-            
+
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
@@ -416,8 +467,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetProvisioningEntries()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
@@ -444,8 +495,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> ToggleRF(bool Enabled)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -457,7 +508,7 @@ namespace ZWaveJS.NET
             Request.Add("messageId", ID);
             Request.Add("command", Enums.Commands.ToggleRF);
             Request.Add("enabled", Enabled);
-            
+
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
             _driver.ClientWebSocket.SendInstant(RequestPL);
 
@@ -467,8 +518,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> RemoveAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
@@ -494,14 +545,14 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> AddAssociations(AssociationAddress Source, int Group, AssociationAddress[] Targets)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-           _driver.Callbacks.Add(ID, (JO) =>
-            {
-                CMDResult Res = new CMDResult(JO);
-                Result.SetResult(Res);
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
+            _driver.Callbacks.Add(ID, (JO) =>
+             {
+                 CMDResult Res = new CMDResult(JO);
+                 Result.SetResult(Res);
 
-            });
+             });
 
             Dictionary<string, object> Request = new Dictionary<string, object>();
             Request.Add("messageId", ID);
@@ -513,7 +564,7 @@ namespace ZWaveJS.NET
 
 
             string RequestPL = Newtonsoft.Json.JsonConvert.SerializeObject(Request);
-           _driver.ClientWebSocket.SendInstant(RequestPL);
+            _driver.ClientWebSocket.SendInstant(RequestPL);
 
             return Result.Task;
         }
@@ -521,8 +572,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetAssociations(int Node, int Endpoint)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
@@ -551,8 +602,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> GetAssociationGroups(int Node, int Endpoint)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
@@ -585,8 +636,8 @@ namespace ZWaveJS.NET
             ConvertRestoreNVMProgressSub = ConvertProgress;
             RestoreNVMProgressSub = RestoreProgress;
 
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
@@ -614,8 +665,8 @@ namespace ZWaveJS.NET
         {
             BackupNVMProgressSub = OnProgress;
 
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
             _driver.Callbacks.Add(ID, (JO) =>
              {
                  CMDResult Res = new CMDResult(JO);
@@ -642,62 +693,23 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> ReplaceFailedNode(int NodeID, InclusionOptions Options)
         {
-            ValidateDSKAndEnterPINSub = null;
-            GrantSecurityClassesSub = null;
-            AbortSub = null;
 
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            switch (Options.strategy)
+            CMDResult Error = ValidateStrategy(Options.strategy) ?? ValidateKeys(Options.strategy) ?? ValidateKeyLength();
+            if (Error != null)
             {
-                case Enums.InclusionStrategy.Default:
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidStrategy, "Invalid Strategy for 'ReplaceFailedNode' Valid Strategies are : [Insecure, Security_S0, Security_S2]", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-
-                case Enums.InclusionStrategy.Security_S2:
-                    ValidateDSKAndEnterPINSub = Options.userCallbacks?.validateDSKAndEnterPIN ?? null;
-                    GrantSecurityClassesSub = Options.userCallbacks?.grantSecurityClasses ?? null;
-                    AbortSub = Options.userCallbacks?.abort ?? null;
-                    break;
-
-            }
-
-            if (Options.strategy == Enums.InclusionStrategy.Security_S2)
-            {
-                if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-
-                if (_driver.Options != null && _driver.Options.MissingKeys(true, false))
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-            }
-
-            if (Options.strategy == Enums.InclusionStrategy.Security_S0)
-            {
-                if (_driver.Options != null && _driver.Options.MissingKeys(false, true))
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-            }
-
-            if (_driver.Options != null && !_driver.Options.CheckKeyLength())
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                Result.SetResult(Res);
+                Result.SetResult(Error);
                 return Result.Task;
             }
 
+            if (Options.strategy == InclusionStrategy.Default)
+            {
+                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidStrategy, "Invalid Strategy for 'ReplaceFailedNode' Valid Strategies are : [Insecure, Security_S0, Security_S2]", false);
+                Result.SetResult(Res);
+                return Result.Task;
+            }
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -723,8 +735,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> RemoveFailedNode(int NodeID)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -747,8 +759,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> RebuildNodeRoutes(int NodeID)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -771,8 +783,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> BeginRebuildingRoutes(RebuildRoutesOptions Options)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -780,6 +792,7 @@ namespace ZWaveJS.NET
                  if (Res.Success && Res.ResultPayloadAs<bool>())
                  {
                      this.isRebuildingRoutes = true;
+                     OnPropertyChanged(nameof(isRebuildingRoutes));
                  }
                  Result.SetResult(Res);
              });
@@ -799,8 +812,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> StopRebuildingRoutes()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -808,6 +821,7 @@ namespace ZWaveJS.NET
                  if (Res.Success && Res.ResultPayloadAs<bool>())
                  {
                      this.isRebuildingRoutes = false;
+                     OnPropertyChanged(nameof(isRebuildingRoutes));
                  }
 
                  Result.SetResult(Res);
@@ -827,73 +841,13 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> BeginInclusion(InclusionOptions Options)
         {
-            ValidateDSKAndEnterPINSub = null;
-            GrantSecurityClassesSub = null;
-            AbortSub = null;
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
-
-            switch (Options.strategy)
+            CMDResult Error = ValidateStrategy(Options.strategy) ?? ValidateKeys(Options.strategy) ?? ValidateKeyLength();
+            if (Error != null)
             {
-                case Enums.InclusionStrategy.Default:
-                case Enums.InclusionStrategy.Security_S2:
-                    ValidateDSKAndEnterPINSub = Options.userCallbacks?.validateDSKAndEnterPIN ?? null;
-                    GrantSecurityClassesSub = Options.userCallbacks?.grantSecurityClasses ?? null;
-                    AbortSub = Options.userCallbacks?.abort ?? null;
-                    break;
-            }
-
-            if (Options.strategy == Enums.InclusionStrategy.Default)
-            {
-
-                if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-
-                if (_driver.Options != null && _driver.Options.MissingKeys(true, true))
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-            }
-
-            if (Options.strategy == Enums.InclusionStrategy.Security_S2)
-            {
-
-                if (ValidateDSKAndEnterPINSub == null || GrantSecurityClassesSub == null || AbortSub == null)
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingS2Callbacks, "S2 Security require userCallbacks to be provided [validateDSKAndEnterPIN, grantSecurityClasses, abort]", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-
-                if (_driver.Options != null && _driver.Options.MissingKeys(true, false))
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-            }
-
-            if (Options.strategy == Enums.InclusionStrategy.Security_S0)
-            {
-                if (_driver.Options != null && _driver.Options.MissingKeys(false, true))
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-            }
-            
-            if (_driver.Options != null && !_driver.Options.CheckKeyLength())
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                Result.SetResult(Res);
+                Result.SetResult(Error);
                 return Result.Task;
             }
 
@@ -921,8 +875,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> StopInclusion()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -939,43 +893,20 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
+
         // Checked as of : 3.5.0
         public Task<CMDResult> ProvisionSmartStartNode(SmartStartProvisioningEntry ProvisioningInformation)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
-            if (_driver.Options != null && _driver.Options.MissingKeys(true, true))
+            CMDResult KeysCheckType = ProvisioningInformation.protocol == Protocols.ZWave ? ValidateKeys(InclusionStrategy.Security_S2) : ValidateLRKeys();
+
+            CMDResult Error = KeysCheckType ?? ValidateKeyLength();
+            if (Error != null)
             {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing Security Keys in Options", false);
-                Result.SetResult(Res);
+                Result.SetResult(Error);
                 return Result.Task;
-            }
-
-            if (_driver.Options != null && !_driver.Options.CheckKeyLength())
-            {
-                CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                Result.SetResult(Res);
-                return Result.Task;
-            }
-
-            if (ProvisioningInformation.protocol == Protocols.ZWaveLongRange)
-            {
-                if (_driver.Options != null && _driver.Options.MissingLRKeys())
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.MissingKeys, "Missing LR Security Keys in Options", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
-
-
-                if (_driver.Options != null && !_driver.Options.CheckKeyLengthLR())
-                {
-                    CMDResult Res = new CMDResult(Enums.ErrorCodes.InvalidkeyLength, "Invalid Key length. All Security Keys must be a 32 character hexadecimal string (representing 16 bytes)", false);
-                    Result.SetResult(Res);
-                    return Result.Task;
-                }
             }
 
             _driver.Callbacks.Add(ID, (JO) =>
@@ -999,8 +930,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> BeginExclusion(ExclusionOptions Options)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -1023,8 +954,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> StopExclusion()
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
              {
@@ -1042,12 +973,12 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
+
         // Checked as of : 3.5.0
         private Task<CMDResult> _UnprovisionSmartStartNode(object dskOrNodeId)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {
@@ -1066,7 +997,7 @@ namespace ZWaveJS.NET
 
             return Result.Task;
         }
-        
+
         // LOCAL
         public Task<CMDResult> UnprovisionSmartStartNode(int NodeID)
         {
@@ -1078,7 +1009,7 @@ namespace ZWaveJS.NET
         {
             return _UnprovisionSmartStartNode(DSK);
         }
-        
+
         // LOCAL
         public VirtualNode GetMulticastGroup(int[] Nodes)
         {
@@ -1087,6 +1018,8 @@ namespace ZWaveJS.NET
         }
 
         public NodesCollection Nodes { get; internal set; }
+
+        public string HomeIdAsHex => $"0x{homeId.ToString("X2").ToUpper()}";
 
         [Newtonsoft.Json.JsonProperty]
         public string libraryVersion { get; internal set; }
@@ -1132,5 +1065,9 @@ namespace ZWaveJS.NET
         public Enums.RFRegion? rfRegion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public bool supportsLongRange { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string firmwareVersion { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public string sdkVersion { get; internal set; }
     }
 }

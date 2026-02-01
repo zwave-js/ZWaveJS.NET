@@ -29,7 +29,7 @@
 
         public enum SetValueStatus
         {
-           
+
             NoDeviceSupport = 0x00,
             Working = 0x01,
             Fail = 0x02,
@@ -105,17 +105,19 @@
             Unknown
         }
 
-
-
         internal class ErrorCodes
         {
-            public const string MissingS2Callbacks = "ZWJS.NET.ERR.001";
-            public const string InvalidStrategy = "ZWJS.NET.ERR.002";
-            public const string MissingKeys = "ZWJS.NET.ERR.003";
-            public const string InvalidkeyLength = "ZWJS.NET.ERR.004";
-            public const string WSConnectionError = "ZWJS.NET.ERR.005";
-            public const string CommercialAPIKey = "ZWJS.NET.ERR.006";
-            public const string WrongOverride = "ZWJS.NET.ERR.007";
+            public const string Unknown = "ERR.00";
+            public const string WSConnectionTimout = "ERR.01";
+            public const string SchemaMisMatch = "ERR.02";
+            public const string StartUpError = "ERR.03";
+
+            public const string MissingS2Callbacks = "ERR.04";
+            public const string InvalidStrategy = "ERR.05";
+            public const string MissingKeys = "ERR.06";
+            public const string InvalidkeyLength = "ERR.07";
+            public const string CommercialAPIKey = "ERR.08";
+            public const string WrongOverride = "ERR.09";
         }
 
         internal class Commands
@@ -210,7 +212,7 @@
 
         public enum SecurityClass
         {
-            
+
             S2_Unauthenticated,
             S2_Authenticated,
             S2_AccessControl,
@@ -248,7 +250,7 @@
             SmartStartFailed,
         }
 
-       public enum ExclusionStrategy
+        public enum ExclusionStrategy
         {
             ExcludeOnly,
             DisableProvisioningEntry,

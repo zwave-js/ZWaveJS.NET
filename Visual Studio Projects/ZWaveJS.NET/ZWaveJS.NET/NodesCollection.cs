@@ -1,13 +1,25 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using System.ComponentModel;
+using System;
 
 namespace ZWaveJS.NET
 {
-    public class NodesCollection
+    public class NodesCollection : INotifyPropertyChanged
     {
         internal NodesCollection()
         {
+        }
+
+        private static readonly IEnumerable<PropertyInfo> UpdatebaleNodeProbs = typeof(ZWaveNode)
+                .GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(UpdateableNodePropertyAttribute)));
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         internal List<ZWaveNode> Nodes { get; set; }
@@ -20,16 +32,22 @@ namespace ZWaveJS.NET
         internal void AddNodeToCollection(ZWaveNode Node)
         {
             Nodes.Add(Node);
+            OnPropertyChanged(nameof(Collection));
         }
 
-        internal void ReplaceInformation(ZWaveNode Source, ZWaveNode Target)
+        internal void ReplaceInformation(ZWaveNode source, ZWaveNode target)
         {
-            PropertyInfo[] infos = typeof(ZWaveNode).GetProperties();
-            foreach (PropertyInfo info in infos)
+            foreach (PropertyInfo prop in UpdatebaleNodeProbs)
             {
-                info.SetValue(Target, info.GetValue(Source, null), null);
+                if (prop.CanRead && prop.CanWrite)
+                {
+                    object value = prop.GetValue(source);
+                    prop.SetValue(target, value);
+                }
             }
+            OnPropertyChanged(nameof(Collection));
         }
+
 
         internal void RemoveNodeFromCollection(int Node)
         {
@@ -37,6 +55,7 @@ namespace ZWaveJS.NET
             if (N != null)
             {
                 Nodes.Remove(N);
+                OnPropertyChanged(nameof(Collection));
             }
         }
 
@@ -45,9 +64,7 @@ namespace ZWaveJS.NET
             return Nodes.FirstOrDefault((N) => N.id.Equals(Node));
         }
 
-        public ZWaveNode[] AsArray()
-        {
-            return Nodes.ToArray();
-        }
+        public ZWaveNode[] Collection => Nodes.ToArray();
+
     }
 }

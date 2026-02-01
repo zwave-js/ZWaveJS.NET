@@ -19,9 +19,8 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> ParseQRCodeString(string QR)
         {
-            Guid ID = Guid.NewGuid();
-
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
 
             _driver.Callbacks.Add(ID, (JO) =>
             {

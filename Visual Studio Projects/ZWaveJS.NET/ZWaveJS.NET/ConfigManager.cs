@@ -39,8 +39,9 @@ namespace ZWaveJS.NET
         public Task<CMDResult> LookupDevice(int ManufacturerID, int ProductTypeID, int ProductId)
         {
             
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
+
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);
@@ -68,8 +69,9 @@ namespace ZWaveJS.NET
         // Checked as of : 3.5.0
         public Task<CMDResult> LookupManufacturer(int ManufacturerID)
         {
-            Guid ID = Guid.NewGuid();
-            TaskCompletionSource<CMDResult> Result = new TaskCompletionSource<CMDResult>();
+            Guid ID;
+            TaskCompletionSource<CMDResult> Result = _driver.GetNewTaskCompletionSource(out ID);
+            
             _driver.Callbacks.Add(ID, (JO) =>
             {
                 CMDResult Res = new CMDResult(JO);

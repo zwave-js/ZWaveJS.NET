@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Demo_Application.Nodes"
+             xmlns:local="clr-namespace:Demo_Application"
+             xmlns:zwjs="clr-namespace:ZWaveJS.NET;assembly=ZWaveJS.NET"
+             x:DataType="local:NodesViewModel"
+             Title="Nodes">
+
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Include Node"
+                     Order="Secondary"
+                     Clicked="StartInclude"
+                     Priority="0"/>
+        <ToolbarItem Text="Exclude Node"
+                     Order="Secondary"
+                     Clicked="StartExclude"
+                     Priority="1"/>
+    </ContentPage.ToolbarItems>
+
+
+
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InterviewStatusConverter x:Key="InterviewStatusConverter"/>
+            <local:StatusConverter x:Key="StatusConverter"/>
+            <local:ReadyConverter x:Key="ReadyConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout>
+
+        <StackLayout Orientation="Horizontal"
+                     Padding="40,40,40,0"
+                     HorizontalOptions="Fill">
+
+            <Frame
+                Margin="5"
+                WidthRequest="100"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Node"/>
+            </Frame>
+
+            <Frame
+                Margin="5"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Info"/>
+            </Frame>
+
+            <Frame
+                Margin="5"
+                WidthRequest="110"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Status"/>
+            </Frame>
+
+            <Frame
+                Margin="5"
+                WidthRequest="110"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Ready?"/>
+            </Frame>
+
+            <Frame
+                Margin="5"
+                WidthRequest="140"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource PrimaryDark}">
+                <Label FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="Intvw State"/>
+            </Frame>
+
+        </StackLayout>
+
+        <CollectionView ItemsSource="{Binding Nodes.Collection}">
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate x:DataType="zwjs:ZWaveNode">
+
+                    <StackLayout Orientation="Horizontal"
+                                 Padding="40,0,40,2"
+                                 HorizontalOptions="Fill">
+
+                        <Frame
+                            Margin="5"
+                            WidthRequest="100"
+                            HeightRequest="78"
+                            BackgroundColor="{StaticResource PrimaryDark}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="28"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Text="{Binding id, StringFormat='#{0}'}"/>
+                        </Frame>
+
+                        <Frame
+                            Margin="5"
+                            HeightRequest="78"
+                            HorizontalOptions="FillAndExpand"
+                            BackgroundColor="{StaticResource PrimaryDark}">
+                            <Grid RowSpacing="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="20" />
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Column="0" Grid.Row="0" Text="Manufacture" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding deviceConfig.manufacturer}" FontAttributes="Italic" />
+
+                                <Label Grid.Column="0" Grid.Row="1" Text="Device" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding deviceConfig.description}" FontAttributes="Italic" />
+                               
+                                   
+                            </Grid>
+
+                        </Frame>
+
+                        <Frame
+                            Margin="5"
+                            WidthRequest="110"
+                            HeightRequest="78"
+                            BackgroundColor="{Binding status, Converter={StaticResource StatusConverter}}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   Text="{Binding status}"/>
+                        </Frame>
+
+                        <Frame
+                            Margin="5"
+                            WidthRequest="110"
+                            HeightRequest="78"
+                            BackgroundColor="{Binding ready, Converter={StaticResource ReadyConverter}}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   Text="{Binding ready}"/>
+                        </Frame>
+
+                        <Frame
+                            Margin="5"
+                            WidthRequest="140"
+                            HeightRequest="78"
+                            BackgroundColor="{Binding interviewStage, Converter={StaticResource InterviewStatusConverter}}"
+                            HorizontalOptions="Start">
+                            <Label FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"
+                                   Text="{Binding interviewStage}"/>
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

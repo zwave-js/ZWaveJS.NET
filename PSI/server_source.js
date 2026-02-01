@@ -24,14 +24,19 @@ if (driverOptions.securityKeysLongRange) {
 }
 
 const driver = new Driver(serialPort, driverOptions);
-const server = new ZwavejsServer(driver, { port: wsPort, host: 'localhost' });
+const server = new ZwavejsServer(driver, { port: wsPort, host: 'localhost', reconnect: false, 'disable-dns-sd': true });
 server.on('listening', () => {
 	ServerStarted = true;
 });
-driver.on('error', (e) => {});
+driver.on('error', (e) => {
+	e.start = false;
+	process.stderr.write(`${JSON.stringify(e)}\n`);
+});
 
 driver.on('driver ready', () => {
-	server.start();
+	if (!ServerStarted) {
+		server.start();
+	}
 });
 
 driver
@@ -41,7 +46,8 @@ driver
 		process.stdin.on('data', HandleInput);
 	})
 	.catch((e) => {
-		process.stderr.write('1\n');
+		e.start = true;
+		process.stderr.write(`${JSON.stringify(e)}\n`);
 	});
 
 const HandleInput = async (Data) => {
