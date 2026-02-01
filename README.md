@@ -94,11 +94,8 @@ private void HandleZWErrors(int ErrorCode, string Message)
 
 private void HandleConnectionErrors(string ErrorCode, string Message, Action<bool, int?> Retry)
 {
-    // Do something with the error, and restart if supported, setting a new timeout
-    if(Retry != null)
-    {
-        Retry(true,15)
-    }
+    // Do something with the error, and restart if supported, setting a new timeout.
+    Retry?.Invoke(true, 15);
 }
 
 private  void DriverReady()
