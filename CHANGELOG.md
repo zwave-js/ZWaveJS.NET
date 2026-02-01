@@ -27,7 +27,7 @@
     - Re-engineered error/connection handling.  
        All Driver/Server error handling, is now handled through 2 events:   
         - **ServerConnectionError** :   
-        Can trigger during start up, or if the server connection is lost. This event has the following signature:
+        This error is triggered, when the Libary is not able to connect to the Driver Runtime, or loses connection:
 
           ```csharp
           ServerConnectionError(string ErrorCode, string Message, Action<bool, int?> Retry)
@@ -41,7 +41,7 @@
             ERR.02 : Schema Mismatch
             ERR.03 : Error During Server Start up
           ```
-          ```ERR.03``` For an example, could originate due to a library fault (example: missing PSI), or a ZWave JS reported error (the error will be included)
+          ```ERR.03``` For an example, could be due to a missing PSI, or a ZWave JS reported error during it's ```start``` promise
 
 
           Where the error code, supports a retry, ```Retry``` will not be ```null```  
@@ -49,13 +49,15 @@
 
           Effectively, the host application, is now respoabile for reconnection attempts
 
-        - **ZWaveSJError** : Any error emited by the Driver, after a successfull start up:
+        - **ZWaveSJError** :   
+        Any error emited by the Driver.  It is important to note: this could also be a precusor to ```ServerConnectionError```
 
           ```csharp
             ZWaveJSError(int ErrorCode, string Message)
             ```
 
     - All interaction error codes have been updated.  
+      These are the response error codes for the ```CMDResult```, if the command failed.
       ```csharp
       ERR.04 : S2 Call backs missing
       ERR.05 : Invalid Strategy
@@ -64,6 +66,8 @@
       ERR.08 : Missing API key (Commercial use)
       ERR.09 : Use of incorrect override
       ```
+      Keep in mind, Zwave JS can produce an error response (and code) also.
+
     - The ```Controller.Nodes.AsArray()``` method has been replaced with a property of ```Controller.Nodes.Collection```
 
     - The following methods/events have been renamed
