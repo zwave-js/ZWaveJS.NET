@@ -229,6 +229,16 @@
             Silly
         }
 
+        public enum ControllerStatus
+        {
+            /// <summary>The controller is ready to accept commands and transmit</summary>
+            Ready = 0,
+            /// <summary>The controller is unresponsive</summary>
+            Unresponsive = 1,
+            /// <summary>The controller is unable to transmit</summary>
+            Jammed = 2
+        }
+
         public enum NodeStatus
         {
             Unknown,
