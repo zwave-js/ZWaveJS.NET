@@ -45,6 +45,14 @@ namespace ZWaveJS.NET
             StatisticsUpdated?.Invoke(Args);
         }
 
+        public delegate void StatusChangedEvent(Enums.ControllerStatus Status);
+        public event StatusChangedEvent StatusChanged;
+        internal void Trigger_StatusChanged(Enums.ControllerStatus Status)
+        {
+            this.status = Status;
+            StatusChanged?.Invoke(Status);
+        }
+
         public delegate void RebuildRoutesProgressEvent(RebuildRoutesProgressArgs Args);
         public event RebuildRoutesProgressEvent RebuildRoutesProgress;
         internal void Trigger_RebuildRoutesProgress(RebuildRoutesProgressArgs Args)
@@ -803,5 +811,7 @@ namespace ZWaveJS.NET
         public Enums.RFRegion? rfRegion { get; internal set; }
         [Newtonsoft.Json.JsonProperty]
         public bool supportsLongRange { get; internal set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Enums.ControllerStatus status { get; internal set; }
     }
 }

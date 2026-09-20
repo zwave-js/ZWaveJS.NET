@@ -368,6 +368,16 @@ namespace ZWaveJS.NET
                 });
             });
 
+            ControllerEventMap.Add("status changed", (JO) =>
+            {
+                Enums.ControllerStatus Status = JO.SelectToken("event.status").ToObject<Enums.ControllerStatus>();
+
+                Task.Run(() =>
+                {
+                    this.Controller.Trigger_StatusChanged(Status);
+                });
+            });
+
             ControllerEventMap.Add("statistics updated", (JO) =>
             {
                 ControllerStatisticsUpdatedArgs CS = JO.SelectToken("event.statistics").ToObject<ControllerStatisticsUpdatedArgs>();
